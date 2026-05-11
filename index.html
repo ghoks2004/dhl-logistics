@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DHL Logistics Services – Suivi & Expédition</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet" />
+  <!-- JsBarcode for barcodes -->
+  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+  <style>
+    :root {
+      --dhl-red: #D40511;
+      --dhl-yellow: #FFCC00;
+      --dhl-dark: #1A1A1A;
+      --dhl-gray: #F5F5F5;
+      --dhl-mid: #666;
+      --dhl-white: #fff;
+      --radius: 6px;
+      --shadow: 0 4px 24px rgba(0,0,0,0.10);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Source Sans 3', sans-serif; background: var(--dhl-gray); color: var(--dhl-dark); min-height: 100vh; }
+
+    /* ===== HEADER ===== */
+    header {
+      background: var(--dhl-red);
+      padding: 0 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 70px;
+      position: sticky; top: 0; z-index: 100;
+      box-shadow: 0 2px 10px rgba(212,5,17,0.3);
+    }
+    .logo {
+      display: flex; align-items: center; gap: 12px;
+    }
+    .logo-box {
+      background: var(--dhl-yellow);
+      font-family: 'Oswald', sans-serif;
+      font-size: 1.7rem;
+      font-weight: 700;
+      color: var(--dhl-red);
+      padding: 4px 14px;
+      letter-spacing: 2px;
+      border-radius: 3px;
+      line-height: 1;
+    }
+    .logo-text {
+      color: var(--dhl-white);
+      font-family: 'Oswald', sans-serif;
+      font-size: 1rem;
+      font-weight: 400;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+    nav { display: flex; gap: 0.5rem; }
+    nav button {
+      background: transparent;
+      border: 2px solid rgba(255,255,255,0.4);
+      color: white;
+      padding: 7px 18px;
+      border-radius: var(--radius);
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.85rem;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: all .2s;
+      text-transform: uppercase;
+    }
+    nav button:hover, nav button.active {
+      background: var(--dhl-yellow);
+      color: var(--dhl-red);
+      border-color: var(--dhl-yellow);
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      background: linear-gradient(135deg, #1A1A1A 0%, #2d2d2d 100%);
+      padding: 3rem 2rem 2.5rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: repeating-linear-gradient(45deg, transparent, transparent 30px, rgba(255,204,0,0.03) 30px, rgba(255,204,0,0.03) 60px);
+    }
+    .hero h1 { font-family: 'Oswald', sans-serif; font-size: 2.4rem; color: var(--dhl-yellow); letter-spacing: 2px; position: relative; }
+    .hero p { color: #aaa; margin-top: 8px; font-size: 1rem; position: relative; }
+
+    /* ===== TRACK BAR ===== */
+    .track-bar {
+      background: var(--dhl-white);
+      max-width: 700px; margin: -1rem auto 0; 
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 1.4rem 1.5rem;
+      position: relative; z-index: 10;
+      display: flex; gap: 10px;
+    }
+    .track-bar input {
+      flex: 1; border: 2px solid #ddd; border-radius: var(--radius);
+      padding: 12px 16px; font-size: 1rem; font-family: 'Source Sans 3', sans-serif;
+      transition: border .2s;
+    }
+    .track-bar input:focus { outline: none; border-color: var(--dhl-red); }
+    .track-bar button {
+      background: var(--dhl-red); color: white;
+      border: none; border-radius: var(--radius);
+      padding: 12px 24px; cursor: pointer;
+      font-family: 'Oswald', sans-serif; font-size: 1rem; letter-spacing: 1px;
+      transition: background .2s;
+    }
+    .track-bar button:hover { background: #b0040f; }
+
+    /* ===== MAIN CONTENT ===== */
+    main { max-width: 1100px; margin: 2rem auto; padding: 0 1.5rem 3rem; }
+
+    /* ===== TABS ===== */
+    .tabs { display: flex; gap: 4px; margin-bottom: 1.5rem; border-bottom: 3px solid var(--dhl-red); }
+    .tab-btn {
+      background: none; border: none; cursor: pointer;
+      font-family: 'Oswald', sans-serif; font-size: 1rem; letter-spacing: 1px;
+      padding: 10px 20px; color: var(--dhl-mid); text-transform: uppercase;
+      border-bottom: 3px solid transparent; margin-bottom: -3px; transition: all .2s;
+    }
+    .tab-btn.active { color: var(--dhl-red); border-bottom-color: var(--dhl-red); }
+
+    /* ===== CARD ===== */
+    .card {
+      background: white; border-radius: var(--radius);
+      box-shadow: var(--shadow); padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+    .card-title {
+      font-family: 'Oswald', sans-serif; font-size: 1.2rem;
+      color: var(--dhl-red); letter-spacing: 1px; text-transform: uppercase;
+      margin-bottom: 1.2rem; padding-bottom: 8px;
+      border-bottom: 2px solid var(--dhl-yellow);
+    }
+
+    /* ===== FORM ===== */
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-grid.three { grid-template-columns: 1fr 1fr 1fr; }
+    .form-group { display: flex; flex-direction: column; gap: 5px; }
+    .form-group.full { grid-column: 1 / -1; }
+    label { font-size: 0.82rem; font-weight: 600; color: var(--dhl-mid); text-transform: uppercase; letter-spacing: 0.5px; }
+    input, select, textarea {
+      border: 1.5px solid #ddd; border-radius: var(--radius);
+      padding: 10px 12px; font-size: 0.95rem; font-family: 'Source Sans 3', sans-serif;
+      background: white; transition: border .2s;
+    }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--dhl-red); }
+    textarea { resize: vertical; min-height: 80px; }
+
+    .section-sep {
+      display: flex; align-items: center; gap: 12px; margin: 1.5rem 0;
+    }
+    .section-sep::before, .section-sep::after {
+      content: ''; flex: 1; height: 1px; background: #eee;
+    }
+    .section-sep span { font-family: 'Oswald', sans-serif; font-size: 0.85rem; color: var(--dhl-mid); letter-spacing: 1px; }
+
+    /* ===== SPEED CARDS ===== */
+    .speed-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1rem 0; }
+    .speed-card {
+      border: 2px solid #ddd; border-radius: var(--radius); padding: 1rem;
+      cursor: pointer; transition: all .2s; text-align: center;
+    }
+    .speed-card:hover { border-color: var(--dhl-red); }
+    .speed-card.selected { border-color: var(--dhl-red); background: #fff5f5; }
+    .speed-card .icon { font-size: 1.8rem; margin-bottom: 6px; }
+    .speed-card .name { font-family: 'Oswald', sans-serif; font-size: 1rem; color: var(--dhl-dark); }
+    .speed-card .delay { font-size: 0.82rem; color: var(--dhl-mid); }
+    .speed-card .price { font-weight: 700; color: var(--dhl-red); font-size: 1.1rem; margin-top: 4px; }
+
+    /* ===== PAYMENT ===== */
+    .pay-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+    .pay-card {
+      border: 2px solid #ddd; border-radius: var(--radius); padding: 1rem 1.2rem;
+      cursor: pointer; display: flex; align-items: center; gap: 12px;
+      transition: all .2s;
+    }
+    .pay-card:hover { border-color: var(--dhl-red); }
+    .pay-card.selected { border-color: var(--dhl-red); background: #fff5f5; }
+    .pay-icon { font-size: 1.4rem; }
+    .pay-name { font-family: 'Oswald', sans-serif; font-size: 1rem; }
+    .pay-info { font-size: 0.8rem; color: var(--dhl-mid); }
+
+    /* ===== STEP INDICATOR ===== */
+    .steps { display: flex; align-items: center; margin-bottom: 2rem; }
+    .step { display: flex; flex-direction: column; align-items: center; flex: 1; }
+    .step-dot {
+      width: 32px; height: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Oswald', sans-serif; font-size: 0.9rem;
+      border: 2px solid #ddd; color: #aaa; background: white;
+      transition: all .3s;
+    }
+    .step.active .step-dot { border-color: var(--dhl-red); color: white; background: var(--dhl-red); }
+    .step.done .step-dot { border-color: #22c55e; color: white; background: #22c55e; }
+    .step-label { font-size: 0.72rem; color: #aaa; margin-top: 4px; text-align: center; }
+    .step.active .step-label { color: var(--dhl-red); font-weight: 600; }
+    .step-line { flex: 1; height: 2px; background: #eee; margin: 0 4px 16px; }
+    .step-line.done { background: #22c55e; }
+
+    /* ===== BTN ===== */
+    .btn { padding: 12px 28px; border-radius: var(--radius); cursor: pointer; font-family: 'Oswald', sans-serif; font-size: 1rem; letter-spacing: 1px; border: none; transition: all .2s; }
+    .btn-primary { background: var(--dhl-red); color: white; }
+    .btn-primary:hover { background: #b0040f; }
+    .btn-secondary { background: var(--dhl-yellow); color: var(--dhl-dark); }
+    .btn-secondary:hover { background: #e6b800; }
+    .btn-outline { background: transparent; border: 2px solid var(--dhl-red); color: var(--dhl-red); }
+    .btn-outline:hover { background: var(--dhl-red); color: white; }
+    .btn-row { display: flex; gap: 10px; justify-content: flex-end; margin-top: 1.5rem; }
+
+    /* ===== TRACKING RESULT ===== */
+    .track-result { display: none; }
+    .track-header {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;
+    }
+    .track-num { font-family: 'Oswald', sans-serif; font-size: 1.5rem; color: var(--dhl-dark); }
+    .track-status {
+      background: var(--dhl-yellow); color: var(--dhl-dark);
+      padding: 6px 18px; border-radius: 20px;
+      font-family: 'Oswald', sans-serif; font-size: 0.9rem; letter-spacing: 1px;
+    }
+    .track-progress {
+      background: #f9f9f9; border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1.5rem;
+    }
+    .progress-bar-outer { background: #eee; border-radius: 8px; height: 8px; margin: 1rem 0; }
+    .progress-bar-inner { background: linear-gradient(90deg, var(--dhl-red), var(--dhl-yellow)); height: 8px; border-radius: 8px; transition: width 1s; }
+    .track-milestones { display: flex; justify-content: space-between; margin-top: 8px; }
+    .milestone { text-align: center; flex: 1; }
+    .ms-dot { width: 14px; height: 14px; border-radius: 50%; background: #ddd; margin: 0 auto 4px; }
+    .ms-dot.done { background: var(--dhl-red); }
+    .ms-label { font-size: 0.72rem; color: var(--dhl-mid); }
+
+    .event-list { list-style: none; }
+    .event-item { display: flex; gap: 16px; padding: 14px 0; border-bottom: 1px solid #f0f0f0; }
+    .event-item:last-child { border-bottom: none; }
+    .event-icon { font-size: 1.3rem; width: 36px; text-align: center; }
+    .event-info { flex: 1; }
+    .event-title { font-weight: 600; font-size: 0.95rem; }
+    .event-location { font-size: 0.82rem; color: var(--dhl-mid); }
+    .event-time { font-size: 0.8rem; color: #aaa; white-space: nowrap; }
+
+    .courier-badge {
+      background: linear-gradient(135deg, var(--dhl-dark), #333);
+      color: white; border-radius: var(--radius); padding: 1rem 1.2rem;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .courier-avatar { font-size: 2rem; }
+    .courier-name { font-family: 'Oswald', sans-serif; font-size: 1rem; }
+    .courier-vehicle { font-size: 0.82rem; color: #aaa; }
+    .nav-btns { display: flex; gap: 8px; margin-top: 1rem; flex-wrap: wrap; }
+    .nav-btn {
+      background: white; border: 1.5px solid #ddd; color: var(--dhl-dark);
+      padding: 8px 14px; border-radius: var(--radius); cursor: pointer;
+      font-size: 0.85rem; display: flex; align-items: center; gap: 6px;
+      transition: all .2s; text-decoration: none;
+    }
+    .nav-btn:hover { border-color: var(--dhl-red); color: var(--dhl-red); }
+
+    /* ===== INVOICE ===== */
+    .invoice-preview {
+      border: 1px solid #ddd; border-radius: var(--radius); padding: 1.5rem;
+      font-size: 0.88rem; line-height: 1.6; display: none;
+    }
+    .invoice-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; }
+    .invoice-logo-box { background: var(--dhl-red); color: white; padding: 6px 16px; border-radius: 3px; }
+    .invoice-logo-inner { background: var(--dhl-yellow); color: var(--dhl-red); font-family: 'Oswald', sans-serif; font-size: 1.4rem; font-weight: 700; padding: 2px 10px; display: inline-block; }
+    .invoice-logo-sub { font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.8); text-align: right; margin-top: 2px; }
+    .invoice-table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+    .invoice-table th { background: var(--dhl-red); color: white; padding: 8px 12px; text-align: left; font-family: 'Oswald', sans-serif; letter-spacing: 1px; font-size: 0.82rem; }
+    .invoice-table td { padding: 8px 12px; border-bottom: 1px solid #f0f0f0; }
+    .invoice-table tr:nth-child(even) td { background: #fafafa; }
+    .invoice-total { text-align: right; font-family: 'Oswald', sans-serif; font-size: 1.1rem; margin-top: 8px; }
+    .barcode-container { text-align: center; margin: 1rem 0; }
+    barcode-container svg { max-width: 100%; }
+    .invoice-footer { text-align: center; font-size: 0.78rem; color: #aaa; margin-top: 1.5rem; border-top: 1px solid #eee; padding-top: 1rem; }
+
+    /* ===== COURIER PANEL ===== */
+    .courier-update-form { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+    .status-pills { display: flex; gap: 8px; flex-wrap: wrap; margin: 1rem 0; }
+    .pill {
+      padding: 6px 14px; border-radius: 20px; cursor: pointer;
+      font-size: 0.82rem; font-family: 'Oswald', sans-serif; letter-spacing: 0.5px;
+      border: 1.5px solid #ddd; background: white; transition: all .2s;
+    }
+    .pill:hover, .pill.selected { background: var(--dhl-red); color: white; border-color: var(--dhl-red); }
+
+    /* ===== NOTIFICATIONS ===== */
+    .notif {
+      position: fixed; top: 80px; right: 20px;
+      background: var(--dhl-dark); color: white;
+      padding: 14px 20px; border-radius: var(--radius);
+      box-shadow: var(--shadow); display: none; z-index: 1000;
+      border-left: 4px solid var(--dhl-yellow);
+      max-width: 320px; font-size: 0.9rem; animation: slideIn .3s ease;
+    }
+    @keyframes slideIn { from { transform: translateX(30px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+    /* ===== LANG FLAG ===== */
+    .lang-switch { display: flex; gap: 6px; }
+    .lang-btn { background: none; border: 1px solid rgba(255,255,255,0.3); color: white; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.78rem; }
+    .lang-btn.active { background: var(--dhl-yellow); color: var(--dhl-red); border-color: var(--dhl-yellow); }
+
+    /* ===== FOOTER ===== */
+    footer {
+      background: var(--dhl-dark); color: #888; text-align: center;
+      padding: 1.5rem; font-size: 0.82rem; margin-top: 3rem;
+    }
+    footer span { color: var(--dhl-yellow); }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 700px) {
+      .form-grid, .form-grid.three, .speed-cards, .pay-cards, .courier-update-form { grid-template-columns: 1fr; }
+      .track-bar { flex-direction: column; }
+      nav { gap: 4px; }
+      nav button { padding: 6px 10px; font-size: 0.75rem; }
+      .hero h1 { font-size: 1.6rem; }
+    }
+
+    /* ===== HIDDEN ===== */
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+<!-- NOTIF -->
+<div class="notif" id="notif"></div>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <div class="logo-box">DHL</div>
+    <div class="logo-text" id="logoText">Logistics Services</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px;">
+    <div class="lang-switch">
+      <button class="lang-btn active" onclick="setLang('fr')">🇫🇷 FR</button>
+      <button class="lang-btn" onclick="setLang('en')">🇬🇧 EN</button>
+      <button class="lang-btn" onclick="setLang('es')">🇪🇸 ES</button>
+      <button class="lang-btn" onclick="setLang('de')">🇩🇪 DE</button>
+    </div>
+    <nav>
+      <button class="active" onclick="showSection('home')" id="nav-home">Accueil</button>
+      <button onclick="showSection('ship')" id="nav-ship">Expédier</button>
+      <button onclick="showSection('courier')" id="nav-courier">Coursier</button>
+      <button onclick="showSection('invoice')" id="nav-invoice">Factures</button>
+    </nav>
+  </div>
+</header>
+
+<!-- ===== HOME SECTION ===== -->
+<div id="section-home">
+  <div class="hero">
+    <h1 id="heroTitle">SUIVI DE VOS COLIS EN TEMPS RÉEL</h1>
+    <p id="heroSub">Expédiez, suivez et gérez vos livraisons partout dans le monde</p>
+  </div>
+  <div class="track-bar" style="max-width:700px;margin:-30px auto 0;position:relative;z-index:10;">
+    <input type="text" id="trackInput" placeholder="Entrez votre numéro de suivi..." />
+    <button onclick="doTrack()" id="trackBtn">SUIVRE</button>
+  </div>
+
+  <main>
+    <!-- TRACKING RESULT -->
+    <div id="trackResult" class="track-result">
+      <div class="card">
+        <div class="track-header">
+          <div>
+            <div style="font-size:0.82rem;color:var(--dhl-mid);text-transform:uppercase;letter-spacing:1px;" id="t-label">Numéro de suivi</div>
+            <div class="track-num" id="t-num">—</div>
+          </div>
+          <div class="track-status" id="t-status">En transit</div>
+        </div>
+        <div class="track-progress">
+          <div style="display:flex;justify-content:space-between;font-size:0.82rem;color:var(--dhl-mid);">
+            <span id="t-from">—</span><span id="t-to">—</span>
+          </div>
+          <div class="progress-bar-outer"><div class="progress-bar-inner" id="t-bar" style="width:60%"></div></div>
+          <div class="track-milestones">
+            <div class="milestone"><div class="ms-dot done" id="ms1"></div><div class="ms-label" id="msl1">Collecté</div></div>
+            <div class="milestone"><div class="ms-dot done" id="ms2"></div><div class="ms-label" id="msl2">Tri</div></div>
+            <div class="milestone"><div class="ms-dot done" id="ms3"></div><div class="ms-label" id="msl3">Transit</div></div>
+            <div class="milestone"><div class="ms-dot" id="ms4"></div><div class="ms-label" id="msl4">Douane</div></div>
+            <div class="milestone"><div class="ms-dot" id="ms5"></div><div class="ms-label" id="msl5">Livré</div></div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1rem;">
+          <div class="courier-badge" style="flex:1;min-width:220px;">
+            <div class="courier-avatar">🚚</div>
+            <div>
+              <div class="courier-name" id="t-courier">Jean-Pierre M.</div>
+              <div class="courier-vehicle" id="t-vehicle">🚗 Véhicule: LT-2847-YDE</div>
+            </div>
+          </div>
+          <div style="flex:1;min-width:220px;">
+            <div style="font-size:0.82rem;color:var(--dhl-mid);margin-bottom:6px;" id="navLabel">Navigation GPS</div>
+            <div class="nav-btns">
+              <a class="nav-btn" id="gmapsLink" href="#" target="_blank">🗺️ Google Maps</a>
+              <a class="nav-btn" id="wazeLink" href="#" target="_blank">🚦 Waze</a>
+              <a class="nav-btn" id="appleLink" href="#" target="_blank">🍎 Apple Maps</a>
+            </div>
+          </div>
+        </div>
+
+        <ul class="event-list" id="t-events"></ul>
+      </div>
+    </div>
+
+    <!-- FEATURES -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:2rem;" id="features">
+      <div class="card" style="text-align:center;">
+        <div style="font-size:2.5rem;margin-bottom:10px;">⚡</div>
+        <div style="font-family:'Oswald',sans-serif;font-size:1.1rem;color:var(--dhl-red);" id="f1t">Livraison Express</div>
+        <div style="font-size:0.88rem;color:var(--dhl-mid);margin-top:6px;" id="f1d">Livraison en 24h dans plus de 50 pays.</div>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div style="font-size:2.5rem;margin-bottom:10px;">📍</div>
+        <div style="font-family:'Oswald',sans-serif;font-size:1.1rem;color:var(--dhl-red);" id="f2t">Suivi en Temps Réel</div>
+        <div style="font-size:0.88rem;color:var(--dhl-mid);margin-top:6px;" id="f2d">GPS live intégré avec Google Maps et Waze.</div>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div style="font-size:2.5rem;margin-bottom:10px;">🔒</div>
+        <div style="font-family:'Oswald',sans-serif;font-size:1.1rem;color:var(--dhl-red);" id="f3t">Sécurisé & Assuré</div>
+        <div style="font-size:0.88rem;color:var(--dhl-mid);margin-top:6px;" id="f3d">Chaque colis est assuré et documenté.</div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ===== SHIP SECTION ===== -->
+<div id="section-ship" class="hidden">
+<main>
+  <!-- STEP INDICATOR -->
+  <div class="steps">
+    <div class="step active" id="step1"><div class="step-dot" id="sd1">1</div><div class="step-label" id="sl1">Expéditeur</div></div>
+    <div class="step-line" id="sl-1"></div>
+    <div class="step" id="step2"><div class="step-dot" id="sd2">2</div><div class="step-label" id="sl2">Colis</div></div>
+    <div class="step-line" id="sl-2"></div>
+    <div class="step" id="step3"><div class="step-dot" id="sd3">3</div><div class="step-label" id="sl3">Documents</div></div>
+    <div class="step-line" id="sl-3"></div>
+    <div class="step" id="step4"><div class="step-dot" id="sd4">4</div><div class="step-label" id="sl4">Vitesse</div></div>
+    <div class="step-line" id="sl-4"></div>
+    <div class="step" id="step5"><div class="step-dot" id="sd5">5</div><div class="step-label" id="sl5">Paiement</div></div>
+  </div>
+
+  <!-- STEP 1: SENDER & RECEIVER -->
+  <div id="form-step1">
+    <div class="card">
+      <div class="card-title" id="senderTitle">📤 Informations Expéditeur</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label id="lSenderName">Nom complet</label>
+          <input type="text" id="senderName" placeholder="Ex: Jean Dupont" />
+        </div>
+        <div class="form-group">
+          <label id="lSenderEmail">Email</label>
+          <input type="email" id="senderEmail" placeholder="email@example.com" />
+        </div>
+        <div class="form-group">
+          <label id="lSenderPhone">Téléphone</label>
+          <input type="tel" id="senderPhone" placeholder="+237 6XX XXX XXX" />
+        </div>
+        <div class="form-group">
+          <label id="lSenderCountry">Pays</label>
+          <select id="senderCountry">
+            <option value="CM">🇨🇲 Cameroun</option>
+            <option value="FR">🇫🇷 France</option>
+            <option value="US">🇺🇸 États-Unis</option>
+            <option value="GB">🇬🇧 Royaume-Uni</option>
+            <option value="DE">🇩🇪 Allemagne</option>
+            <option value="SN">🇸🇳 Sénégal</option>
+            <option value="CI">🇨🇮 Côte d'Ivoire</option>
+            <option value="NG">🇳🇬 Nigeria</option>
+            <option value="ZA">🇿🇦 Afrique du Sud</option>
+            <option value="CN">🇨🇳 Chine</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label id="lSenderCity">Ville</label>
+          <input type="text" id="senderCity" placeholder="Yaoundé" />
+        </div>
+        <div class="form-group">
+          <label id="lSenderZip">Code Postal</label>
+          <input type="text" id="senderZip" placeholder="BP 1234" />
+        </div>
+        <div class="form-group full">
+          <label id="lSenderAddr">Adresse complète</label>
+          <input type="text" id="senderAddr" placeholder="Rue, quartier, immeuble..." />
+        </div>
+      </div>
+
+      <div class="section-sep"><span id="recvSep">DESTINATAIRE</span></div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label id="lRecvName">Nom complet</label>
+          <input type="text" id="recvName" placeholder="Ex: Marie Curie" />
+        </div>
+        <div class="form-group">
+          <label id="lRecvEmail">Email</label>
+          <input type="email" id="recvEmail" placeholder="email@example.com" />
+        </div>
+        <div class="form-group">
+          <label id="lRecvPhone">Téléphone</label>
+          <input type="tel" id="recvPhone" placeholder="+33 6XX XXX XXX" />
+        </div>
+        <div class="form-group">
+          <label id="lRecvCountry">Pays</label>
+          <select id="recvCountry">
+            <option value="FR">🇫🇷 France</option>
+            <option value="CM">🇨🇲 Cameroun</option>
+            <option value="US">🇺🇸 États-Unis</option>
+            <option value="GB">🇬🇧 Royaume-Uni</option>
+            <option value="DE">🇩🇪 Allemagne</option>
+            <option value="SN">🇸🇳 Sénégal</option>
+            <option value="CI">🇨🇮 Côte d'Ivoire</option>
+            <option value="NG">🇳🇬 Nigeria</option>
+            <option value="ZA">🇿🇦 Afrique du Sud</option>
+            <option value="CN">🇨🇳 Chine</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label id="lRecvCity">Ville</label>
+          <input type="text" id="recvCity" placeholder="Paris" />
+        </div>
+        <div class="form-group">
+          <label id="lRecvZip">Code Postal</label>
+          <input type="text" id="recvZip" placeholder="75001" />
+        </div>
+        <div class="form-group full">
+          <label id="lRecvAddr">Adresse complète</label>
+          <input type="text" id="recvAddr" placeholder="Rue, appartement, quartier..." />
+        </div>
+      </div>
+      <div class="btn-row"><button class="btn btn-primary" onclick="goStep(2)" id="btnNext1">Suivant →</button></div>
+    </div>
+  </div>
+
+  <!-- STEP 2: PARCEL -->
+  <div id="form-step2" class="hidden">
+    <div class="card">
+      <div class="card-title" id="parcelTitle">📦 Description du Colis</div>
+      <div class="form-grid three">
+        <div class="form-group">
+          <label id="lWeight">Poids (kg)</label>
+          <input type="number" id="pkgWeight" placeholder="1.5" min="0.1" step="0.1" />
+        </div>
+        <div class="form-group">
+          <label id="lLength">Longueur (cm)</label>
+          <input type="number" id="pkgLength" placeholder="30" />
+        </div>
+        <div class="form-group">
+          <label id="lWidth">Largeur (cm)</label>
+          <input type="number" id="pkgWidth" placeholder="20" />
+        </div>
+        <div class="form-group">
+          <label id="lHeight">Hauteur (cm)</label>
+          <input type="number" id="pkgHeight" placeholder="15" />
+        </div>
+        <div class="form-group">
+          <label id="lValue">Valeur déclarée (€)</label>
+          <input type="number" id="pkgValue" placeholder="100" />
+        </div>
+        <div class="form-group">
+          <label id="lQty">Quantité d'articles</label>
+          <input type="number" id="pkgQty" placeholder="1" min="1" />
+        </div>
+      </div>
+      <div class="form-group" style="margin-top:1rem;">
+        <label id="lContent">Description du contenu</label>
+        <textarea id="pkgContent" placeholder="Décrire le contenu du colis en détail..."></textarea>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-outline" onclick="goStep(1)" id="btnBack2">← Retour</button>
+        <button class="btn btn-primary" onclick="goStep(3)" id="btnNext2">Suivant →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3: DOCUMENTS -->
+  <div id="form-step3" class="hidden">
+    <div class="card">
+      <div class="card-title" id="docTitle">📄 Documents Requis</div>
+      <p style="font-size:0.88rem;color:var(--dhl-mid);margin-bottom:1.2rem;" id="docInfo">
+        Pour les expéditions internationales, certains documents sont obligatoires.
+      </p>
+      <div class="form-grid">
+        <div class="form-group">
+          <label id="lDocID">Pièce d'identité (CNI/Passeport)</label>
+          <input type="file" accept=".pdf,.jpg,.jpeg,.png" id="docID" />
+        </div>
+        <div class="form-group">
+          <label id="lDocInvoice">Facture commerciale</label>
+          <input type="file" accept=".pdf,.jpg,.jpeg,.png" id="docInvoice" />
+        </div>
+        <div class="form-group">
+          <label id="lDocCustoms">Déclaration douanière (si applicable)</label>
+          <input type="file" accept=".pdf,.jpg,.jpeg,.png" id="docCustoms" />
+        </div>
+        <div class="form-group">
+          <label id="lDocOther">Autre document</label>
+          <input type="file" accept=".pdf,.jpg,.jpeg,.png" id="docOther" />
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-outline" onclick="goStep(2)" id="btnBack3">← Retour</button>
+        <button class="btn btn-primary" onclick="goStep(4)" id="btnNext3">Suivant →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 4: SPEED -->
+  <div id="form-step4" class="hidden">
+    <div class="card">
+      <div class="card-title" id="speedTitle">⚡ Vitesse de Livraison</div>
+      <div class="speed-cards">
+        <div class="speed-card selected" onclick="selectSpeed(this,'express')" id="sc-express">
+          <div class="icon">✈️</div>
+          <div class="name" id="spExpName">Express International</div>
+          <div class="delay" id="spExpDelay">24 – 48 heures</div>
+          <div class="price" id="spExpPrice">À partir de 45 €</div>
+        </div>
+        <div class="speed-card" onclick="selectSpeed(this,'standard')" id="sc-standard">
+          <div class="icon">📦</div>
+          <div class="name" id="spStdName">Standard</div>
+          <div class="delay" id="spStdDelay">2 – 4 jours ouvrés</div>
+          <div class="price" id="spStdPrice">À partir de 22 €</div>
+        </div>
+        <div class="speed-card" onclick="selectSpeed(this,'eco')" id="sc-eco">
+          <div class="icon">🚢</div>
+          <div class="name" id="spEcoName">Économique</div>
+          <div class="delay" id="spEcoDelay">5 – 10 jours ouvrés</div>
+          <div class="price" id="spEcoPrice">À partir de 12 €</div>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-outline" onclick="goStep(3)" id="btnBack4">← Retour</button>
+        <button class="btn btn-primary" onclick="goStep(5)" id="btnNext4">Suivant →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 5: PAYMENT -->
+  <div id="form-step5" class="hidden">
+    <div class="card">
+      <div class="card-title" id="payTitle">💳 Paiement</div>
+      <div style="background:#fff8e1;border-left:4px solid var(--dhl-yellow);padding:1rem;border-radius:var(--radius);margin-bottom:1.2rem;font-size:0.88rem;" id="payInfoBox">
+        📧 Votre facture de paiement et les instructions seront envoyées à votre adresse email après validation.
+      </div>
+      <div class="pay-cards">
+        <div class="pay-card selected" onclick="selectPay(this,'mtn')">
+          <div class="pay-icon">📱</div>
+          <div><div class="pay-name">MTN Mobile Money</div><div class="pay-info" id="payMTN">Paiement via MoMo</div></div>
+        </div>
+        <div class="pay-card" onclick="selectPay(this,'orange')">
+          <div class="pay-icon">🟠</div>
+          <div><div class="pay-name">Orange Money</div><div class="pay-info" id="payOM">Paiement via Orange</div></div>
+        </div>
+        <div class="pay-card" onclick="selectPay(this,'card')">
+          <div class="pay-icon">💳</div>
+          <div><div class="pay-name">Carte Bancaire</div><div class="pay-info" id="payCard">Visa / Mastercard</div></div>
+        </div>
+        <div class="pay-card" onclick="selectPay(this,'cod')">
+          <div class="pay-icon">💵</div>
+          <div><div class="pay-name" id="payCOD">Paiement à la livraison</div><div class="pay-info" id="payCODInfo">Cash à réception</div></div>
+        </div>
+      </div>
+      <div class="form-group" style="margin-top:1.2rem;">
+        <label id="lPayPhone">Numéro de paiement / IBAN</label>
+        <input type="text" id="payPhone" placeholder="Ex: +237 6XX XXX XXX" />
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-outline" onclick="goStep(4)" id="btnBack5">← Retour</button>
+        <button class="btn btn-secondary" onclick="submitShipment()" id="btnSubmit">✅ CONFIRMER L'EXPÉDITION</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONFIRMATION -->
+  <div id="form-confirm" class="hidden">
+    <div class="card" style="text-align:center;padding:2.5rem;">
+      <div style="font-size:3rem;margin-bottom:12px;">✅</div>
+      <div style="font-family:'Oswald',sans-serif;font-size:1.6rem;color:var(--dhl-red);margin-bottom:8px;" id="confirmTitle">EXPÉDITION CONFIRMÉE !</div>
+      <p id="confirmMsg" style="color:var(--dhl-mid);margin-bottom:1.5rem;">Un email de confirmation a été envoyé au destinataire.</p>
+      <div style="display:inline-block;background:var(--dhl-gray);border-radius:var(--radius);padding:1.2rem 2rem;margin-bottom:1.5rem;">
+        <div style="font-size:0.78rem;color:var(--dhl-mid);text-transform:uppercase;letter-spacing:1px;" id="trackNumLabel">Numéro de suivi</div>
+        <div style="font-family:'Oswald',sans-serif;font-size:1.8rem;color:var(--dhl-dark);letter-spacing:3px;" id="confirmTrackNum">DHL-XXXXXXXX</div>
+      </div>
+      <div class="barcode-container">
+        <svg id="barcodeConfirm"></svg>
+      </div>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:1rem;">
+        <button class="btn btn-primary" onclick="printLabel()" id="btnPrint">🖨️ Imprimer l'étiquette</button>
+        <button class="btn btn-outline" onclick="showInvoice()" id="btnInvoice">📄 Voir la facture</button>
+        <button class="btn btn-secondary" onclick="resetForm()" id="btnNew">+ Nouvelle expédition</button>
+      </div>
+    </div>
+  </div>
+</main>
+</div>
+
+<!-- ===== COURIER SECTION ===== -->
+<div id="section-courier" class="hidden">
+<main>
+  <div class="card">
+    <div class="card-title" id="courierPanelTitle">🚚 Espace Coursier</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-bottom:1.5rem;">
+      <div class="form-group">
+        <label id="lCourierName">Votre nom</label>
+        <input type="text" id="courierName" placeholder="Jean-Pierre M." />
+      </div>
+      <div class="form-group">
+        <label id="lCourierVehicle">Numéro de véhicule</label>
+        <input type="text" id="courierVehicle" placeholder="LT-2847-YDE" />
+      </div>
+      <div class="form-group">
+        <label id="lCourierTrack">N° de suivi à mettre à jour</label>
+        <input type="text" id="courierTrack" placeholder="DHL-XXXXXXXX" />
+      </div>
+    </div>
+    <div class="form-group" style="margin-bottom:1rem;">
+      <label id="lCourierPos">Position actuelle</label>
+      <input type="text" id="courierPos" placeholder="Carrefour Bastos, Yaoundé, Cameroun" />
+    </div>
+    <div style="margin-bottom:1rem;">
+      <div style="font-size:0.82rem;font-weight:600;color:var(--dhl-mid);text-transform:uppercase;margin-bottom:8px;" id="statusLabel">Statut du colis</div>
+      <div class="status-pills">
+        <div class="pill selected" onclick="selectStatus(this)" data-status="collected" id="ps1">✅ Collecté</div>
+        <div class="pill" onclick="selectStatus(this)" data-status="sorting" id="ps2">🔄 En tri</div>
+        <div class="pill" onclick="selectStatus(this)" data-status="transit" id="ps3">🚚 En transit</div>
+        <div class="pill" onclick="selectStatus(this)" data-status="customs" id="ps4">🛃 Douane</div>
+        <div class="pill" onclick="selectStatus(this)" data-status="out" id="ps5">🏃 En livraison</div>
+        <div class="pill" onclick="selectStatus(this)" data-status="delivered" id="ps6">✅ Livré</div>
+        <div class="pill" onclick="selectStatus(this)" data-status="delayed" id="ps7">⚠️ Retardé</div>
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="sendUpdate()" id="btnSendUpdate">📡 ENVOYER LA MISE À JOUR EN TEMPS RÉEL</button>
+  </div>
+
+  <div class="card" id="updateLog">
+    <div class="card-title" id="updateLogTitle">📋 Historique des Mises à Jour</div>
+    <ul class="event-list" id="updatesList"></ul>
+  </div>
+</main>
+</div>
+
+<!-- ===== INVOICE SECTION ===== -->
+<div id="section-invoice" class="hidden">
+<main>
+  <div class="card">
+    <div class="card-title" id="invoiceSearchTitle">🔍 Rechercher une Facture</div>
+    <div style="display:flex;gap:10px;">
+      <input type="text" id="invSearch" placeholder="Numéro de suivi..." style="flex:1;" />
+      <button class="btn btn-primary" onclick="loadInvoice()" id="btnLoadInv">Charger</button>
+    </div>
+  </div>
+
+  <div class="invoice-preview" id="invoicePreview">
+    <div class="invoice-head">
+      <div class="invoice-logo-box">
+        <div class="invoice-logo-inner">DHL</div>
+        <div class="invoice-logo-sub">Logistics Services</div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-family:'Oswald',sans-serif;font-size:1.3rem;" id="inv-title">FACTURE COMMERCIALE</div>
+        <div style="font-size:0.82rem;color:var(--dhl-mid);" id="inv-num">N° INV-XXXXXXXX</div>
+        <div style="font-size:0.82rem;color:var(--dhl-mid);" id="inv-date">Date: —</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-bottom:1.5rem;">
+      <div>
+        <div style="font-family:'Oswald',sans-serif;font-size:0.82rem;color:var(--dhl-red);letter-spacing:1px;margin-bottom:6px;" id="invSenderLabel">EXPÉDITEUR</div>
+        <div id="inv-sender" style="font-size:0.88rem;line-height:1.6;">—</div>
+      </div>
+      <div>
+        <div style="font-family:'Oswald',sans-serif;font-size:0.82rem;color:var(--dhl-red);letter-spacing:1px;margin-bottom:6px;" id="invRecvLabel">DESTINATAIRE</div>
+        <div id="inv-recv" style="font-size:0.88rem;line-height:1.6;">—</div>
+      </div>
+    </div>
+
+    <table class="invoice-table">
+      <thead><tr><th id="invColDesc">Description</th><th id="invColQty">Qté</th><th id="invColWeight">Poids</th><th id="invColValue">Valeur</th><th id="invColFee">Frais</th></tr></thead>
+      <tbody id="inv-body"></tbody>
+    </table>
+    <div class="invoice-total" id="inv-total">TOTAL: — €</div>
+
+    <div class="barcode-container" style="margin:1.5rem 0;">
+      <svg id="barcodeInvoice"></svg>
+    </div>
+
+    <div class="invoice-footer" id="inv-footer">
+      DHL Logistics Services • contact@dhl-logistics.cm • +237 6XX XXX XXX<br>
+      Ce document est une facture officielle. Conservez-le pour vos archives.
+    </div>
+    <div style="text-align:center;margin-top:1rem;">
+      <button class="btn btn-primary" onclick="window.print()" id="btnPrintInv">🖨️ Imprimer</button>
+    </div>
+  </div>
+</main>
+</div>
+
+<footer>
+  <span>DHL Logistics Services</span> © 2024 • Suivi international en temps réel •
+  <span>contact@dhl-logistics.cm</span>
+</footer>
+
+<script>
+// ======================== TRANSLATIONS ========================
+const T = {
+  fr: {
+    logoText:"Logistics Services", heroTitle:"SUIVI DE VOS COLIS EN TEMPS RÉEL",
+    heroSub:"Expédiez, suivez et gérez vos livraisons partout dans le monde",
+    trackBtn:"SUIVRE", navHome:"Accueil", navShip:"Expédier", navCourier:"Coursier", navInvoice:"Factures",
+    f1t:"Livraison Express", f1d:"Livraison en 24h dans plus de 50 pays.",
+    f2t:"Suivi en Temps Réel", f2d:"GPS live intégré avec Google Maps et Waze.",
+    f3t:"Sécurisé & Assuré", f3d:"Chaque colis est assuré et documenté.",
+    senderTitle:"📤 Informations Expéditeur", parcelTitle:"📦 Description du Colis",
+    docTitle:"📄 Documents Requis", speedTitle:"⚡ Vitesse de Livraison", payTitle:"💳 Paiement",
+    sl1:"Expéditeur",sl2:"Colis",sl3:"Documents",sl4:"Vitesse",sl5:"Paiement",
+    msl1:"Collecté",msl2:"Tri",msl3:"Transit",msl4:"Douane",msl5:"Livré",
+    lSenderName:"Nom complet",lSenderEmail:"Email",lSenderPhone:"Téléphone",
+    lSenderCountry:"Pays",lSenderCity:"Ville",lSenderZip:"Code Postal",lSenderAddr:"Adresse complète",
+    recvSep:"DESTINATAIRE",
+    lRecvName:"Nom complet",lRecvEmail:"Email",lRecvPhone:"Téléphone",
+    lRecvCountry:"Pays",lRecvCity:"Ville",lRecvZip:"Code Postal",lRecvAddr:"Adresse complète",
+    lWeight:"Poids (kg)",lLength:"Longueur (cm)",lWidth:"Largeur (cm)",lHeight:"Hauteur (cm)",
+    lValue:"Valeur déclarée (€)",lQty:"Quantité d'articles",lContent:"Description du contenu",
+    docInfo:"Pour les expéditions internationales, certains documents sont obligatoires.",
+    lDocID:"Pièce d'identité (CNI/Passeport)",lDocInvoice:"Facture commerciale",
+    lDocCustoms:"Déclaration douanière (si applicable)",lDocOther:"Autre document",
+    spExpName:"Express International",spExpDelay:"24 – 48 heures",spExpPrice:"À partir de 45 €",
+    spStdName:"Standard",spStdDelay:"2 – 4 jours ouvrés",spStdPrice:"À partir de 22 €",
+    spEcoName:"Économique",spEcoDelay:"5 – 10 jours ouvrés",spEcoPrice:"À partir de 12 €",
+    payInfoBox:"📧 Votre facture de paiement et les instructions seront envoyées à votre adresse email après validation.",
+    payMTN:"Paiement via MoMo",payOM:"Paiement via Orange",payCard:"Visa / Mastercard",
+    payCOD:"Paiement à la livraison",payCODInfo:"Cash à réception",
+    lPayPhone:"Numéro de paiement / IBAN",
+    btnNext1:"Suivant →",btnBack2:"← Retour",btnNext2:"Suivant →",btnBack3:"← Retour",btnNext3:"Suivant →",
+    btnBack4:"← Retour",btnNext4:"Suivant →",btnBack5:"← Retour",
+    btnSubmit:"✅ CONFIRMER L'EXPÉDITION",
+    confirmTitle:"EXPÉDITION CONFIRMÉE !",
+    confirmMsg:"Un email de confirmation a été envoyé au destinataire.",
+    trackNumLabel:"Numéro de suivi",
+    btnPrint:"🖨️ Imprimer l'étiquette",btnInvoice:"📄 Voir la facture",btnNew:"+ Nouvelle expédition",
+    courierPanelTitle:"🚚 Espace Coursier",
+    lCourierName:"Votre nom",lCourierVehicle:"Numéro de véhicule",lCourierTrack:"N° de suivi à mettre à jour",
+    lCourierPos:"Position actuelle",statusLabel:"Statut du colis",
+    ps1:"✅ Collecté",ps2:"🔄 En tri",ps3:"🚚 En transit",ps4:"🛃 Douane",ps5:"🏃 En livraison",ps6:"✅ Livré",ps7:"⚠️ Retardé",
+    btnSendUpdate:"📡 ENVOYER LA MISE À JOUR EN TEMPS RÉEL",
+    updateLogTitle:"📋 Historique des Mises à Jour",
+    invoiceSearchTitle:"🔍 Rechercher une Facture",
+    btnLoadInv:"Charger",invTitle:"FACTURE COMMERCIALE",
+    invSenderLabel:"EXPÉDITEUR",invRecvLabel:"DESTINATAIRE",
+    invColDesc:"Description",invColQty:"Qté",invColWeight:"Poids",invColValue:"Valeur",invColFee:"Frais",
+    btnPrintInv:"🖨️ Imprimer",invFooter:"DHL Logistics Services • contact@dhl-logistics.cm • +237 6XX XXX XXX\nCe document est une facture officielle. Conservez-le pour vos archives.",
+    tLabel:"Numéro de suivi",navLabel:"Navigation GPS"
+  },
+  en: {
+    logoText:"Logistics Services", heroTitle:"TRACK YOUR PARCELS IN REAL TIME",
+    heroSub:"Ship, track and manage your deliveries worldwide",
+    trackBtn:"TRACK", navHome:"Home", navShip:"Ship", navCourier:"Courier", navInvoice:"Invoices",
+    f1t:"Express Delivery",f1d:"24h delivery in over 50 countries.",
+    f2t:"Real-Time Tracking",f2d:"Live GPS with Google Maps and Waze.",
+    f3t:"Secured & Insured",f3d:"Every parcel is insured and documented.",
+    senderTitle:"📤 Sender Information",parcelTitle:"📦 Parcel Description",
+    docTitle:"📄 Required Documents",speedTitle:"⚡ Delivery Speed",payTitle:"💳 Payment",
+    sl1:"Sender",sl2:"Parcel",sl3:"Documents",sl4:"Speed",sl5:"Payment",
+    msl1:"Collected",msl2:"Sorting",msl3:"Transit",msl4:"Customs",msl5:"Delivered",
+    lSenderName:"Full name",lSenderEmail:"Email",lSenderPhone:"Phone",
+    lSenderCountry:"Country",lSenderCity:"City",lSenderZip:"Postal Code",lSenderAddr:"Full address",
+    recvSep:"RECIPIENT",
+    lRecvName:"Full name",lRecvEmail:"Email",lRecvPhone:"Phone",
+    lRecvCountry:"Country",lRecvCity:"City",lRecvZip:"Postal Code",lRecvAddr:"Full address",
+    lWeight:"Weight (kg)",lLength:"Length (cm)",lWidth:"Width (cm)",lHeight:"Height (cm)",
+    lValue:"Declared value (€)",lQty:"Number of items",lContent:"Content description",
+    docInfo:"For international shipments, some documents are mandatory.",
+    lDocID:"ID Document (National ID/Passport)",lDocInvoice:"Commercial invoice",
+    lDocCustoms:"Customs declaration (if applicable)",lDocOther:"Other document",
+    spExpName:"International Express",spExpDelay:"24 – 48 hours",spExpPrice:"From €45",
+    spStdName:"Standard",spStdDelay:"2 – 4 business days",spStdPrice:"From €22",
+    spEcoName:"Economy",spEcoDelay:"5 – 10 business days",spEcoPrice:"From €12",
+    payInfoBox:"📧 Your payment invoice and instructions will be sent to your email after validation.",
+    payMTN:"Payment via MoMo",payOM:"Payment via Orange",payCard:"Visa / Mastercard",
+    payCOD:"Cash on Delivery",payCODInfo:"Cash upon receipt",
+    lPayPhone:"Payment number / IBAN",
+    btnNext1:"Next →",btnBack2:"← Back",btnNext2:"Next →",btnBack3:"← Back",btnNext3:"Next →",
+    btnBack4:"← Back",btnNext4:"Next →",btnBack5:"← Back",
+    btnSubmit:"✅ CONFIRM SHIPMENT",
+    confirmTitle:"SHIPMENT CONFIRMED!",
+    confirmMsg:"A confirmation email has been sent to the recipient.",
+    trackNumLabel:"Tracking number",
+    btnPrint:"🖨️ Print label",btnInvoice:"📄 View invoice",btnNew:"+ New shipment",
+    courierPanelTitle:"🚚 Courier Panel",
+    lCourierName:"Your name",lCourierVehicle:"Vehicle number",lCourierTrack:"Tracking number to update",
+    lCourierPos:"Current position",statusLabel:"Parcel status",
+    ps1:"✅ Collected",ps2:"🔄 Sorting",ps3:"🚚 In transit",ps4:"🛃 Customs",ps5:"🏃 Out for delivery",ps6:"✅ Delivered",ps7:"⚠️ Delayed",
+    btnSendUpdate:"📡 SEND REAL-TIME UPDATE",
+    updateLogTitle:"📋 Update History",
+    invoiceSearchTitle:"🔍 Search Invoice",
+    btnLoadInv:"Load",invTitle:"COMMERCIAL INVOICE",
+    invSenderLabel:"SENDER",invRecvLabel:"RECIPIENT",
+    invColDesc:"Description",invColQty:"Qty",invColWeight:"Weight",invColValue:"Value",invColFee:"Fee",
+    btnPrintInv:"🖨️ Print",invFooter:"DHL Logistics Services • contact@dhl-logistics.cm\nThis document is an official invoice. Keep it for your records.",
+    tLabel:"Tracking number",navLabel:"GPS Navigation"
+  },
+  es: {
+    logoText:"Servicios Logísticos",heroTitle:"RASTREO DE PAQUETES EN TIEMPO REAL",
+    heroSub:"Envía, rastrea y gestiona tus entregas en todo el mundo",
+    trackBtn:"RASTREAR",navHome:"Inicio",navShip:"Enviar",navCourier:"Mensajero",navInvoice:"Facturas",
+    f1t:"Entrega Express",f1d:"Entrega en 24h en más de 50 países.",
+    f2t:"Seguimiento en Tiempo Real",f2d:"GPS en vivo con Google Maps y Waze.",
+    f3t:"Seguro & Asegurado",f3d:"Cada paquete está asegurado y documentado.",
+    senderTitle:"📤 Datos del Remitente",parcelTitle:"📦 Descripción del Paquete",
+    docTitle:"📄 Documentos Requeridos",speedTitle:"⚡ Velocidad de Entrega",payTitle:"💳 Pago",
+    sl1:"Remitente",sl2:"Paquete",sl3:"Documentos",sl4:"Velocidad",sl5:"Pago",
+    msl1:"Recogido",msl2:"Clasificación",msl3:"Tránsito",msl4:"Aduana",msl5:"Entregado",
+    lSenderName:"Nombre completo",lSenderEmail:"Correo",lSenderPhone:"Teléfono",
+    lSenderCountry:"País",lSenderCity:"Ciudad",lSenderZip:"Código Postal",lSenderAddr:"Dirección completa",
+    recvSep:"DESTINATARIO",
+    lRecvName:"Nombre completo",lRecvEmail:"Correo",lRecvPhone:"Teléfono",
+    lRecvCountry:"País",lRecvCity:"Ciudad",lRecvZip:"Código Postal",lRecvAddr:"Dirección completa",
+    lWeight:"Peso (kg)",lLength:"Longitud (cm)",lWidth:"Ancho (cm)",lHeight:"Alto (cm)",
+    lValue:"Valor declarado (€)",lQty:"Cantidad de artículos",lContent:"Descripción del contenido",
+    docInfo:"Para envíos internacionales, algunos documentos son obligatorios.",
+    lDocID:"Documento de identidad",lDocInvoice:"Factura comercial",
+    lDocCustoms:"Declaración de aduana",lDocOther:"Otro documento",
+    spExpName:"Express Internacional",spExpDelay:"24 – 48 horas",spExpPrice:"Desde 45 €",
+    spStdName:"Estándar",spStdDelay:"2 – 4 días hábiles",spStdPrice:"Desde 22 €",
+    spEcoName:"Económico",spEcoDelay:"5 – 10 días hábiles",spEcoPrice:"Desde 12 €",
+    payInfoBox:"📧 Tu factura y las instrucciones de pago serán enviadas a tu correo tras la validación.",
+    payMTN:"Pago vía MoMo",payOM:"Pago vía Orange",payCard:"Visa / Mastercard",
+    payCOD:"Pago contra entrega",payCODInfo:"Efectivo al recibir",
+    lPayPhone:"Número de pago / IBAN",
+    btnNext1:"Siguiente →",btnBack2:"← Volver",btnNext2:"Siguiente →",btnBack3:"← Volver",btnNext3:"Siguiente →",
+    btnBack4:"← Volver",btnNext4:"Siguiente →",btnBack5:"← Volver",
+    btnSubmit:"✅ CONFIRMAR ENVÍO",
+    confirmTitle:"¡ENVÍO CONFIRMADO!",
+    confirmMsg:"Se ha enviado un correo de confirmación al destinatario.",
+    trackNumLabel:"Número de seguimiento",
+    btnPrint:"🖨️ Imprimir etiqueta",btnInvoice:"📄 Ver factura",btnNew:"+ Nuevo envío",
+    courierPanelTitle:"🚚 Panel del Mensajero",
+    lCourierName:"Tu nombre",lCourierVehicle:"Número de vehículo",lCourierTrack:"N° de seguimiento",
+    lCourierPos:"Posición actual",statusLabel:"Estado del paquete",
+    ps1:"✅ Recogido",ps2:"🔄 Clasificación",ps3:"🚚 En tránsito",ps4:"🛃 Aduana",ps5:"🏃 En reparto",ps6:"✅ Entregado",ps7:"⚠️ Retrasado",
+    btnSendUpdate:"📡 ENVIAR ACTUALIZACIÓN EN TIEMPO REAL",
+    updateLogTitle:"📋 Historial de actualizaciones",
+    invoiceSearchTitle:"🔍 Buscar Factura",
+    btnLoadInv:"Cargar",invTitle:"FACTURA COMERCIAL",
+    invSenderLabel:"REMITENTE",invRecvLabel:"DESTINATARIO",
+    invColDesc:"Descripción",invColQty:"Cant.",invColWeight:"Peso",invColValue:"Valor",invColFee:"Tarifa",
+    btnPrintInv:"🖨️ Imprimir",invFooter:"DHL Logistics Services • contact@dhl-logistics.cm",
+    tLabel:"Número de seguimiento",navLabel:"Navegación GPS"
+  },
+  de: {
+    logoText:"Logistics Services",heroTitle:"PAKETE IN ECHTZEIT VERFOLGEN",
+    heroSub:"Versenden, verfolgen und verwalten Sie Ihre Sendungen weltweit",
+    trackBtn:"VERFOLGEN",navHome:"Startseite",navShip:"Versenden",navCourier:"Kurier",navInvoice:"Rechnungen",
+    f1t:"Expresslieferung",f1d:"24h Lieferung in über 50 Ländern.",
+    f2t:"Echtzeit-Tracking",f2d:"Live GPS mit Google Maps und Waze.",
+    f3t:"Sicher & Versichert",f3d:"Jedes Paket ist versichert und dokumentiert.",
+    senderTitle:"📤 Absender-Informationen",parcelTitle:"📦 Paketbeschreibung",
+    docTitle:"📄 Erforderliche Dokumente",speedTitle:"⚡ Liefergeschwindigkeit",payTitle:"💳 Zahlung",
+    sl1:"Absender",sl2:"Paket",sl3:"Dokumente",sl4:"Geschwindigkeit",sl5:"Zahlung",
+    msl1:"Abgeholt",msl2:"Sortierung",msl3:"Transit",msl4:"Zoll",msl5:"Zugestellt",
+    lSenderName:"Vollständiger Name",lSenderEmail:"E-Mail",lSenderPhone:"Telefon",
+    lSenderCountry:"Land",lSenderCity:"Stadt",lSenderZip:"Postleitzahl",lSenderAddr:"Vollständige Adresse",
+    recvSep:"EMPFÄNGER",
+    lRecvName:"Vollständiger Name",lRecvEmail:"E-Mail",lRecvPhone:"Telefon",
+    lRecvCountry:"Land",lRecvCity:"Stadt",lRecvZip:"Postleitzahl",lRecvAddr:"Vollständige Adresse",
+    lWeight:"Gewicht (kg)",lLength:"Länge (cm)",lWidth:"Breite (cm)",lHeight:"Höhe (cm)",
+    lValue:"Deklarierter Wert (€)",lQty:"Anzahl Artikel",lContent:"Inhaltsbeschreibung",
+    docInfo:"Für internationale Sendungen sind bestimmte Dokumente erforderlich.",
+    lDocID:"Ausweis (Personalausweis/Reisepass)",lDocInvoice:"Handelsrechnung",
+    lDocCustoms:"Zollerklärung (falls zutreffend)",lDocOther:"Anderes Dokument",
+    spExpName:"International Express",spExpDelay:"24 – 48 Stunden",spExpPrice:"Ab 45 €",
+    spStdName:"Standard",spStdDelay:"2 – 4 Werktage",spStdPrice:"Ab 22 €",
+    spEcoName:"Wirtschaftlich",spEcoDelay:"5 – 10 Werktage",spEcoPrice:"Ab 12 €",
+    payInfoBox:"📧 Ihre Zahlungsrechnung und Anweisungen werden nach der Validierung an Ihre E-Mail gesendet.",
+    payMTN:"Zahlung via MoMo",payOM:"Zahlung via Orange",payCard:"Visa / Mastercard",
+    payCOD:"Nachnahme",payCODInfo:"Bargeld bei Erhalt",
+    lPayPhone:"Zahlungsnummer / IBAN",
+    btnNext1:"Weiter →",btnBack2:"← Zurück",btnNext2:"Weiter →",btnBack3:"← Zurück",btnNext3:"Weiter →",
+    btnBack4:"← Zurück",btnNext4:"Weiter →",btnBack5:"← Zurück",
+    btnSubmit:"✅ SENDUNG BESTÄTIGEN",
+    confirmTitle:"SENDUNG BESTÄTIGT!",
+    confirmMsg:"Eine Bestätigungs-E-Mail wurde an den Empfänger gesendet.",
+    trackNumLabel:"Sendungsnummer",
+    btnPrint:"🖨️ Etikett drucken",btnInvoice:"📄 Rechnung anzeigen",btnNew:"+ Neue Sendung",
+    courierPanelTitle:"🚚 Kurier-Bereich",
+    lCourierName:"Ihr Name",lCourierVehicle:"Fahrzeugnummer",lCourierTrack:"Sendungsnummer aktualisieren",
+    lCourierPos:"Aktuelle Position",statusLabel:"Paketstatus",
+    ps1:"✅ Abgeholt",ps2:"🔄 Sortierung",ps3:"🚚 Im Transit",ps4:"🛃 Zoll",ps5:"🏃 Wird zugestellt",ps6:"✅ Zugestellt",ps7:"⚠️ Verzögert",
+    btnSendUpdate:"📡 ECHTZEIT-UPDATE SENDEN",
+    updateLogTitle:"📋 Update-Verlauf",
+    invoiceSearchTitle:"🔍 Rechnung suchen",
+    btnLoadInv:"Laden",invTitle:"HANDELSRECHNUNG",
+    invSenderLabel:"ABSENDER",invRecvLabel:"EMPFÄNGER",
+    invColDesc:"Beschreibung",invColQty:"Menge",invColWeight:"Gewicht",invColValue:"Wert",invColFee:"Gebühr",
+    btnPrintInv:"🖨️ Drucken",invFooter:"DHL Logistics Services • contact@dhl-logistics.cm",
+    tLabel:"Sendungsnummer",navLabel:"GPS-Navigation"
+  }
+};
+
+let currentLang = 'fr';
+let currentStep = 1;
+let selectedSpeed = 'express';
+let selectedPay = 'mtn';
+let selectedStatus = 'collected';
+let shipments = {};
+let updates = [];
+
+function setLang(lang) {
+  currentLang = lang;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`.lang-btn[onclick="setLang('${lang}')"]`).classList.add('active');
+  const t = T[lang];
+  Object.keys(t).forEach(k => {
+    const el = document.getElementById(k);
+    if (el) {
+      if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') el.placeholder = t[k];
+      else el.textContent = t[k];
+    }
+  });
+}
+
+function showSection(s) {
+  ['home','ship','courier','invoice'].forEach(sec => {
+    document.getElementById(`section-${sec}`).classList.add('hidden');
+    document.getElementById(`nav-${sec}`).classList.remove('active');
+  });
+  document.getElementById(`section-${s}`).classList.remove('hidden');
+  document.getElementById(`nav-${s}`).classList.add('active');
+}
+
+function goStep(n) {
+  for (let i = 1; i <= 5; i++) {
+    document.getElementById(`form-step${i}`)?.classList.add('hidden');
+    const dot = document.getElementById(`step${i}`);
+    if (dot) {
+      dot.classList.remove('active','done');
+      if (i < n) dot.classList.add('done');
+      if (i === n) dot.classList.add('active');
+    }
+    if (i < 5) {
+      const line = document.getElementById(`sl-${i}`);
+      if (line) line.classList.toggle('done', i < n);
+    }
+  }
+  document.getElementById(`form-step${n}`)?.classList.remove('hidden');
+  currentStep = n;
+}
+
+function selectSpeed(el, val) {
+  document.querySelectorAll('.speed-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected'); selectedSpeed = val;
+}
+
+function selectPay(el, val) {
+  document.querySelectorAll('.pay-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected'); selectedPay = val;
+}
+
+function selectStatus(el) {
+  document.querySelectorAll('.pill').forEach(p => p.classList.remove('selected'));
+  el.classList.add('selected'); selectedStatus = el.dataset.status;
+}
+
+function genTrackNum() {
+  return 'DHL-' + Math.random().toString(36).substr(2,8).toUpperCase();
+}
+
+function submitShipment() {
+  const sName = document.getElementById('senderName').value || 'Expéditeur';
+  const rName = document.getElementById('recvName').value || 'Destinataire';
+  const sCity = document.getElementById('senderCity').value || 'Yaoundé';
+  const rCity = document.getElementById('recvCity').value || 'Paris';
+  const sCountry = document.getElementById('senderCountry').value;
+  const rCountry = document.getElementById('recvCountry').value;
+  const sAddr = document.getElementById('senderAddr').value || sCity;
+  const rAddr = document.getElementById('recvAddr').value || rCity;
+  const weight = document.getElementById('pkgWeight').value || '1';
+  const value = document.getElementById('pkgValue').value || '0';
+  const content = document.getElementById('pkgContent').value || 'Marchandises';
+  const qty = document.getElementById('pkgQty').value || '1';
+
+  const trackNum = genTrackNum();
+  const prices = {express: 45, standard: 22, eco: 12};
+  const fee = prices[selectedSpeed] + parseFloat(weight) * 2.5;
+
+  shipments[trackNum] = {
+    trackNum, sName, rName, sCity, rCity, sCountry, rCountry, sAddr, rAddr,
+    weight, value, content, qty, fee: fee.toFixed(2), speed: selectedSpeed, pay: selectedPay,
+    date: new Date().toLocaleDateString(), status: 'transit',
+    events: [
+      {icon:'📦',title:'Colis collecté',location: sCity + ', ' + sCountry, time: new Date().toLocaleString()},
+      {icon:'🔄',title:'En cours de tri',location:'Centre de tri ' + sCity, time: new Date(Date.now()-3600000).toLocaleString()},
+      {icon:'🚚',title:'En transit international',location:sCity + ' → ' + rCity, time: new Date(Date.now()-7200000).toLocaleString()}
+    ],
+    courier: 'Jean-Pierre M.', vehicle: 'LT-2847-YDE'
+  };
+
+  for (let i = 1; i <= 5; i++) document.getElementById(`form-step${i}`)?.classList.add('hidden');
+  document.getElementById('form-confirm').classList.remove('hidden');
+  document.getElementById('confirmTrackNum').textContent = trackNum;
+  document.getElementById('confirmTitle').textContent = T[currentLang].confirmTitle;
+  document.getElementById('confirmMsg').textContent = T[currentLang].confirmMsg;
+  document.getElementById('trackNumLabel').textContent = T[currentLang].trackNumLabel;
+  document.getElementById('btnPrint').textContent = T[currentLang].btnPrint;
+  document.getElementById('btnInvoice').textContent = T[currentLang].btnInvoice;
+  document.getElementById('btnNew').textContent = T[currentLang].btnNew;
+
+  setTimeout(() => {
+    JsBarcode("#barcodeConfirm", trackNum, {format:"CODE128",width:2,height:60,displayValue:true,fontSize:12,margin:10});
+  }, 100);
+
+  showNotif(`✅ ${trackNum} — ${T[currentLang].confirmTitle}`);
+}
+
+function doTrack() {
+  const num = document.getElementById('trackInput').value.trim().toUpperCase();
+  const t = T[currentLang];
+  if (!num) { showNotif('⚠️ Entrez un numéro de suivi'); return; }
+  
+  const ship = shipments[num];
+  if (!ship) {
+    // Demo data
+    const demo = {
+      trackNum: num, sName: 'Jean Dupont', rName: 'Marie Curie',
+      sCity: 'Yaoundé', rCity: 'Paris', sCountry:'CM', rCountry:'FR',
+      sAddr: 'Bastos, Yaoundé, Cameroun', rAddr: '10 Rue de Rivoli, Paris, France',
+      weight:'2.5', value:'150', content:'Livres et documents', qty:'3',
+      fee:'72.50', speed:'express', date: new Date().toLocaleDateString(),
+      courier:'Jean-Pierre M.', vehicle:'LT-2847-YDE',
+      events:[
+        {icon:'📦',title:'Colis collecté',location:'Yaoundé, Cameroun',time:'Hier 09:15'},
+        {icon:'✈️',title:'Départ aéroport NSI',location:'Aéroport NSIMALEN, Yaoundé',time:'Hier 14:30'},
+        {icon:'🛃',title:'Passage en douane',location:'CDG, Paris',time:'Aujourd\'hui 06:00'},
+        {icon:'🚚',title:'En cours de livraison',location:'Paris 1er',time:'Aujourd\'hui 10:45'}
+      ]
+    };
+    shipments[num] = demo;
+    renderTrack(demo);
+  } else {
+    renderTrack(ship);
+  }
+}
+
+function renderTrack(ship) {
+  const t = T[currentLang];
+  document.getElementById('trackResult').style.display = 'block';
+  document.getElementById('t-label').textContent = t.tLabel;
+  document.getElementById('t-num').textContent = ship.trackNum;
+  document.getElementById('t-status').textContent = '🚚 En transit';
+  document.getElementById('t-from').textContent = '📍 ' + ship.sCity;
+  document.getElementById('t-to').textContent = ship.rCity + ' 📍';
+  document.getElementById('t-courier').textContent = ship.courier || 'Jean-Pierre M.';
+  document.getElementById('t-vehicle').textContent = '🚗 Véhicule: ' + (ship.vehicle || 'LT-2847-YDE');
+  document.getElementById('navLabel').textContent = t.navLabel;
+  ['msl1','msl2','msl3','msl4','msl5'].forEach((id,i) => {
+    document.getElementById(id).textContent = [t.msl1,t.msl2,t.msl3,t.msl4,t.msl5][i];
+  });
+
+  const from = encodeURIComponent(ship.sAddr || ship.sCity);
+  const to = encodeURIComponent(ship.rAddr || ship.rCity);
+  document.getElementById('gmapsLink').href = `https://www.google.com/maps/dir/${from}/${to}`;
+  document.getElementById('wazeLink').href = `https://waze.com/ul?q=${to}`;
+  document.getElementById('appleLink').href = `https://maps.apple.com/?saddr=${from}&daddr=${to}`;
+
+  const evList = document.getElementById('t-events');
+  evList.innerHTML = '';
+  (ship.events || []).slice().reverse().forEach(ev => {
+    const li = document.createElement('li');
+    li.className = 'event-item';
+    li.innerHTML = `<div class="event-icon">${ev.icon}</div>
+      <div class="event-info">
+        <div class="event-title">${ev.title}</div>
+        <div class="event-location">📍 ${ev.location}</div>
+      </div>
+      <div class="event-time">${ev.time}</div>`;
+    evList.appendChild(li);
+  });
+}
+
+function sendUpdate() {
+  const name = document.getElementById('courierName').value || 'Coursier';
+  const vehicle = document.getElementById('courierVehicle').value || 'N/A';
+  const track = document.getElementById('courierTrack').value.trim().toUpperCase();
+  const pos = document.getElementById('courierPos').value || 'Position inconnue';
+  if (!track) { showNotif('⚠️ Entrez un numéro de suivi'); return; }
+
+  const statusMap = {
+    collected:'📦 Colis collecté', sorting:'🔄 En tri', transit:'🚚 En transit',
+    customs:'🛃 Passage en douane', out:'🏃 En cours de livraison', delivered:'✅ Livré', delayed:'⚠️ Retardé'
+  };
+  const statusLabel = statusMap[selectedStatus] || selectedStatus;
+  const now = new Date().toLocaleString();
+
+  if (!shipments[track]) shipments[track] = {
+    trackNum:track, sCity:'—', rCity:'—', sAddr:'', rAddr:'',
+    courier:name, vehicle, events:[], sName:'', rName:''
+  };
+  shipments[track].events.push({icon: statusLabel.split(' ')[0], title: statusLabel, location: pos, time: now});
+  shipments[track].courier = name;
+  shipments[track].vehicle = vehicle;
+
+  const li = document.createElement('li');
+  li.className = 'event-item';
+  li.innerHTML = `<div class="event-icon">📡</div>
+    <div class="event-info">
+      <div class="event-title">${track} — ${statusLabel}</div>
+      <div class="event-location">📍 ${pos} • 🚗 ${vehicle}</div>
+    </div>
+    <div class="event-time">${now}</div>`;
+  document.getElementById('updatesList').prepend(li);
+  showNotif(`📡 Mise à jour envoyée pour ${track}`);
+}
+
+function loadInvoice() {
+  const num = document.getElementById('invSearch').value.trim().toUpperCase();
+  const ship = shipments[num] || {
+    trackNum: num || 'DHL-DEMO0001', sName:'Jean Dupont', rName:'Marie Curie',
+    sCity:'Yaoundé', rCity:'Paris', sCountry:'CM', rCountry:'FR',
+    sAddr:'Bastos, Yaoundé', rAddr:'10 Rue de Rivoli, Paris',
+    sEmail:'jean@example.com', rEmail:'marie@example.com',
+    weight:'2.5', value:'150', content:'Livres et documents', qty:'3',
+    fee:'72.50', date: new Date().toLocaleDateString()
+  };
+  const t = T[currentLang];
+  const inv = document.getElementById('invoicePreview');
+  inv.style.display = 'block';
+  document.getElementById('inv-title').textContent = t.invTitle;
+  document.getElementById('inv-num').textContent = 'N° INV-' + ship.trackNum;
+  document.getElementById('inv-date').textContent = 'Date: ' + ship.date;
+  document.getElementById('invSenderLabel').textContent = t.invSenderLabel;
+  document.getElementById('invRecvLabel').textContent = t.invRecvLabel;
+  document.getElementById('inv-sender').innerHTML = `<strong>${ship.sName}</strong><br>${ship.sAddr || ship.sCity}<br>${ship.sCountry}`;
+  document.getElementById('inv-recv').innerHTML = `<strong>${ship.rName}</strong><br>${ship.rAddr || ship.rCity}<br>${ship.rCountry}`;
+  document.getElementById('inv-body').innerHTML = `
+    <tr><td>${ship.content}</td><td>${ship.qty}</td><td>${ship.weight} kg</td><td>${ship.value} €</td><td>${ship.fee} €</td></tr>
+  `;
+  document.getElementById('inv-total').textContent = `TOTAL: ${ship.fee} €`;
+  document.getElementById('invColDesc').textContent = t.invColDesc;
+  document.getElementById('invColQty').textContent = t.invColQty;
+  document.getElementById('invColWeight').textContent = t.invColWeight;
+  document.getElementById('invColValue').textContent = t.invColValue;
+  document.getElementById('invColFee').textContent = t.invColFee;
+  document.getElementById('btnPrintInv').textContent = t.btnPrintInv;
+  document.getElementById('inv-footer').textContent = t.invFooter;
+  setTimeout(() => {
+    JsBarcode("#barcodeInvoice", ship.trackNum, {format:"CODE128",width:2,height:50,displayValue:true,fontSize:11,margin:8});
+  }, 100);
+}
+
+function showInvoice() {
+  const trackNum = document.getElementById('confirmTrackNum').textContent;
+  showSection('invoice');
+  document.getElementById('invSearch').value = trackNum;
+  loadInvoice();
+}
+
+function printLabel() {
+  window.print();
+}
+
+function resetForm() {
+  document.getElementById('form-confirm').classList.add('hidden');
+  for (let i = 1; i <= 5; i++) document.getElementById(`form-step${i}`)?.classList.add('hidden');
+  document.getElementById('form-step1').classList.remove('hidden');
+  goStep(1);
+}
+
+function showNotif(msg) {
+  const el = document.getElementById('notif');
+  el.textContent = msg;
+  el.style.display = 'block';
+  setTimeout(() => { el.style.display = 'none'; }, 4000);
+}
+
+// Init
+document.addEventListener('DOMContentLoaded', () => {
+  setLang('fr');
+});
+</script>
+
+<style>
+@media print {
+  header, footer, .track-bar, nav, .btn-row, .nav-btns, .tabs, .lang-switch { display: none !important; }
+  body { background: white; }
+  .card { box-shadow: none; border: 1px solid #ddd; }
+}
+</style>
+</body>
+</html>
