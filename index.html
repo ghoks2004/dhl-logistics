@@ -2,294 +2,286 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>DHL Logistics Services – Suivi & Expédition Internationale</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>DHL Logistics Services</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
-<!-- EmailJS -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
-<!-- ===================== PRINT STYLES ===================== -->
 <style>
+/* ===== PRINT : seul le bordereau s'imprime ===== */
 @media print {
-  body > *:not(#printZone) { display: none !important; }
-  #printZone { display: block !important; position: fixed; inset: 0; background: white; z-index: 99999; padding: 30px; }
-  #printZone * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body>*:not(#printZone){display:none!important;}
+  #printZone{display:block!important;position:fixed;inset:0;background:#fff;z-index:99999;padding:24px;}
+  #printZone *{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
 }
-</style>
 
-<!-- ===================== MAIN STYLES ===================== -->
-<style>
-:root {
-  --red: #D40511;
-  --yellow: #FFCC00;
-  --dark: #1A1A1A;
-  --gray: #F4F4F4;
-  --mid: #666;
-  --light: #fff;
-  --radius: 8px;
-  --shadow: 0 4px 20px rgba(0,0,0,0.09);
+/* ===== VARIABLES ===== */
+:root{
+  --red:#D40511;--yellow:#FFCC00;--dark:#1A1A1A;
+  --gray:#F4F4F4;--mid:#666;--w:#fff;
+  --r:8px;--sh:0 4px 20px rgba(0,0,0,.09);
 }
+
+/* ===== RESET ===== */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-html{scroll-behavior:smooth;}
-body{font-family:'Source Sans 3',sans-serif;background:var(--gray);color:var(--dark);min-height:100vh;font-size:16px;}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
+body{font-family:'Source Sans 3',sans-serif;background:var(--gray);color:var(--dark);min-height:100vh;font-size:15px;}
 
-/* HEADER */
-header{background:var(--red);height:66px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(212,5,17,.35);}
-.logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
-.logo-box{background:var(--yellow);font-family:'Oswald',sans-serif;font-weight:700;font-size:1.6rem;color:var(--red);padding:3px 13px;border-radius:3px;letter-spacing:2px;line-height:1.2;}
-.logo-sub{color:#fff;font-family:'Oswald',sans-serif;font-size:.9rem;letter-spacing:1.5px;text-transform:uppercase;}
-.header-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
-.lang-bar{display:flex;gap:4px;}
-.lang-btn{background:none;border:1.5px solid rgba(255,255,255,.4);color:#fff;padding:4px 9px;border-radius:4px;cursor:pointer;font-size:.78rem;transition:all .2s;}
+/* ===== HEADER ===== */
+header{
+  background:var(--red);position:sticky;top:0;z-index:300;
+  box-shadow:0 2px 12px rgba(212,5,17,.4);
+}
+.hdr-top{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 16px;min-height:56px;
+}
+.logo{display:flex;align-items:center;gap:8px;text-decoration:none;flex-shrink:0;}
+.logo-box{background:var(--yellow);font-family:'Oswald',sans-serif;font-weight:700;font-size:1.5rem;color:var(--red);padding:3px 11px;border-radius:3px;letter-spacing:2px;line-height:1.2;}
+.logo-sub{color:#fff;font-family:'Oswald',sans-serif;font-size:.75rem;letter-spacing:1.5px;text-transform:uppercase;white-space:nowrap;}
+
+/* ===== LANGUE — grande et visible ===== */
+.lang-bar{display:flex;gap:6px;flex-wrap:wrap;}
+.lang-btn{
+  background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.5);
+  color:#fff;padding:6px 10px;border-radius:6px;cursor:pointer;
+  font-size:1rem;font-weight:600;transition:all .2s;white-space:nowrap;
+  display:flex;align-items:center;gap:4px;
+}
 .lang-btn:hover,.lang-btn.active{background:var(--yellow);color:var(--red);border-color:var(--yellow);}
-nav{display:flex;gap:4px;}
-nav button{background:transparent;border:1.5px solid rgba(255,255,255,.35);color:#fff;padding:7px 14px;border-radius:var(--radius);font-family:'Oswald',sans-serif;font-size:.82rem;letter-spacing:1px;cursor:pointer;transition:all .2s;text-transform:uppercase;}
-nav button:hover,nav button.active{background:var(--yellow);color:var(--red);border-color:var(--yellow);}
+.lang-btn .flag{font-size:1.3rem;}
+.lang-btn .code{font-size:.75rem;font-family:'Oswald',sans-serif;letter-spacing:.5px;}
 
-/* HERO */
-.hero{background:linear-gradient(135deg,#111 0%,#2a2a2a 100%);padding:48px 24px 80px;text-align:center;position:relative;overflow:hidden;}
-.hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 28px,rgba(255,204,0,.03) 28px,rgba(255,204,0,.03) 56px);}
-.hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:40px;background:var(--gray);clip-path:ellipse(55% 100% at 50% 100%);}
-.hero h1{font-family:'Oswald',sans-serif;font-size:2.2rem;color:var(--yellow);letter-spacing:2px;position:relative;z-index:1;}
-.hero p{color:#aaa;margin-top:10px;font-size:1rem;position:relative;z-index:1;}
+/* ===== NAV (tab-bar style mobile) ===== */
+.hdr-nav{
+  display:flex;background:rgba(0,0,0,.25);overflow-x:auto;
+  -webkit-overflow-scrolling:touch;scrollbar-width:none;
+}
+.hdr-nav::-webkit-scrollbar{display:none;}
+.nav-btn{
+  flex:1;min-width:70px;background:none;border:none;color:rgba(255,255,255,.75);
+  padding:10px 6px;cursor:pointer;font-family:'Oswald',sans-serif;
+  font-size:.78rem;letter-spacing:.8px;text-transform:uppercase;
+  border-bottom:3px solid transparent;transition:all .2s;white-space:nowrap;
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+}
+.nav-btn .ni{font-size:1.1rem;}
+.nav-btn:hover,.nav-btn.active{color:#fff;border-bottom-color:var(--yellow);background:rgba(255,255,255,.08);}
 
-/* TRACK BAR */
-.track-bar-wrap{max-width:680px;margin:-28px auto 0;position:relative;z-index:10;padding:0 16px;}
-.track-bar{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;display:flex;gap:10px;}
-.track-bar input{flex:1;border:1.5px solid #ddd;border-radius:var(--radius);padding:11px 14px;font-size:1rem;font-family:'Source Sans 3',sans-serif;transition:border .2s;min-width:0;}
+/* ===== HERO ===== */
+.hero{
+  background:linear-gradient(135deg,#111,#2a2a2a);
+  padding:36px 16px 70px;text-align:center;position:relative;overflow:hidden;
+}
+.hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 28px,rgba(255,204,0,.04) 28px,rgba(255,204,0,.04) 56px);}
+.hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:36px;background:var(--gray);clip-path:ellipse(60% 100% at 50% 100%);}
+.hero h1{font-family:'Oswald',sans-serif;font-size:clamp(1.3rem,5vw,2.1rem);color:var(--yellow);letter-spacing:2px;position:relative;z-index:1;line-height:1.2;}
+.hero p{color:#aaa;margin-top:8px;font-size:.9rem;position:relative;z-index:1;}
+
+/* ===== TRACK BAR ===== */
+.track-wrap{max-width:660px;margin:-26px auto 0;padding:0 14px;position:relative;z-index:10;}
+.track-bar{background:#fff;border-radius:var(--r);box-shadow:var(--sh);padding:12px;display:flex;gap:8px;flex-wrap:wrap;}
+.track-bar input{flex:1;min-width:180px;border:1.5px solid #ddd;border-radius:var(--r);padding:11px 13px;font-size:.95rem;font-family:'Source Sans 3',sans-serif;transition:border .2s;}
 .track-bar input:focus{outline:none;border-color:var(--red);}
-.track-bar button{background:var(--red);color:#fff;border:none;border-radius:var(--radius);padding:11px 22px;cursor:pointer;font-family:'Oswald',sans-serif;font-size:1rem;letter-spacing:1px;white-space:nowrap;transition:background .2s;}
+.track-bar button{background:var(--red);color:#fff;border:none;border-radius:var(--r);padding:11px 20px;cursor:pointer;font-family:'Oswald',sans-serif;font-size:.95rem;letter-spacing:1px;white-space:nowrap;transition:background .2s;width:100%;}
+@media(min-width:480px){.track-bar button{width:auto;}}
 .track-bar button:hover{background:#b0040f;}
 
-/* MAIN */
-main{max-width:1080px;margin:2rem auto;padding:0 16px 4rem;}
+/* ===== MAIN ===== */
+main{max-width:1060px;margin:0 auto;padding:16px 12px 60px;}
 
-/* CARD */
-.card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:24px;margin-bottom:20px;}
-.card-title{font-family:'Oswald',sans-serif;font-size:1.1rem;color:var(--red);letter-spacing:1px;text-transform:uppercase;margin-bottom:18px;padding-bottom:10px;border-bottom:2.5px solid var(--yellow);}
+/* ===== CARD ===== */
+.card{background:#fff;border-radius:var(--r);box-shadow:var(--sh);padding:18px;margin-bottom:16px;}
+.card-title{font-family:'Oswald',sans-serif;font-size:1rem;color:var(--red);letter-spacing:1px;text-transform:uppercase;margin-bottom:16px;padding-bottom:8px;border-bottom:2.5px solid var(--yellow);}
 
-/* FORM */
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-.form-grid.g3{grid-template-columns:1fr 1fr 1fr;}
-.fg{display:flex;flex-direction:column;gap:5px;}
-.fg.full{grid-column:1/-1;}
-label{font-size:.78rem;font-weight:600;color:var(--mid);text-transform:uppercase;letter-spacing:.5px;}
-.req-star{color:var(--red);}
-input,select,textarea{border:1.5px solid #ddd;border-radius:var(--radius);padding:10px 12px;font-size:.95rem;font-family:'Source Sans 3',sans-serif;background:#fff;transition:border .2s;width:100%;}
+/* ===== FORM ===== */
+.fg{display:flex;flex-direction:column;gap:4px;margin-bottom:10px;}
+.fg-row{display:grid;gap:10px;grid-template-columns:1fr;}
+@media(min-width:520px){.fg-row.c2{grid-template-columns:1fr 1fr;}}
+@media(min-width:520px){.fg-row.c3{grid-template-columns:1fr 1fr 1fr;}}
+label{font-size:.73rem;font-weight:700;color:var(--mid);text-transform:uppercase;letter-spacing:.5px;}
+.req{color:var(--red);}
+input,select,textarea{border:1.5px solid #ddd;border-radius:var(--r);padding:10px 11px;font-size:.92rem;font-family:'Source Sans 3',sans-serif;background:#fff;transition:border .2s;width:100%;}
 input:focus,select:focus,textarea:focus{outline:none;border-color:var(--red);}
-textarea{resize:vertical;min-height:76px;}
-.opt-badge{font-size:.72rem;background:#e8f5e9;color:#2e7d32;padding:2px 7px;border-radius:10px;margin-left:6px;font-weight:600;}
-.opt-note{font-size:.8rem;color:#888;margin-top:4px;font-style:italic;}
+textarea{resize:vertical;min-height:70px;}
 
-/* SEPARATOR */
-.sep{display:flex;align-items:center;gap:10px;margin:18px 0;}
+/* ===== OPT BADGE ===== */
+.opt{font-size:.68rem;background:#e8f5e9;color:#2e7d32;padding:2px 7px;border-radius:10px;margin-left:5px;font-weight:700;}
+.opt-note{font-size:.75rem;color:#999;margin-top:3px;font-style:italic;}
+
+/* ===== SEP ===== */
+.sep{display:flex;align-items:center;gap:8px;margin:14px 0;}
 .sep::before,.sep::after{content:'';flex:1;height:1px;background:#eee;}
-.sep span{font-family:'Oswald',sans-serif;font-size:.82rem;color:var(--mid);letter-spacing:1px;}
+.sep span{font-family:'Oswald',sans-serif;font-size:.78rem;color:var(--mid);letter-spacing:1px;white-space:nowrap;}
 
-/* STEPS */
-.steps{display:flex;align-items:center;margin-bottom:24px;}
-.stp{display:flex;flex-direction:column;align-items:center;flex:1;}
-.stp-dot{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Oswald',sans-serif;font-size:.85rem;border:2px solid #ddd;color:#bbb;background:#fff;transition:all .3s;}
+/* ===== STEPS ===== */
+.steps{display:flex;align-items:center;margin-bottom:18px;overflow-x:auto;padding-bottom:4px;}
+.stp{display:flex;flex-direction:column;align-items:center;flex:1;min-width:50px;}
+.stp-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Oswald',sans-serif;font-size:.8rem;border:2px solid #ddd;color:#bbb;background:#fff;transition:all .3s;flex-shrink:0;}
 .stp.active .stp-dot{border-color:var(--red);color:#fff;background:var(--red);}
 .stp.done .stp-dot{border-color:#22c55e;color:#fff;background:#22c55e;}
-.stp-lbl{font-size:.68rem;color:#bbb;margin-top:4px;text-align:center;white-space:nowrap;}
-.stp.active .stp-lbl{color:var(--red);font-weight:600;}
+.stp-lbl{font-size:.62rem;color:#bbb;margin-top:3px;text-align:center;white-space:nowrap;}
+.stp.active .stp-lbl{color:var(--red);font-weight:700;}
 .stp.done .stp-lbl{color:#22c55e;}
-.stp-line{flex:1;height:2px;background:#eee;margin:0 2px 14px;}
+.stp-line{flex:1;height:2px;background:#eee;margin:0 2px 12px;min-width:8px;}
 .stp-line.done{background:#22c55e;}
 
-/* BTN */
-.btn{padding:11px 26px;border-radius:var(--radius);cursor:pointer;font-family:'Oswald',sans-serif;font-size:.95rem;letter-spacing:1px;border:none;transition:all .2s;display:inline-flex;align-items:center;gap:6px;}
-.btn-red{background:var(--red);color:#fff;}
-.btn-red:hover{background:#b0040f;}
-.btn-yellow{background:var(--yellow);color:var(--dark);}
-.btn-yellow:hover{background:#e6b800;}
-.btn-out{background:transparent;border:2px solid var(--red);color:var(--red);}
-.btn-out:hover{background:var(--red);color:#fff;}
-.btn-row{display:flex;gap:10px;justify-content:flex-end;margin-top:18px;flex-wrap:wrap;}
+/* ===== BTN ===== */
+.btn{padding:11px 22px;border-radius:var(--r);cursor:pointer;font-family:'Oswald',sans-serif;font-size:.92rem;letter-spacing:1px;border:none;transition:all .2s;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;}
+.btn-red{background:var(--red);color:#fff;}.btn-red:hover{background:#b0040f;}
+.btn-yel{background:var(--yellow);color:var(--dark);}.btn-yel:hover{background:#e6b800;}
+.btn-out{background:transparent;border:2px solid var(--red);color:var(--red);}.btn-out:hover{background:var(--red);color:#fff;}
+.btn-row{display:flex;gap:8px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap;}
 
-/* SPEED */
-.speed-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:12px 0;}
-.speed-card{border:2px solid #e0e0e0;border-radius:var(--radius);padding:16px;cursor:pointer;transition:all .2s;text-align:center;}
-.speed-card:hover{border-color:var(--red);}
-.speed-card.sel{border-color:var(--red);background:#fff5f5;}
-.speed-card .ico{font-size:1.8rem;margin-bottom:6px;}
-.speed-card .spname{font-family:'Oswald',sans-serif;font-size:1rem;color:var(--dark);}
-.speed-card .spdel{font-size:.8rem;color:var(--mid);}
-.speed-card .spprice{font-weight:700;color:var(--red);font-size:1.05rem;margin-top:4px;}
+/* ===== SPEED ===== */
+.speed-grid{display:grid;grid-template-columns:1fr;gap:10px;margin:10px 0;}
+@media(min-width:480px){.speed-grid{grid-template-columns:repeat(3,1fr);}}
+.speed-card{border:2px solid #e0e0e0;border-radius:var(--r);padding:14px;cursor:pointer;transition:all .2s;text-align:center;}
+.speed-card:hover,.speed-card.sel{border-color:var(--red);background:#fff5f5;}
+.speed-card .ico{font-size:1.6rem;margin-bottom:4px;}
+.speed-card .spn{font-family:'Oswald',sans-serif;font-size:.95rem;}
+.speed-card .spd{font-size:.78rem;color:var(--mid);}
+.speed-card .spp{font-weight:700;color:var(--red);font-size:1rem;margin-top:4px;}
 
-/* PAY */
-.pay-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.pay-card{border:2px solid #e0e0e0;border-radius:var(--radius);padding:14px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:all .2s;}
-.pay-card:hover{border-color:var(--red);}
-.pay-card.sel{border-color:var(--red);background:#fff5f5;}
-.pay-ico{font-size:1.4rem;}
-.pay-name{font-family:'Oswald',sans-serif;font-size:.95rem;}
-.pay-info{font-size:.78rem;color:var(--mid);}
+/* ===== PAY CARDS ===== */
+.pay-grid{display:grid;grid-template-columns:1fr;gap:10px;}
+@media(min-width:480px){.pay-grid{grid-template-columns:1fr 1fr;}}
+.pay-card{border:2px solid #e0e0e0;border-radius:var(--r);padding:12px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:all .2s;}
+.pay-card:hover,.pay-card.sel{border-color:var(--red);background:#fff5f5;}
+.pay-ico{font-size:1.3rem;flex-shrink:0;}
+.pay-nm{font-family:'Oswald',sans-serif;font-size:.92rem;}
+.pay-inf{font-size:.75rem;color:var(--mid);}
 
-/* TRACKING RESULT */
-.track-header{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:18px;}
-.track-num{font-family:'Oswald',sans-serif;font-size:1.6rem;color:var(--dark);}
-.track-badge{background:var(--yellow);color:var(--dark);padding:5px 16px;border-radius:20px;font-family:'Oswald',sans-serif;font-size:.85rem;letter-spacing:1px;}
-.progress-outer{background:#eee;border-radius:8px;height:8px;margin:12px 0;}
-.progress-inner{background:linear-gradient(90deg,var(--red),var(--yellow));height:8px;border-radius:8px;transition:width 1s;}
-.milestones{display:flex;justify-content:space-between;margin-top:8px;}
+/* ===== TRACKING ===== */
+.t-head{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;margin-bottom:14px;}
+.t-num{font-family:'Oswald',sans-serif;font-size:1.4rem;}
+.t-badge{background:var(--yellow);color:var(--dark);padding:5px 14px;border-radius:20px;font-family:'Oswald',sans-serif;font-size:.82rem;letter-spacing:1px;}
+.prog-out{background:#eee;border-radius:8px;height:8px;margin:10px 0;}
+.prog-in{background:linear-gradient(90deg,var(--red),var(--yellow));height:8px;border-radius:8px;transition:width 1s;}
+.miles{display:flex;justify-content:space-between;margin-top:6px;}
 .ms{text-align:center;flex:1;}
-.ms-dot{width:13px;height:13px;border-radius:50%;background:#ddd;margin:0 auto 3px;}
+.ms-dot{width:12px;height:12px;border-radius:50%;background:#ddd;margin:0 auto 3px;}
 .ms-dot.done{background:var(--red);}
-.ms-lbl{font-size:.68rem;color:var(--mid);}
-.event-list{list-style:none;}
-.event-item{display:flex;gap:14px;padding:13px 0;border-bottom:1px solid #f0f0f0;}
-.event-item:last-child{border-bottom:none;}
-.ev-icon{font-size:1.2rem;width:32px;text-align:center;flex-shrink:0;}
-.ev-info{flex:1;}
-.ev-title{font-weight:600;font-size:.92rem;}
-.ev-loc{font-size:.78rem;color:var(--mid);}
-.ev-time{font-size:.75rem;color:#aaa;white-space:nowrap;}
-.courier-badge{background:linear-gradient(135deg,var(--dark),#333);color:#fff;border-radius:var(--radius);padding:14px 16px;display:flex;align-items:center;gap:12px;}
-.nav-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
-.nav-btn{background:#fff;border:1.5px solid #ddd;color:var(--dark);padding:7px 12px;border-radius:var(--radius);cursor:pointer;font-size:.82rem;display:inline-flex;align-items:center;gap:5px;transition:all .2s;text-decoration:none;}
-.nav-btn:hover{border-color:var(--red);color:var(--red);}
+.ms-lbl{font-size:.65rem;color:var(--mid);}
+.ev-list{list-style:none;}
+.ev-item{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid #f0f0f0;}
+.ev-item:last-child{border-bottom:none;}
+.ev-ico{font-size:1.1rem;width:28px;text-align:center;flex-shrink:0;}
+.ev-info{flex:1;min-width:0;}
+.ev-title{font-weight:600;font-size:.88rem;}
+.ev-loc{font-size:.75rem;color:var(--mid);}
+.ev-time{font-size:.72rem;color:#aaa;white-space:nowrap;flex-shrink:0;}
+.courier-badge{background:linear-gradient(135deg,var(--dark),#333);color:#fff;border-radius:var(--r);padding:12px 14px;display:flex;align-items:center;gap:10px;flex:1;min-width:180px;}
+.nav-btns{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
+.nav-btn-a{background:#fff;border:1.5px solid #ddd;color:var(--dark);padding:7px 11px;border-radius:var(--r);font-size:.8rem;display:inline-flex;align-items:center;gap:5px;transition:all .2s;text-decoration:none;}
+.nav-btn-a:hover{border-color:var(--red);color:var(--red);}
 
-/* FEATURES */
-.features{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:2rem;}
-.feat{text-align:center;padding:20px;}
-.feat-ico{font-size:2.2rem;margin-bottom:8px;}
-.feat-title{font-family:'Oswald',sans-serif;font-size:1rem;color:var(--red);margin-bottom:6px;}
-.feat-desc{font-size:.85rem;color:var(--mid);}
+/* ===== FEATURES ===== */
+.feat-grid{display:grid;grid-template-columns:1fr;gap:12px;margin-top:18px;}
+@media(min-width:600px){.feat-grid{grid-template-columns:repeat(3,1fr);}}
+.feat{text-align:center;padding:18px;}
+.feat-ico{font-size:2rem;margin-bottom:6px;}
+.feat-title{font-family:'Oswald',sans-serif;font-size:.95rem;color:var(--red);margin-bottom:4px;}
+.feat-desc{font-size:.82rem;color:var(--mid);}
 
-/* COURIER PILLS */
-.pills{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0;}
-.pill{padding:6px 13px;border-radius:20px;cursor:pointer;font-size:.8rem;font-family:'Oswald',sans-serif;letter-spacing:.5px;border:1.5px solid #ddd;background:#fff;transition:all .2s;}
+/* ===== PILLS ===== */
+.pills{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0;}
+.pill{padding:6px 12px;border-radius:20px;cursor:pointer;font-size:.78rem;font-family:'Oswald',sans-serif;letter-spacing:.5px;border:1.5px solid #ddd;background:#fff;transition:all .2s;}
 .pill:hover,.pill.sel{background:var(--red);color:#fff;border-color:var(--red);}
 
-/* INFO BOX */
-.info-box{background:#fff8e1;border-left:4px solid var(--yellow);padding:12px 14px;border-radius:var(--radius);margin-bottom:16px;font-size:.86rem;color:#555;}
-.info-box.blue{background:#e3f2fd;border-color:#1976d2;color:#1a4a7a;}
-.info-box.green{background:#e8f5e9;border-color:#2e7d32;color:#1b5e20;}
+/* ===== INFO BOX ===== */
+.info{background:#fff8e1;border-left:4px solid var(--yellow);padding:11px 13px;border-radius:var(--r);margin-bottom:14px;font-size:.83rem;color:#555;line-height:1.5;}
+.info.green{background:#e8f5e9;border-color:#2e7d32;color:#1b5e20;}
+.info.blue{background:#e3f2fd;border-color:#1976d2;color:#1a4a7a;}
+.info.red{background:#ffebee;border-color:var(--red);color:#b71c1c;}
 
-/* NOTIFICATION */
-.notif{position:fixed;top:78px;right:18px;background:var(--dark);color:#fff;padding:13px 18px;border-radius:var(--radius);box-shadow:var(--shadow);display:none;z-index:9999;border-left:4px solid var(--yellow);max-width:320px;font-size:.88rem;animation:slideIn .3s ease;}
-@keyframes slideIn{from{transform:translateX(30px);opacity:0;}to{transform:translateX(0);opacity:1;}}
+/* ===== ADMIN PAYMENT PANEL ===== */
+#adminPanel{display:none;border:2px dashed var(--red);border-radius:var(--r);}
+.admin-toggle{background:var(--dark);color:var(--yellow);border:none;cursor:pointer;font-family:'Oswald',sans-serif;font-size:.82rem;padding:8px 16px;border-radius:var(--r);letter-spacing:1px;}
+.pay-method-admin{display:none;}
+.pay-method-admin.visible{display:block;}
 
-/* SECTION HIDDEN */
-.section{display:none;}
-.section.active{display:block;}
+/* ===== MODAL ===== */
+#invModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:5000;align-items:flex-start;justify-content:center;padding:16px;overflow-y:auto;}
+#invModal.open{display:flex;}
+.modal-box{background:#fff;border-radius:var(--r);width:100%;max-width:700px;box-shadow:0 8px 40px rgba(0,0,0,.25);margin:auto;}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;padding:14px 20px;border-top:1px solid #eee;flex-wrap:wrap;}
 
-/* COUNTRY LIST OPTIONS */
-select option{padding:4px;}
+/* ===== NOTIF ===== */
+.notif{position:fixed;top:70px;right:14px;left:14px;background:var(--dark);color:#fff;padding:12px 16px;border-radius:var(--r);box-shadow:var(--sh);display:none;z-index:9999;border-left:4px solid var(--yellow);font-size:.86rem;animation:sIn .3s ease;}
+@media(min-width:500px){.notif{left:auto;max-width:320px;}}
+@keyframes sIn{from{transform:translateY(-10px);opacity:0;}to{transform:translateY(0);opacity:1;}}
 
-/* INVOICE MODAL */
-#invoiceModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:5000;align-items:center;justify-content:center;padding:20px;}
-#invoiceModal.open{display:flex;}
-.modal-box{background:#fff;border-radius:var(--radius);max-width:720px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 8px 40px rgba(0,0,0,.25);}
-.modal-actions{display:flex;gap:10px;justify-content:flex-end;padding:16px 24px;border-top:1px solid #eee;flex-wrap:wrap;}
+/* ===== SECTION ===== */
+.section{display:none;}.section.active{display:block;}
 
-/* INVOICE CONTENT (print-clean) */
-.inv-body{padding:32px 36px;}
-.inv-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:28px;flex-wrap:wrap;gap:12px;}
-.inv-logo-wrap{display:flex;flex-direction:column;align-items:flex-start;}
-.inv-logo{background:var(--red);padding:6px 10px;border-radius:3px;display:inline-block;}
-.inv-logo-text{background:var(--yellow);color:var(--red);font-family:'Oswald',sans-serif;font-size:1.5rem;font-weight:700;padding:3px 10px;display:inline-block;}
-.inv-logo-sub{font-size:.65rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.85);margin-top:2px;text-align:right;}
-.inv-right{text-align:right;}
-.inv-title-text{font-family:'Oswald',sans-serif;font-size:1.3rem;color:var(--dark);}
-.inv-meta{font-size:.8rem;color:var(--mid);margin-top:4px;}
-.inv-parties{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin:20px 0;}
-.inv-party-label{font-family:'Oswald',sans-serif;font-size:.78rem;color:var(--red);letter-spacing:1px;margin-bottom:6px;text-transform:uppercase;}
-.inv-party-data{font-size:.85rem;line-height:1.7;}
-.inv-table{width:100%;border-collapse:collapse;margin:16px 0;}
-.inv-table th{background:var(--red);color:#fff;padding:9px 12px;text-align:left;font-family:'Oswald',sans-serif;letter-spacing:1px;font-size:.78rem;}
-.inv-table td{padding:9px 12px;border-bottom:1px solid #f0f0f0;font-size:.85rem;}
-.inv-table tr:nth-child(even) td{background:#fafafa;}
-.inv-total-row{text-align:right;margin-top:8px;font-family:'Oswald',sans-serif;font-size:1.1rem;}
-.inv-barcode{text-align:center;margin:20px 0 10px;}
-.inv-footer-text{text-align:center;font-size:.75rem;color:#aaa;margin-top:18px;padding-top:14px;border-top:1px solid #eee;line-height:1.7;}
-.inv-stamp{display:inline-block;border:3px solid var(--red);color:var(--red);font-family:'Oswald',sans-serif;font-size:1rem;padding:6px 16px;border-radius:4px;letter-spacing:2px;transform:rotate(-8deg);margin:10px auto;opacity:.7;}
-
-/* FOOTER */
-footer{background:var(--dark);color:#666;text-align:center;padding:20px;font-size:.8rem;margin-top:3rem;}
+/* ===== FOOTER ===== */
+footer{background:var(--dark);color:#666;text-align:center;padding:18px;font-size:.78rem;}
 footer span{color:var(--yellow);}
-
-/* RESPONSIVE */
-@media(max-width:768px){
-  header{height:auto;padding:10px 14px;flex-direction:column;gap:8px;}
-  .logo-sub{display:none;}
-  .hero h1{font-size:1.4rem;}
-  .form-grid,.form-grid.g3,.speed-cards,.pay-cards,.features{grid-template-columns:1fr;}
-  .inv-parties{grid-template-columns:1fr;}
-  nav button{padding:5px 8px;font-size:.72rem;}
-  .track-bar{flex-direction:column;}
-  .steps{overflow-x:auto;padding-bottom:8px;}
-  .stp-lbl{font-size:.6rem;}
-}
-@media(max-width:480px){
-  .header-right{justify-content:center;}
-  .lang-bar{flex-wrap:wrap;justify-content:center;}
-}
 </style>
 </head>
 <body>
 
-<!-- NOTIFICATION -->
 <div class="notif" id="notif"></div>
-
-<!-- PRINT ZONE (invisible sauf impression) -->
 <div id="printZone" style="display:none;"></div>
 
-<!-- ==================== HEADER ==================== -->
+<!-- =========== HEADER =========== -->
 <header>
-  <a class="logo" href="#" onclick="showSection('home');return false;">
-    <div class="logo-box">DHL</div>
-    <div class="logo-sub" id="hLogoSub">Logistics Services</div>
-  </a>
-  <div class="header-right">
+  <div class="hdr-top">
+    <a class="logo" href="#" onclick="showSec('home');return false;">
+      <div class="logo-box">DHL</div>
+      <div class="logo-sub" id="hSub">Logistics Services</div>
+    </a>
+    <!-- LANGUES GRANDES ET VISIBLES -->
     <div class="lang-bar">
-      <button class="lang-btn active" onclick="setLang('fr')">🇫🇷 FR</button>
-      <button class="lang-btn" onclick="setLang('en')">🇬🇧 EN</button>
-      <button class="lang-btn" onclick="setLang('es')">🇪🇸 ES</button>
-      <button class="lang-btn" onclick="setLang('de')">🇩🇪 DE</button>
+      <button class="lang-btn active" onclick="setLang('fr')"><span class="flag">🇫🇷</span><span class="code">FR</span></button>
+      <button class="lang-btn" onclick="setLang('en')"><span class="flag">🇬🇧</span><span class="code">EN</span></button>
+      <button class="lang-btn" onclick="setLang('es')"><span class="flag">🇪🇸</span><span class="code">ES</span></button>
+      <button class="lang-btn" onclick="setLang('de')"><span class="flag">🇩🇪</span><span class="code">DE</span></button>
+      <button class="lang-btn" onclick="setLang('pt')"><span class="flag">🇵🇹</span><span class="code">PT</span></button>
+      <button class="lang-btn" onclick="setLang('it')"><span class="flag">🇮🇹</span><span class="code">IT</span></button>
     </div>
-    <nav>
-      <button class="active" onclick="showSection('home')" id="nav-home">Accueil</button>
-      <button onclick="showSection('ship')" id="nav-ship">Expédier</button>
-      <button onclick="showSection('courier')" id="nav-courier">Coursier</button>
-      <button onclick="showSection('invoices')" id="nav-invoices">Factures</button>
-    </nav>
+  </div>
+  <!-- NAV TABS -->
+  <div class="hdr-nav">
+    <button class="nav-btn active" onclick="showSec('home')" id="nav-home"><span class="ni">🏠</span><span id="nHome">Accueil</span></button>
+    <button class="nav-btn" onclick="showSec('ship')" id="nav-ship"><span class="ni">📦</span><span id="nShip">Expédier</span></button>
+    <button class="nav-btn" onclick="showSec('admin')" id="nav-admin"><span class="ni">⚙️</span><span id="nAdmin">Admin</span></button>
+    <button class="nav-btn" onclick="showSec('courier')" id="nav-courier"><span class="ni">🚚</span><span id="nCourier">Coursier</span></button>
+    <button class="nav-btn" onclick="showSec('invoices')" id="nav-invoices"><span class="ni">📄</span><span id="nInvoices">Factures</span></button>
   </div>
 </header>
 
-<!-- ==================== HOME ==================== -->
+<!-- =========== HOME =========== -->
 <div id="sec-home" class="section active">
   <div class="hero">
-    <h1 id="heroTitle">SUIVI DE VOS COLIS EN TEMPS RÉEL</h1>
-    <p id="heroSub">Expédiez, suivez et gérez vos livraisons partout dans le monde</p>
+    <h1 id="heroT">SUIVI DE VOS COLIS EN TEMPS RÉEL</h1>
+    <p id="heroS">Expédiez, suivez et gérez vos livraisons partout dans le monde</p>
   </div>
-  <div class="track-bar-wrap">
+  <div class="track-wrap">
     <div class="track-bar">
-      <input type="text" id="trackInput" placeholder="Entrez votre numéro de suivi ex: DHL-XXXXXXXX"/>
-      <button onclick="doTrack()" id="trackBtn">SUIVRE</button>
+      <input type="text" id="trackInput" placeholder="N° de suivi : DHL-XXXXXXXX"/>
+      <button onclick="doTrack()" id="trackBtn">🔍 SUIVRE</button>
     </div>
   </div>
-
   <main>
-    <div id="trackResult" style="display:none;margin-top:2rem;">
+    <div id="trackResult" style="display:none;margin-top:20px;">
       <div class="card">
-        <div class="track-header">
+        <div class="t-head">
           <div>
-            <div style="font-size:.75rem;color:var(--mid);text-transform:uppercase;letter-spacing:1px;" id="tLabel">Numéro de suivi</div>
-            <div class="track-num" id="tNum">—</div>
+            <div style="font-size:.72rem;color:var(--mid);text-transform:uppercase;letter-spacing:1px;" id="tLbl">Numéro de suivi</div>
+            <div class="t-num" id="tNum">—</div>
           </div>
-          <div class="track-badge" id="tStatus">En transit</div>
+          <div class="t-badge" id="tStatus">En transit</div>
         </div>
-        <div style="background:#f9f9f9;border-radius:var(--radius);padding:16px;margin-bottom:16px;">
-          <div style="display:flex;justify-content:space-between;font-size:.8rem;color:var(--mid);">
+        <div style="background:#f9f9f9;border-radius:var(--r);padding:14px;margin-bottom:14px;">
+          <div style="display:flex;justify-content:space-between;font-size:.78rem;color:var(--mid);">
             <span id="tFrom">—</span><span id="tTo">—</span>
           </div>
-          <div class="progress-outer"><div class="progress-inner" id="tBar" style="width:60%"></div></div>
-          <div class="milestones">
+          <div class="prog-out"><div class="prog-in" id="tBar" style="width:60%"></div></div>
+          <div class="miles">
             <div class="ms"><div class="ms-dot done" id="ms1"></div><div class="ms-lbl" id="msl1">Collecté</div></div>
             <div class="ms"><div class="ms-dot done" id="ms2"></div><div class="ms-lbl" id="msl2">Tri</div></div>
             <div class="ms"><div class="ms-dot done" id="ms3"></div><div class="ms-lbl" id="msl3">Transit</div></div>
@@ -297,48 +289,93 @@ footer span{color:var(--yellow);}
             <div class="ms"><div class="ms-dot" id="ms5"></div><div class="ms-lbl" id="msl5">Livré</div></div>
           </div>
         </div>
-        <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:14px;">
-          <div class="courier-badge" style="flex:1;min-width:200px;">
-            <div style="font-size:2rem;">🚚</div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px;">
+          <div class="courier-badge">
+            <div style="font-size:1.8rem;">🚚</div>
             <div>
-              <div style="font-family:'Oswald',sans-serif;font-size:1rem;" id="tCourier">—</div>
-              <div style="font-size:.8rem;color:#aaa;" id="tVehicle">—</div>
+              <div style="font-family:'Oswald',sans-serif;font-size:.95rem;" id="tCourier">—</div>
+              <div style="font-size:.78rem;color:#aaa;" id="tVehicle">—</div>
             </div>
           </div>
-          <div style="flex:1;min-width:200px;">
-            <div style="font-size:.78rem;color:var(--mid);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;" id="navLabel">Navigation GPS</div>
+          <div style="flex:1;min-width:180px;">
+            <div style="font-size:.72rem;color:var(--mid);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;" id="navLbl">Navigation GPS</div>
             <div class="nav-btns">
-              <a class="nav-btn" id="gmapsLink" href="#" target="_blank">🗺️ Google Maps</a>
-              <a class="nav-btn" id="wazeLink" href="#" target="_blank">🚦 Waze</a>
-              <a class="nav-btn" id="appleLink" href="#" target="_blank">🍎 Apple Maps</a>
+              <a class="nav-btn-a" id="gmaps" href="#" target="_blank">🗺️ Google Maps</a>
+              <a class="nav-btn-a" id="waze" href="#" target="_blank">🚦 Waze</a>
+              <a class="nav-btn-a" id="apple" href="#" target="_blank">🍎 Apple Maps</a>
             </div>
           </div>
         </div>
-        <ul class="event-list" id="tEvents"></ul>
+        <ul class="ev-list" id="tEvents"></ul>
       </div>
     </div>
-
-    <div class="features">
-      <div class="card feat">
-        <div class="feat-ico">⚡</div>
-        <div class="feat-title" id="f1t">Livraison Express</div>
-        <div class="feat-desc" id="f1d">Livraison en 24–48h dans plus de 80 pays.</div>
-      </div>
-      <div class="card feat">
-        <div class="feat-ico">📍</div>
-        <div class="feat-title" id="f2t">Suivi en Temps Réel</div>
-        <div class="feat-desc" id="f2d">GPS live intégré avec Google Maps et Waze.</div>
-      </div>
-      <div class="card feat">
-        <div class="feat-ico">🔒</div>
-        <div class="feat-title" id="f3t">Sécurisé & Assuré</div>
-        <div class="feat-desc" id="f3d">Chaque colis est assuré et documenté.</div>
-      </div>
+    <div class="feat-grid">
+      <div class="card feat"><div class="feat-ico">⚡</div><div class="feat-title" id="f1t">Livraison Express</div><div class="feat-desc" id="f1d">24–48h dans plus de 80 pays.</div></div>
+      <div class="card feat"><div class="feat-ico">📍</div><div class="feat-title" id="f2t">Suivi Temps Réel</div><div class="feat-desc" id="f2d">GPS live avec Google Maps et Waze.</div></div>
+      <div class="card feat"><div class="feat-ico">🔒</div><div class="feat-title" id="f3t">Sécurisé & Assuré</div><div class="feat-desc" id="f3d">Chaque colis assuré et documenté.</div></div>
     </div>
   </main>
 </div>
 
-<!-- ==================== SHIP ==================== -->
+<!-- =========== ADMIN PAIEMENT =========== -->
+<div id="sec-admin" class="section">
+<main>
+  <div class="card">
+    <div class="card-title" id="adminTitle">⚙️ Panneau Admin — Coordonnées de Paiement</div>
+    <div class="info red" id="adminInfo">
+      🔐 Ces informations sont privées. Renseignez ici vos coordonnées bancaires/crypto. Elles apparaîtront automatiquement sur le bordereau du client selon son mode de paiement.
+    </div>
+
+    <!-- IBAN / Virement -->
+    <div class="card" style="border:1.5px solid #eee;padding:14px;margin-bottom:12px;">
+      <div style="font-family:'Oswald',sans-serif;color:var(--red);margin-bottom:10px;font-size:.9rem;letter-spacing:1px;">🏦 VIREMENT BANCAIRE / IBAN</div>
+      <div class="fg-row c2">
+        <div class="fg"><label id="lIban">IBAN</label><input id="adminIban" type="text" placeholder="FR76 3000 6000 0112 3456 7890 189"/></div>
+        <div class="fg"><label id="lBic">BIC / SWIFT</label><input id="adminBic" type="text" placeholder="BNPAFRPPXXX"/></div>
+        <div class="fg"><label id="lBank">Nom de la banque</label><input id="adminBank" type="text" placeholder="BNP Paribas"/></div>
+        <div class="fg"><label id="lAccName">Titulaire du compte</label><input id="adminAccName" type="text" placeholder="DONGMO JIOFACK ROMARTH"/></div>
+      </div>
+    </div>
+
+    <!-- Mobile Money -->
+    <div class="card" style="border:1.5px solid #eee;padding:14px;margin-bottom:12px;">
+      <div style="font-family:'Oswald',sans-serif;color:var(--red);margin-bottom:10px;font-size:.9rem;letter-spacing:1px;">📱 MOBILE MONEY (MTN / ORANGE)</div>
+      <div class="fg-row c2">
+        <div class="fg"><label>MTN MoMo</label><input id="adminMTN" type="tel" placeholder="+237 6XX XXX XXX"/></div>
+        <div class="fg"><label>Orange Money</label><input id="adminOrange" type="tel" placeholder="+237 6XX XXX XXX"/></div>
+        <div class="fg"><label>PayPal</label><input id="adminPaypal" type="text" placeholder="paypal.me/tonprofil ou email"/></div>
+        <div class="fg"><label>Wave / Flooz</label><input id="adminWave" type="text" placeholder="+XXX XXXXXXXXX"/></div>
+      </div>
+    </div>
+
+    <!-- Crypto -->
+    <div class="card" style="border:1.5px solid #eee;padding:14px;margin-bottom:12px;">
+      <div style="font-family:'Oswald',sans-serif;color:var(--red);margin-bottom:10px;font-size:.9rem;letter-spacing:1px;">₿ CRYPTO-MONNAIES</div>
+      <div class="fg-row c2">
+        <div class="fg"><label>Bitcoin (BTC)</label><input id="adminBTC" type="text" placeholder="bc1qxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"/></div>
+        <div class="fg"><label>USDT (TRC20)</label><input id="adminUSDT" type="text" placeholder="Txxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"/></div>
+        <div class="fg"><label>Ethereum (ETH)</label><input id="adminETH" type="text" placeholder="0xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"/></div>
+        <div class="fg"><label>Autre crypto</label><input id="adminCrypto" type="text" placeholder="Adresse + réseau"/></div>
+      </div>
+    </div>
+
+    <!-- Carte -->
+    <div class="card" style="border:1.5px solid #eee;padding:14px;margin-bottom:12px;">
+      <div style="font-family:'Oswald',sans-serif;color:var(--red);margin-bottom:10px;font-size:.9rem;letter-spacing:1px;">💳 LIEN DE PAIEMENT CARTE</div>
+      <div class="fg-row c2">
+        <div class="fg"><label>Lien Stripe / SumUp</label><input id="adminStripe" type="text" placeholder="https://buy.stripe.com/xxx"/></div>
+        <div class="fg"><label>Lien PayPal.me</label><input id="adminPPLink" type="text" placeholder="https://paypal.me/tonprofil"/></div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-yel" onclick="saveAdmin()">💾 SAUVEGARDER MES COORDONNÉES</button>
+    </div>
+  </div>
+</main>
+</div>
+
+<!-- =========== SHIP =========== -->
 <div id="sec-ship" class="section">
 <main>
   <div class="steps" id="stepsBar">
@@ -354,69 +391,60 @@ footer span{color:var(--yellow);}
   <!-- STEP 1 -->
   <div id="fst1">
     <div class="card">
-      <div class="card-title" id="senderTitle">📤 Expéditeur</div>
-      <div class="form-grid">
-        <div class="fg"><label id="lSNm">Nom complet <span class="req-star">*</span></label><input id="sNm" type="text" placeholder="Jean Dupont"/></div>
-        <div class="fg"><label id="lSEm">Email <span class="req-star">*</span></label><input id="sEm" type="email" placeholder="expediteur@email.com"/></div>
-        <div class="fg"><label id="lSPh">Téléphone <span class="req-star">*</span></label><input id="sPh" type="tel" placeholder="+237 6XX XXX XXX"/></div>
-        <div class="fg"><label id="lSCo">Pays <span class="req-star">*</span></label><select id="sCo" onchange="updateCurrency()"></select></div>
-        <div class="fg"><label id="lSCi">Ville <span class="req-star">*</span></label><input id="sCi" type="text" placeholder="Yaoundé"/></div>
+      <div class="card-title" id="senderT">📤 Expéditeur</div>
+      <div class="fg-row c2">
+        <div class="fg"><label id="lSNm">Nom <span class="req">*</span></label><input id="sNm" type="text" placeholder="Jean Dupont"/></div>
+        <div class="fg"><label id="lSEm">Email <span class="req">*</span></label><input id="sEm" type="email" placeholder="exp@email.com"/></div>
+        <div class="fg"><label id="lSPh">Téléphone <span class="req">*</span></label><input id="sPh" type="tel" placeholder="+237 6XX XXX XXX"/></div>
+        <div class="fg"><label id="lSCo">Pays <span class="req">*</span></label><select id="sCo" onchange="updateCurr()"></select></div>
+        <div class="fg"><label id="lSCi">Ville <span class="req">*</span></label><input id="sCi" type="text" placeholder="Yaoundé"/></div>
         <div class="fg"><label id="lSZp">Code Postal</label><input id="sZp" type="text" placeholder="BP 1234"/></div>
-        <div class="fg full"><label id="lSAd">Adresse complète <span class="req-star">*</span></label><input id="sAd" type="text" placeholder="Rue, quartier, immeuble..."/></div>
+        <div class="fg" style="grid-column:1/-1"><label id="lSAd">Adresse <span class="req">*</span></label><input id="sAd" type="text" placeholder="Rue, quartier, immeuble..."/></div>
       </div>
 
       <div class="sep"><span id="recvSep">DESTINATAIRE</span></div>
 
-      <div class="form-grid">
-        <div class="fg"><label id="lRNm">Nom complet <span class="req-star">*</span></label><input id="rNm" type="text" placeholder="Marie Curie"/></div>
-        <div class="fg"><label id="lREm">Email <span class="req-star">*</span></label><input id="rEm" type="email" placeholder="destinataire@email.com"/></div>
-        <div class="fg"><label id="lRPh">Téléphone <span class="req-star">*</span></label><input id="rPh" type="tel" placeholder="+33 6XX XXX XXX"/></div>
-        <div class="fg"><label id="lRCo">Pays <span class="req-star">*</span></label><select id="rCo"></select></div>
-        <div class="fg"><label id="lRCi">Ville <span class="req-star">*</span></label><input id="rCi" type="text" placeholder="Paris"/></div>
+      <div class="fg-row c2">
+        <div class="fg"><label id="lRNm">Nom <span class="req">*</span></label><input id="rNm" type="text" placeholder="Marie Curie"/></div>
+        <div class="fg"><label id="lREm">Email <span class="req">*</span></label><input id="rEm" type="email" placeholder="dest@email.com"/></div>
+        <div class="fg"><label id="lRPh">Téléphone <span class="req">*</span></label><input id="rPh" type="tel" placeholder="+33 6XX XXX XXX"/></div>
+        <div class="fg"><label id="lRCo">Pays <span class="req">*</span></label><select id="rCo" onchange="detectClientPay()"></select></div>
+        <div class="fg"><label id="lRCi">Ville <span class="req">*</span></label><input id="rCi" type="text" placeholder="Paris"/></div>
         <div class="fg"><label id="lRZp">Code Postal</label><input id="rZp" type="text" placeholder="75001"/></div>
-        <div class="fg full"><label id="lRAd">Adresse complète <span class="req-star">*</span></label><input id="rAd" type="text" placeholder="Rue, appartement, quartier..."/></div>
+        <div class="fg" style="grid-column:1/-1"><label id="lRAd">Adresse <span class="req">*</span></label><input id="rAd" type="text" placeholder="Rue, appartement, quartier..."/></div>
       </div>
 
-      <!-- OPTIONAL DOCUMENTS -->
       <div class="sep"><span id="docSep">DOCUMENTS (OPTIONNELS)</span></div>
-      <div class="info-box" id="docInfoBox">
-        📎 Ces documents sont facultatifs. Ils peuvent être requis pour certaines destinations (douane, haute valeur). Vous pouvez les envoyer par email séparément.
-      </div>
-      <div class="form-grid">
+      <div class="info" id="docInfo">📎 Ces documents sont facultatifs. Requis uniquement pour certaines destinations ou colis de haute valeur.</div>
+      <div class="fg-row c2">
         <div class="fg">
-          <label id="lDocID">Pièce d'identité <span class="opt-badge" id="optBadge1">OPTIONNEL</span></label>
+          <label id="lDocID">Pièce d'identité <span class="opt" id="opt1">OPTIONNEL</span></label>
           <input type="file" id="docID" accept=".pdf,.jpg,.jpeg,.png"/>
-          <div class="opt-note" id="optNote1">CNI, Passeport — uniquement si requis par la douane</div>
+          <div class="opt-note" id="optN1">CNI, Passeport — si requis par la douane</div>
         </div>
         <div class="fg">
-          <label id="lDocInv">Facture / Valeur des articles <span class="opt-badge" id="optBadge2">OPTIONNEL</span></label>
+          <label id="lDocInv">Facture / Valeur <span class="opt" id="opt2">OPTIONNEL</span></label>
           <input type="file" id="docInv" accept=".pdf,.jpg,.jpeg,.png"/>
-          <div class="opt-note" id="optNote2">Pour les colis de valeur élevée ou hors UE</div>
+          <div class="opt-note" id="optN2">Pour colis de haute valeur</div>
         </div>
       </div>
-
-      <div class="btn-row">
-        <button class="btn btn-red" onclick="goStep(2)" id="btnN1">Suivant →</button>
-      </div>
+      <div class="btn-row"><button class="btn btn-red" onclick="goStep(2)" id="btnN1">Suivant →</button></div>
     </div>
   </div>
 
   <!-- STEP 2 -->
   <div id="fst2" style="display:none;">
     <div class="card">
-      <div class="card-title" id="parcelTitle">📦 Description du Colis</div>
-      <div class="form-grid g3">
-        <div class="fg"><label id="lWt">Poids (kg) <span class="req-star">*</span></label><input id="pkWt" type="number" placeholder="1.5" min="0.1" step="0.1"/></div>
+      <div class="card-title" id="parcelT">📦 Description du Colis</div>
+      <div class="fg-row c3">
+        <div class="fg"><label id="lWt">Poids (kg) <span class="req">*</span></label><input id="pkWt" type="number" placeholder="1.5" min="0.1" step="0.1"/></div>
         <div class="fg"><label id="lLn">Longueur (cm)</label><input id="pkLn" type="number" placeholder="30"/></div>
         <div class="fg"><label id="lWd">Largeur (cm)</label><input id="pkWd" type="number" placeholder="20"/></div>
         <div class="fg"><label id="lHt">Hauteur (cm)</label><input id="pkHt" type="number" placeholder="15"/></div>
-        <div class="fg"><label id="lVl">Valeur déclarée <span id="currLabel">(€)</span></label><input id="pkVl" type="number" placeholder="100"/></div>
-        <div class="fg"><label id="lQty">Nombre d'articles</label><input id="pkQty" type="number" placeholder="1" min="1"/></div>
+        <div class="fg"><label id="lVl">Valeur déclarée <span id="currLbl">(€)</span></label><input id="pkVl" type="number" placeholder="100"/></div>
+        <div class="fg"><label id="lQty">Nb articles</label><input id="pkQty" type="number" placeholder="1" min="1"/></div>
       </div>
-      <div class="fg" style="margin-top:12px;">
-        <label id="lCnt">Description du contenu <span class="req-star">*</span></label>
-        <textarea id="pkCnt" placeholder="Décrire le contenu en détail..."></textarea>
-      </div>
+      <div class="fg"><label id="lCnt">Contenu <span class="req">*</span></label><textarea id="pkCnt" placeholder="Décrire le contenu en détail..."></textarea></div>
       <div class="btn-row">
         <button class="btn btn-out" onclick="goStep(1)" id="btnB2">← Retour</button>
         <button class="btn btn-red" onclick="goStep(3)" id="btnN2">Suivant →</button>
@@ -427,26 +455,11 @@ footer span{color:var(--yellow);}
   <!-- STEP 3 -->
   <div id="fst3" style="display:none;">
     <div class="card">
-      <div class="card-title" id="speedTitle">⚡ Vitesse de Livraison</div>
-      <div class="speed-cards">
-        <div class="speed-card sel" onclick="selSpeed(this,'express')">
-          <div class="ico">✈️</div>
-          <div class="spname" id="spEN">Express International</div>
-          <div class="spdel" id="spED">24 – 48 heures</div>
-          <div class="spprice" id="spEP">À partir de 45 €</div>
-        </div>
-        <div class="speed-card" onclick="selSpeed(this,'standard')">
-          <div class="ico">📦</div>
-          <div class="spname" id="spSN">Standard</div>
-          <div class="spdel" id="spSD">2 – 4 jours ouvrés</div>
-          <div class="spprice" id="spSP">À partir de 22 €</div>
-        </div>
-        <div class="speed-card" onclick="selSpeed(this,'eco')">
-          <div class="ico">🚢</div>
-          <div class="spname" id="spCN">Économique</div>
-          <div class="spdel" id="spCD">5 – 10 jours ouvrés</div>
-          <div class="spprice" id="spCP">À partir de 12 €</div>
-        </div>
+      <div class="card-title" id="speedT">⚡ Vitesse de Livraison</div>
+      <div class="speed-grid">
+        <div class="speed-card sel" onclick="selSpeed(this,'express')"><div class="ico">✈️</div><div class="spn" id="spEN">Express International</div><div class="spd" id="spED">24 – 48 heures</div><div class="spp" id="spEP">À partir de 45 €</div></div>
+        <div class="speed-card" onclick="selSpeed(this,'standard')"><div class="ico">📦</div><div class="spn" id="spSN">Standard</div><div class="spd" id="spSD">2 – 4 jours ouvrés</div><div class="spp" id="spSP">À partir de 22 €</div></div>
+        <div class="speed-card" onclick="selSpeed(this,'eco')"><div class="ico">🚢</div><div class="spn" id="spCN">Économique</div><div class="spd" id="spCD">5 – 10 jours ouvrés</div><div class="spp" id="spCP">À partir de 12 €</div></div>
       </div>
       <div class="btn-row">
         <button class="btn btn-out" onclick="goStep(2)" id="btnB3">← Retour</button>
@@ -458,104 +471,100 @@ footer span{color:var(--yellow);}
   <!-- STEP 4 -->
   <div id="fst4" style="display:none;">
     <div class="card">
-      <div class="card-title" id="payTitle">💳 Paiement</div>
-      <div class="info-box green" id="payInfo">
-        📧 Après confirmation, un <strong>bordereau de commande officiel</strong> avec toutes les instructions de paiement sera envoyé par email au destinataire.
+      <div class="card-title" id="payT">💳 Mode de Paiement</div>
+      <div class="info green" id="payInfo">📧 Le bordereau avec vos coordonnées de paiement sera envoyé par email au destinataire après confirmation.</div>
+      <div class="pay-grid">
+        <div class="pay-card sel" onclick="selPay(this,'iban')"><div class="pay-ico">🏦</div><div><div class="pay-nm" id="pmIban">Virement / IBAN</div><div class="pay-inf">Europe & International</div></div></div>
+        <div class="pay-card" onclick="selPay(this,'mtn')"><div class="pay-ico">📱</div><div><div class="pay-nm">MTN Mobile Money</div><div class="pay-inf">Afrique (Cameroun, etc.)</div></div></div>
+        <div class="pay-card" onclick="selPay(this,'orange')"><div class="pay-ico">🟠</div><div><div class="pay-nm">Orange Money</div><div class="pay-inf">Afrique francophone</div></div></div>
+        <div class="pay-card" onclick="selPay(this,'paypal')"><div class="pay-ico">🅿️</div><div><div class="pay-nm">PayPal</div><div class="pay-inf">International</div></div></div>
+        <div class="pay-card" onclick="selPay(this,'card')"><div class="pay-ico">💳</div><div><div class="pay-nm" id="pmCard">Carte bancaire</div><div class="pay-inf">Visa / Mastercard</div></div></div>
+        <div class="pay-card" onclick="selPay(this,'btc')"><div class="pay-ico">₿</div><div><div class="pay-nm">Bitcoin / Crypto</div><div class="pay-inf">BTC, USDT, ETH...</div></div></div>
+        <div class="pay-card" onclick="selPay(this,'cod')"><div class="pay-ico">💵</div><div><div class="pay-nm" id="pmCOD">Paiement à la livraison</div><div class="pay-inf" id="pmCODI">Cash à réception</div></div></div>
+        <div class="pay-card" onclick="selPay(this,'wave')"><div class="pay-ico">🌊</div><div><div class="pay-nm">Wave / Flooz</div><div class="pay-inf">Afrique de l'Ouest</div></div></div>
       </div>
-      <div class="pay-cards">
-        <div class="pay-card sel" onclick="selPay(this,'mtn')"><div class="pay-ico">📱</div><div><div class="pay-name">MTN Mobile Money</div><div class="pay-info" id="payMTN">Paiement via MoMo</div></div></div>
-        <div class="pay-card" onclick="selPay(this,'orange')"><div class="pay-ico">🟠</div><div><div class="pay-name">Orange Money</div><div class="pay-info" id="payOM">Paiement via Orange Money</div></div></div>
-        <div class="pay-card" onclick="selPay(this,'card')"><div class="pay-ico">💳</div><div><div class="pay-name">Carte Bancaire</div><div class="pay-info" id="payCard">Visa / Mastercard / CB</div></div></div>
-        <div class="pay-card" onclick="selPay(this,'cod')"><div class="pay-ico">💵</div><div><div class="pay-name" id="payCOD">Paiement à la livraison</div><div class="pay-info" id="payCODI">Cash à réception</div></div></div>
-      </div>
-      <div class="fg" style="margin-top:14px;">
-        <label id="lPayRef">Référence de paiement / Numéro MoMo / IBAN</label>
-        <input id="payRef" type="text" placeholder="+237 6XX XXX XXX ou IBAN"/>
-      </div>
+      <div id="payDetected" class="info blue" style="display:none;margin-top:12px;"></div>
       <div class="btn-row">
         <button class="btn btn-out" onclick="goStep(3)" id="btnB4">← Retour</button>
-        <button class="btn btn-yellow" onclick="submitShipment()" id="btnSubmit">✅ CONFIRMER L'EXPÉDITION</button>
+        <button class="btn btn-yel" onclick="submitShip()" id="btnSubmit">✅ CONFIRMER L'EXPÉDITION</button>
       </div>
     </div>
   </div>
 
   <!-- CONFIRM -->
   <div id="fConfirm" style="display:none;">
-    <div class="card" style="text-align:center;padding:36px 24px;">
-      <div style="font-size:3rem;margin-bottom:10px;">✅</div>
-      <div style="font-family:'Oswald',sans-serif;font-size:1.6rem;color:var(--red);margin-bottom:8px;" id="confTitle">EXPÉDITION CONFIRMÉE !</div>
-      <p style="color:var(--mid);margin-bottom:20px;" id="confMsg">Un bordereau de commande a été envoyé au destinataire par email.</p>
-      <div style="display:inline-block;background:var(--gray);border-radius:var(--radius);padding:16px 28px;margin-bottom:16px;">
-        <div style="font-size:.72rem;color:var(--mid);text-transform:uppercase;letter-spacing:1px;" id="confTLabel">Numéro de suivi</div>
-        <div style="font-family:'Oswald',sans-serif;font-size:1.9rem;letter-spacing:3px;color:var(--dark);" id="confTrackNum">DHL-XXXXXXXX</div>
+    <div class="card" style="text-align:center;padding:28px 16px;">
+      <div style="font-size:2.8rem;margin-bottom:8px;">✅</div>
+      <div style="font-family:'Oswald',sans-serif;font-size:1.5rem;color:var(--red);margin-bottom:6px;" id="confT">EXPÉDITION CONFIRMÉE !</div>
+      <p style="color:var(--mid);margin-bottom:16px;font-size:.88rem;" id="confMsg">Le bordereau a été envoyé au destinataire par email.</p>
+      <div style="display:inline-block;background:var(--gray);border-radius:var(--r);padding:14px 24px;margin-bottom:12px;">
+        <div style="font-size:.7rem;color:var(--mid);text-transform:uppercase;letter-spacing:1px;" id="confTLbl">Numéro de suivi</div>
+        <div style="font-family:'Oswald',sans-serif;font-size:1.7rem;letter-spacing:3px;" id="confNum">DHL-XXXXXXXX</div>
       </div>
-      <div style="margin:12px 0;"><svg id="bcConfirm"></svg></div>
-      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px;">
-        <button class="btn btn-red" onclick="openInvoiceModal(currentShipNum)" id="btnViewInv">📄 Voir le bordereau</button>
-        <button class="btn btn-out" onclick="sendBordereau(currentShipNum)" id="btnSendEmail">📧 Renvoyer par email</button>
-        <button class="btn btn-yellow" onclick="resetForm()" id="btnNew">+ Nouvelle expédition</button>
+      <div style="margin:10px 0;overflow-x:auto;"><svg id="bcConf"></svg></div>
+      <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px;">
+        <button class="btn btn-red" onclick="openModal(currentNum)" id="btnViewB">📄 Voir le bordereau</button>
+        <button class="btn btn-out" onclick="resendEmail(currentNum)" id="btnReSend">📧 Renvoyer</button>
+        <button class="btn btn-yel" onclick="resetForm()" id="btnNew">+ Nouveau</button>
       </div>
     </div>
   </div>
 </main>
 </div>
 
-<!-- ==================== COURIER ==================== -->
+<!-- =========== COURIER =========== -->
 <div id="sec-courier" class="section">
 <main>
   <div class="card">
-    <div class="card-title" id="courierTitle">🚚 Espace Coursier – Mises à jour en Temps Réel</div>
-    <div class="form-grid g3">
+    <div class="card-title" id="courierT">🚚 Espace Coursier</div>
+    <div class="fg-row c3">
       <div class="fg"><label id="lCNm">Votre nom</label><input id="cNm" type="text" placeholder="Jean-Pierre M."/></div>
-      <div class="fg"><label id="lCVh">Numéro de véhicule</label><input id="cVh" type="text" placeholder="LT-2847-YDE"/></div>
-      <div class="fg"><label id="lCTr">N° de suivi à mettre à jour</label><input id="cTr" type="text" placeholder="DHL-XXXXXXXX"/></div>
+      <div class="fg"><label id="lCVh">Véhicule</label><input id="cVh" type="text" placeholder="LT-2847-YDE"/></div>
+      <div class="fg"><label id="lCTr">N° de suivi</label><input id="cTr" type="text" placeholder="DHL-XXXXXXXX"/></div>
     </div>
-    <div class="fg" style="margin:12px 0;">
-      <label id="lCPos">Position actuelle</label>
-      <input id="cPos" type="text" placeholder="Ex: Carrefour Bastos, Yaoundé, Cameroun"/>
-    </div>
+    <div class="fg"><label id="lCPos">Position actuelle</label><input id="cPos" type="text" placeholder="Ex: Bastos, Yaoundé, Cameroun"/></div>
     <div>
-      <div style="font-size:.78rem;font-weight:600;color:var(--mid);text-transform:uppercase;margin-bottom:8px;" id="statusLbl">Statut du colis</div>
+      <div style="font-size:.72rem;font-weight:700;color:var(--mid);text-transform:uppercase;margin-bottom:6px;" id="statusLbl">Statut</div>
       <div class="pills">
-        <div class="pill sel" onclick="selStatus(this)" data-s="collected" id="ps1">✅ Collecté</div>
-        <div class="pill" onclick="selStatus(this)" data-s="sorting" id="ps2">🔄 En tri</div>
-        <div class="pill" onclick="selStatus(this)" data-s="transit" id="ps3">🚚 En transit</div>
-        <div class="pill" onclick="selStatus(this)" data-s="customs" id="ps4">🛃 Douane</div>
-        <div class="pill" onclick="selStatus(this)" data-s="out" id="ps5">🏃 En livraison</div>
-        <div class="pill" onclick="selStatus(this)" data-s="delivered" id="ps6">✅ Livré</div>
-        <div class="pill" onclick="selStatus(this)" data-s="delayed" id="ps7">⚠️ Retardé</div>
+        <div class="pill sel" onclick="selSt(this)" data-s="collected" id="ps1">✅ Collecté</div>
+        <div class="pill" onclick="selSt(this)" data-s="sorting" id="ps2">🔄 En tri</div>
+        <div class="pill" onclick="selSt(this)" data-s="transit" id="ps3">🚚 Transit</div>
+        <div class="pill" onclick="selSt(this)" data-s="customs" id="ps4">🛃 Douane</div>
+        <div class="pill" onclick="selSt(this)" data-s="out" id="ps5">🏃 En livraison</div>
+        <div class="pill" onclick="selSt(this)" data-s="delivered" id="ps6">✅ Livré</div>
+        <div class="pill" onclick="selSt(this)" data-s="delayed" id="ps7">⚠️ Retardé</div>
       </div>
     </div>
-    <button class="btn btn-red" onclick="sendUpdate()" id="btnUpdate" style="margin-top:12px;">📡 ENVOYER LA MISE À JOUR</button>
+    <button class="btn btn-red" onclick="sendUpd()" id="btnUpd" style="margin-top:10px;">📡 ENVOYER LA MISE À JOUR</button>
   </div>
   <div class="card">
-    <div class="card-title" id="logTitle">📋 Historique des mises à jour</div>
-    <ul class="event-list" id="updateLog"></ul>
-    <div style="color:var(--mid);font-size:.85rem;text-align:center;padding:20px;" id="logEmpty">Aucune mise à jour envoyée.</div>
+    <div class="card-title" id="logT">📋 Historique</div>
+    <ul class="ev-list" id="updLog"></ul>
+    <div style="color:var(--mid);font-size:.82rem;text-align:center;padding:18px;" id="logEmpty">Aucune mise à jour.</div>
   </div>
 </main>
 </div>
 
-<!-- ==================== INVOICES ==================== -->
+<!-- =========== INVOICES =========== -->
 <div id="sec-invoices" class="section">
 <main>
   <div class="card">
-    <div class="card-title" id="invSearchTitle">🔍 Rechercher un Bordereau / Facture</div>
-    <div style="display:flex;gap:10px;">
-      <input type="text" id="invSrch" placeholder="Numéro de suivi ex: DHL-XXXXXXXX" style="flex:1;"/>
-      <button class="btn btn-red" onclick="searchInvoice()" id="btnInvLoad">Charger</button>
+    <div class="card-title" id="invST">🔍 Rechercher un bordereau</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <input type="text" id="invSrch" placeholder="DHL-XXXXXXXX" style="flex:1;min-width:160px;"/>
+      <button class="btn btn-red" onclick="searchInv()" id="btnInvL">Charger</button>
     </div>
   </div>
   <div id="invResult"></div>
 </main>
 </div>
 
-<!-- ==================== INVOICE MODAL ==================== -->
-<div id="invoiceModal">
+<!-- =========== MODAL BORDEREAU =========== -->
+<div id="invModal">
   <div class="modal-box">
-    <div class="inv-body" id="invContent"></div>
+    <div id="invContent" style="padding:24px 28px;"></div>
     <div class="modal-actions">
-      <button class="btn btn-red" onclick="printInvoice()" id="btnPrintMod">🖨️ Imprimer</button>
+      <button class="btn btn-red" onclick="printBordereau()">🖨️ Imprimer</button>
       <button class="btn btn-out" onclick="closeModal()">✕ Fermer</button>
     </div>
   </div>
@@ -566,690 +575,823 @@ footer span{color:var(--yellow);}
 </footer>
 
 <script>
-// ======================================================
-// COUNTRIES (Europe + Africa + World)
-// ======================================================
-const COUNTRIES = [
+// ============================================================
+// EMAILJS INIT
+// ============================================================
+try { emailjs.init("HockizT2vLH9dt0I9"); } catch(e){}
+
+// ============================================================
+// PAYS (Europe complète + Afrique + Monde)
+// ============================================================
+const COUNTRIES=[
   // AFRIQUE
-  {c:'CM',flag:'🇨🇲',name:{fr:'Cameroun',en:'Cameroon',es:'Camerún',de:'Kamerun'},currency:'XAF'},
-  {c:'SN',flag:'🇸🇳',name:{fr:'Sénégal',en:'Senegal',es:'Senegal',de:'Senegal'},currency:'XOF'},
-  {c:'CI',flag:'🇨🇮',name:{fr:"Côte d'Ivoire",en:"Côte d'Ivoire",es:"Costa de Marfil",de:"Elfenbeinküste"},currency:'XOF'},
-  {c:'NG',flag:'🇳🇬',name:{fr:'Nigeria',en:'Nigeria',es:'Nigeria',de:'Nigeria'},currency:'NGN'},
-  {c:'GH',flag:'🇬🇭',name:{fr:'Ghana',en:'Ghana',es:'Ghana',de:'Ghana'},currency:'GHS'},
-  {c:'MA',flag:'🇲🇦',name:{fr:'Maroc',en:'Morocco',es:'Marruecos',de:'Marokko'},currency:'MAD'},
-  {c:'TN',flag:'🇹🇳',name:{fr:'Tunisie',en:'Tunisia',es:'Túnez',de:'Tunesien'},currency:'TND'},
-  {c:'ZA',flag:'🇿🇦',name:{fr:'Afrique du Sud',en:'South Africa',es:'Sudáfrica',de:'Südafrika'},currency:'ZAR'},
-  {c:'KE',flag:'🇰🇪',name:{fr:'Kenya',en:'Kenya',es:'Kenia',de:'Kenia'},currency:'KES'},
-  {c:'ET',flag:'🇪🇹',name:{fr:'Éthiopie',en:'Ethiopia',es:'Etiopía',de:'Äthiopien'},currency:'ETB'},
-  {c:'GN',flag:'🇬🇳',name:{fr:'Guinée',en:'Guinea',es:'Guinea',de:'Guinea'},currency:'GNF'},
-  {c:'BJ',flag:'🇧🇯',name:{fr:'Bénin',en:'Benin',es:'Benín',de:'Benin'},currency:'XOF'},
-  {c:'TG',flag:'🇹🇬',name:{fr:'Togo',en:'Togo',es:'Togo',de:'Togo'},currency:'XOF'},
-  {c:'ML',flag:'🇲🇱',name:{fr:'Mali',en:'Mali',es:'Malí',de:'Mali'},currency:'XOF'},
-  {c:'GA',flag:'🇬🇦',name:{fr:'Gabon',en:'Gabon',es:'Gabón',de:'Gabun'},currency:'XAF'},
-  {c:'CD',flag:'🇨🇩',name:{fr:'Congo (RDC)',en:'Congo (DRC)',es:'Congo (RDC)',de:'Kongo (DRK)'},currency:'CDF'},
-  {c:'MG',flag:'🇲🇬',name:{fr:'Madagascar',en:'Madagascar',es:'Madagascar',de:'Madagaskar'},currency:'MGA'},
+  {c:'CM',f:'🇨🇲',n:{fr:'Cameroun',en:'Cameroon',es:'Camerún',de:'Kamerun',pt:'Camarões',it:'Camerun'},cur:'XAF',pay:['mtn','orange','cod']},
+  {c:'SN',f:'🇸🇳',n:{fr:'Sénégal',en:'Senegal',es:'Senegal',de:'Senegal',pt:'Senegal',it:'Senegal'},cur:'XOF',pay:['orange','wave','cod']},
+  {c:'CI',f:'🇨🇮',n:{fr:"Côte d'Ivoire",en:"Ivory Coast",es:"Costa de Marfil",de:"Elfenbeinküste",pt:"Costa do Marfim",it:"Costa d'Avorio"},cur:'XOF',pay:['orange','wave','cod']},
+  {c:'NG',f:'🇳🇬',n:{fr:'Nigeria',en:'Nigeria',es:'Nigeria',de:'Nigeria',pt:'Nigéria',it:'Nigeria'},cur:'NGN',pay:['paypal','cod','btc']},
+  {c:'GH',f:'🇬🇭',n:{fr:'Ghana',en:'Ghana',es:'Ghana',de:'Ghana',pt:'Gana',it:'Ghana'},cur:'GHS',pay:['mtn','paypal','cod']},
+  {c:'MA',f:'🇲🇦',n:{fr:'Maroc',en:'Morocco',es:'Marruecos',de:'Marokko',pt:'Marrocos',it:'Marocco'},cur:'MAD',pay:['iban','paypal','cod']},
+  {c:'TN',f:'🇹🇳',n:{fr:'Tunisie',en:'Tunisia',es:'Túnez',de:'Tunesien',pt:'Tunísia',it:'Tunisia'},cur:'TND',pay:['iban','paypal','cod']},
+  {c:'ZA',f:'🇿🇦',n:{fr:'Afrique du Sud',en:'South Africa',es:'Sudáfrica',de:'Südafrika',pt:'África do Sul',it:'Sudafrica'},cur:'ZAR',pay:['paypal','btc','iban']},
+  {c:'KE',f:'🇰🇪',n:{fr:'Kenya',en:'Kenya',es:'Kenia',de:'Kenia',pt:'Quénia',it:'Kenya'},cur:'KES',pay:['mtn','cod','btc']},
+  {c:'GA',f:'🇬🇦',n:{fr:'Gabon',en:'Gabon',es:'Gabón',de:'Gabun',pt:'Gabão',it:'Gabon'},cur:'XAF',pay:['mtn','orange','cod']},
+  {c:'CD',f:'🇨🇩',n:{fr:'Congo RDC',en:'Congo DRC',es:'Congo RDC',de:'Kongo DRK',pt:'Congo RDC',it:'Congo RDC'},cur:'CDF',pay:['orange','cod']},
+  {c:'ML',f:'🇲🇱',n:{fr:'Mali',en:'Mali',es:'Malí',de:'Mali',pt:'Mali',it:'Mali'},cur:'XOF',pay:['orange','wave','cod']},
+  {c:'BJ',f:'🇧🇯',n:{fr:'Bénin',en:'Benin',es:'Benín',de:'Benin',pt:'Benim',it:'Benin'},cur:'XOF',pay:['mtn','wave','cod']},
+  {c:'TG',f:'🇹🇬',n:{fr:'Togo',en:'Togo',es:'Togo',de:'Togo',pt:'Togo',it:'Togo'},cur:'XOF',pay:['mtn','wave','cod']},
   // EUROPE
-  {c:'FR',flag:'🇫🇷',name:{fr:'France',en:'France',es:'Francia',de:'Frankreich'},currency:'EUR'},
-  {c:'DE',flag:'🇩🇪',name:{fr:'Allemagne',en:'Germany',es:'Alemania',de:'Deutschland'},currency:'EUR'},
-  {c:'GB',flag:'🇬🇧',name:{fr:'Royaume-Uni',en:'United Kingdom',es:'Reino Unido',de:'Vereinigtes Königreich'},currency:'GBP'},
-  {c:'ES',flag:'🇪🇸',name:{fr:'Espagne',en:'Spain',es:'España',de:'Spanien'},currency:'EUR'},
-  {c:'IT',flag:'🇮🇹',name:{fr:'Italie',en:'Italy',es:'Italia',de:'Italien'},currency:'EUR'},
-  {c:'BE',flag:'🇧🇪',name:{fr:'Belgique',en:'Belgium',es:'Bélgica',de:'Belgien'},currency:'EUR'},
-  {c:'CH',flag:'🇨🇭',name:{fr:'Suisse',en:'Switzerland',es:'Suiza',de:'Schweiz'},currency:'CHF'},
-  {c:'NL',flag:'🇳🇱',name:{fr:'Pays-Bas',en:'Netherlands',es:'Países Bajos',de:'Niederlande'},currency:'EUR'},
-  {c:'PT',flag:'🇵🇹',name:{fr:'Portugal',en:'Portugal',es:'Portugal',de:'Portugal'},currency:'EUR'},
-  {c:'SE',flag:'🇸🇪',name:{fr:'Suède',en:'Sweden',es:'Suecia',de:'Schweden'},currency:'SEK'},
-  {c:'NO',flag:'🇳🇴',name:{fr:'Norvège',en:'Norway',es:'Noruega',de:'Norwegen'},currency:'NOK'},
-  {c:'DK',flag:'🇩🇰',name:{fr:'Danemark',en:'Denmark',es:'Dinamarca',de:'Dänemark'},currency:'DKK'},
-  {c:'PL',flag:'🇵🇱',name:{fr:'Pologne',en:'Poland',es:'Polonia',de:'Polen'},currency:'PLN'},
-  {c:'RO',flag:'🇷🇴',name:{fr:'Roumanie',en:'Romania',es:'Rumanía',de:'Rumänien'},currency:'RON'},
-  {c:'AT',flag:'🇦🇹',name:{fr:'Autriche',en:'Austria',es:'Austria',de:'Österreich'},currency:'EUR'},
-  {c:'GR',flag:'🇬🇷',name:{fr:'Grèce',en:'Greece',es:'Grecia',de:'Griechenland'},currency:'EUR'},
-  {c:'CZ',flag:'🇨🇿',name:{fr:'Tchéquie',en:'Czech Republic',es:'Chequia',de:'Tschechien'},currency:'CZK'},
-  {c:'HU',flag:'🇭🇺',name:{fr:'Hongrie',en:'Hungary',es:'Hungría',de:'Ungarn'},currency:'HUF'},
-  {c:'FI',flag:'🇫🇮',name:{fr:'Finlande',en:'Finland',es:'Finlandia',de:'Finlandia'},currency:'EUR'},
-  {c:'IE',flag:'🇮🇪',name:{fr:'Irlande',en:'Ireland',es:'Irlanda',de:'Irland'},currency:'EUR'},
-  {c:'LU',flag:'🇱🇺',name:{fr:'Luxembourg',en:'Luxembourg',es:'Luxemburgo',de:'Luxemburg'},currency:'EUR'},
+  {c:'FR',f:'🇫🇷',n:{fr:'France',en:'France',es:'Francia',de:'Frankreich',pt:'França',it:'Francia'},cur:'EUR',pay:['iban','card','paypal']},
+  {c:'DE',f:'🇩🇪',n:{fr:'Allemagne',en:'Germany',es:'Alemania',de:'Deutschland',pt:'Alemanha',it:'Germania'},cur:'EUR',pay:['iban','card','paypal']},
+  {c:'GB',f:'🇬🇧',n:{fr:'Royaume-Uni',en:'United Kingdom',es:'Reino Unido',de:'Vereinigtes Königreich',pt:'Reino Unido',it:'Regno Unito'},cur:'GBP',pay:['iban','card','paypal','btc']},
+  {c:'ES',f:'🇪🇸',n:{fr:'Espagne',en:'Spain',es:'España',de:'Spanien',pt:'Espanha',it:'Spagna'},cur:'EUR',pay:['iban','card','paypal']},
+  {c:'IT',f:'🇮🇹',n:{fr:'Italie',en:'Italy',es:'Italia',de:'Italien',pt:'Itália',it:'Italia'},cur:'EUR',pay:['iban','card','paypal']},
+  {c:'BE',f:'🇧🇪',n:{fr:'Belgique',en:'Belgium',es:'Bélgica',de:'Belgien',pt:'Bélgica',it:'Belgio'},cur:'EUR',pay:['iban','card','paypal']},
+  {c:'CH',f:'🇨🇭',n:{fr:'Suisse',en:'Switzerland',es:'Suiza',de:'Schweiz',pt:'Suíça',it:'Svizzera'},cur:'CHF',pay:['iban','card','paypal','btc']},
+  {c:'NL',f:'🇳🇱',n:{fr:'Pays-Bas',en:'Netherlands',es:'Países Bajos',de:'Niederlande',pt:'Países Baixos',it:'Paesi Bassi'},cur:'EUR',pay:['iban','card','paypal']},
+  {c:'PT',f:'🇵🇹',n:{fr:'Portugal',en:'Portugal',es:'Portugal',de:'Portugal',pt:'Portugal',it:'Portogallo'},cur:'EUR',pay:['iban','card','paypal']},
+  {c:'SE',f:'🇸🇪',n:{fr:'Suède',en:'Sweden',es:'Suecia',de:'Schweden',pt:'Suécia',it:'Svezia'},cur:'SEK',pay:['iban','card','paypal']},
+  {c:'NO',f:'🇳🇴',n:{fr:'Norvège',en:'Norway',es:'Noruega',de:'Norwegen',pt:'Noruega',it:'Norvegia'},cur:'NOK',pay:['iban','card','paypal']},
+  {c:'DK',f:'🇩🇰',n:{fr:'Danemark',en:'Denmark',es:'Dinamarca',de:'Dänemark',pt:'Dinamarca',it:'Danimarca'},cur:'DKK',pay:['iban','card','paypal']},
+  {c:'PL',f:'🇵🇱',n:{fr:'Pologne',en:'Poland',es:'Polonia',de:'Polen',pt:'Polónia',it:'Polonia'},cur:'PLN',pay:['iban','card','paypal']},
+  {c:'AT',f:'🇦🇹',n:{fr:'Autriche',en:'Austria',es:'Austria',de:'Österreich',pt:'Áustria',it:'Austria'},cur:'EUR',pay:['iban','card','paypal']},
+  {c:'GR',f:'🇬🇷',n:{fr:'Grèce',en:'Greece',es:'Grecia',de:'Griechenland',pt:'Grécia',it:'Grecia'},cur:'EUR',pay:['iban','card','paypal']},
+  {c:'RO',f:'🇷🇴',n:{fr:'Roumanie',en:'Romania',es:'Rumanía',de:'Rumänien',pt:'Roménia',it:'Romania'},cur:'RON',pay:['iban','card','paypal']},
+  {c:'CZ',f:'🇨🇿',n:{fr:'Tchéquie',en:'Czech Republic',es:'Chequia',de:'Tschechien',pt:'Chéquia',it:'Repubblica Ceca'},cur:'CZK',pay:['iban','card','paypal']},
+  {c:'HU',f:'🇭🇺',n:{fr:'Hongrie',en:'Hungary',es:'Hungría',de:'Ungarn',pt:'Hungria',it:'Ungheria'},cur:'HUF',pay:['iban','card','paypal']},
+  {c:'FI',f:'🇫🇮',n:{fr:'Finlande',en:'Finland',es:'Finlandia',de:'Finnland',pt:'Finlândia',it:'Finlandia'},cur:'EUR',pay:['iban','card','paypal']},
+  {c:'IE',f:'🇮🇪',n:{fr:'Irlande',en:'Ireland',es:'Irlanda',de:'Irland',pt:'Irlanda',it:'Irlanda'},cur:'EUR',pay:['iban','card','paypal']},
+  {c:'LU',f:'🇱🇺',n:{fr:'Luxembourg',en:'Luxembourg',es:'Luxemburgo',de:'Luxemburg',pt:'Luxemburgo',it:'Lussemburgo'},cur:'EUR',pay:['iban','card','paypal']},
   // AMERIQUE
-  {c:'US',flag:'🇺🇸',name:{fr:'États-Unis',en:'United States',es:'Estados Unidos',de:'USA'},currency:'USD'},
-  {c:'CA',flag:'🇨🇦',name:{fr:'Canada',en:'Canada',es:'Canadá',de:'Kanada'},currency:'CAD'},
-  {c:'BR',flag:'🇧🇷',name:{fr:'Brésil',en:'Brazil',es:'Brasil',de:'Brasilien'},currency:'BRL'},
-  {c:'MX',flag:'🇲🇽',name:{fr:'Mexique',en:'Mexico',es:'México',de:'Mexiko'},currency:'MXN'},
-  // ASIE
-  {c:'CN',flag:'🇨🇳',name:{fr:'Chine',en:'China',es:'China',de:'China'},currency:'CNY'},
-  {c:'JP',flag:'🇯🇵',name:{fr:'Japon',en:'Japan',es:'Japón',de:'Japan'},currency:'JPY'},
-  {c:'IN',flag:'🇮🇳',name:{fr:'Inde',en:'India',es:'India',de:'Indien'},currency:'INR'},
-  {c:'AE',flag:'🇦🇪',name:{fr:'Émirats Arabes',en:'UAE',es:'EAU',de:'VAE'},currency:'AED'},
-  {c:'SA',flag:'🇸🇦',name:{fr:'Arabie Saoudite',en:'Saudi Arabia',es:'Arabia Saudita',de:'Saudi-Arabien'},currency:'SAR'},
+  {c:'US',f:'🇺🇸',n:{fr:'États-Unis',en:'United States',es:'Estados Unidos',de:'USA',pt:'Estados Unidos',it:'Stati Uniti'},cur:'USD',pay:['paypal','card','btc']},
+  {c:'CA',f:'🇨🇦',n:{fr:'Canada',en:'Canada',es:'Canadá',de:'Kanada',pt:'Canadá',it:'Canada'},cur:'CAD',pay:['paypal','card','btc']},
+  {c:'BR',f:'🇧🇷',n:{fr:'Brésil',en:'Brazil',es:'Brasil',de:'Brasilien',pt:'Brasil',it:'Brasile'},cur:'BRL',pay:['paypal','card','cod']},
+  // ASIE & MOYEN-ORIENT
+  {c:'CN',f:'🇨🇳',n:{fr:'Chine',en:'China',es:'China',de:'China',pt:'China',it:'Cina'},cur:'CNY',pay:['btc','paypal','cod']},
+  {c:'JP',f:'🇯🇵',n:{fr:'Japon',en:'Japan',es:'Japón',de:'Japan',pt:'Japão',it:'Giappone'},cur:'JPY',pay:['paypal','card','btc']},
+  {c:'AE',f:'🇦🇪',n:{fr:'Émirats Arabes',en:'UAE',es:'EAU',de:'VAE',pt:'Emirados',it:'Emirati'},cur:'AED',pay:['iban','paypal','btc']},
+  {c:'SA',f:'🇸🇦',n:{fr:'Arabie Saoudite',en:'Saudi Arabia',es:'Arabia Saudita',de:'Saudi-Arabien',pt:'Arábia Saudita',it:'Arabia Saudita'},cur:'SAR',pay:['iban','paypal','btc']},
 ];
 
-const CURRENCIES = {XAF:'FCFA',XOF:'FCFA',EUR:'€',GBP:'£',USD:'$',CAD:'CA$',CHF:'CHF',SEK:'kr',NOK:'kr',DKK:'kr',PLN:'zł',RON:'lei',CZK:'Kč',HUF:'Ft',NGN:'₦',GHS:'₵',MAD:'MAD',ZAR:'R',KES:'KSh',CNY:'¥',JPY:'¥',INR:'₹',AED:'AED',SAR:'SAR',BRL:'R$',MXN:'$',CDF:'FC',MGA:'Ar',GNF:'GNF',TND:'DT',ETB:'Br'};
+const CURR={XAF:'FCFA',XOF:'FCFA',EUR:'€',GBP:'£',USD:'$',CAD:'CA$',CHF:'CHF',SEK:'kr',NOK:'kr',DKK:'kr',PLN:'zł',RON:'lei',CZK:'Kč',HUF:'Ft',NGN:'₦',GHS:'₵',MAD:'MAD',ZAR:'R',KES:'KSh',CNY:'¥',JPY:'¥',AED:'AED',SAR:'SAR',BRL:'R$',CDF:'FC'};
 
-// ======================================================
-// TRANSLATIONS
-// ======================================================
+// ============================================================
+// TRADUCTIONS
+// ============================================================
 const T={
   fr:{
-    heroTitle:"SUIVI DE VOS COLIS EN TEMPS RÉEL",
-    heroSub:"Expédiez, suivez et gérez vos livraisons partout dans le monde",
-    trackBtn:"SUIVRE",hLogoSub:"Logistics Services",
-    "nav-home":"Accueil","nav-ship":"Expédier","nav-courier":"Coursier","nav-invoices":"Factures",
-    f1t:"Livraison Express",f1d:"Livraison en 24–48h dans plus de 80 pays.",
-    f2t:"Suivi en Temps Réel",f2d:"GPS live intégré avec Google Maps et Waze.",
-    f3t:"Sécurisé & Assuré",f3d:"Chaque colis est assuré et documenté.",
-    tLabel:"Numéro de suivi",navLabel:"Navigation GPS",
+    heroT:"SUIVI DE VOS COLIS EN TEMPS RÉEL",heroS:"Expédiez, suivez et gérez vos livraisons partout dans le monde",
+    trackBtn:"🔍 SUIVRE",hSub:"Logistics Services",
+    nHome:"Accueil",nShip:"Expédier",nAdmin:"Admin",nCourier:"Coursier",nInvoices:"Factures",
+    tLbl:"Numéro de suivi",navLbl:"Navigation GPS",
     msl1:"Collecté",msl2:"Tri",msl3:"Transit",msl4:"Douane",msl5:"Livré",
-    senderTitle:"📤 Expéditeur",recvSep:"DESTINATAIRE",
-    docSep:"DOCUMENTS (OPTIONNELS)",
-    docInfoBox:"📎 Ces documents sont facultatifs. Ils peuvent être requis pour certaines destinations (douane, haute valeur). Vous pouvez les envoyer par email séparément.",
-    lSNm:"Nom complet",lSEm:"Email",lSPh:"Téléphone",lSCo:"Pays",lSCi:"Ville",lSZp:"Code Postal",lSAd:"Adresse complète",
-    lRNm:"Nom complet",lREm:"Email",lRPh:"Téléphone",lRCo:"Pays",lRCi:"Ville",lRZp:"Code Postal",lRAd:"Adresse complète",
-    lDocID:"Pièce d'identité",optBadge1:"OPTIONNEL",optNote1:"CNI, Passeport — uniquement si requis par la douane",
-    lDocInv:"Facture / Valeur des articles",optBadge2:"OPTIONNEL",optNote2:"Pour les colis de valeur élevée ou hors UE",
-    parcelTitle:"📦 Description du Colis",
-    lWt:"Poids (kg)",lLn:"Longueur (cm)",lWd:"Largeur (cm)",lHt:"Hauteur (cm)",lVl:"Valeur déclarée",lQty:"Nombre d'articles",lCnt:"Description du contenu",
-    speedTitle:"⚡ Vitesse de Livraison",
+    f1t:"Livraison Express",f1d:"24–48h dans plus de 80 pays.",f2t:"Suivi Temps Réel",f2d:"GPS live avec Google Maps et Waze.",f3t:"Sécurisé & Assuré",f3d:"Chaque colis assuré et documenté.",
+    adminTitle:"⚙️ Panneau Admin — Coordonnées de Paiement",
+    adminInfo:"🔐 Ces informations sont privées. Renseignez ici vos coordonnées bancaires/crypto. Elles apparaîtront sur le bordereau du client.",
+    lIban:"IBAN",lBic:"BIC / SWIFT",lBank:"Nom de la banque",lAccName:"Titulaire du compte",
+    senderT:"📤 Expéditeur",recvSep:"DESTINATAIRE",
+    docSep:"DOCUMENTS (OPTIONNELS)",docInfo:"📎 Ces documents sont facultatifs. Requis uniquement pour certaines destinations ou colis de haute valeur.",
+    lSNm:"Nom",lSEm:"Email",lSPh:"Téléphone",lSCo:"Pays",lSCi:"Ville",lSZp:"Code Postal",lSAd:"Adresse",
+    lRNm:"Nom",lREm:"Email",lRPh:"Téléphone",lRCo:"Pays",lRCi:"Ville",lRZp:"Code Postal",lRAd:"Adresse",
+    lDocID:"Pièce d'identité",opt1:"OPTIONNEL",optN1:"CNI, Passeport — si requis par la douane",
+    lDocInv:"Facture / Valeur",opt2:"OPTIONNEL",optN2:"Pour colis de haute valeur",
+    parcelT:"📦 Description du Colis",lWt:"Poids (kg)",lLn:"Longueur (cm)",lWd:"Largeur (cm)",lHt:"Hauteur (cm)",lVl:"Valeur déclarée",lQty:"Nb articles",lCnt:"Contenu",
+    speedT:"⚡ Vitesse de Livraison",
     spEN:"Express International",spED:"24 – 48 heures",spEP:"À partir de 45 €",
     spSN:"Standard",spSD:"2 – 4 jours ouvrés",spSP:"À partir de 22 €",
     spCN:"Économique",spCD:"5 – 10 jours ouvrés",spCP:"À partir de 12 €",
-    payTitle:"💳 Paiement",
-    payInfo:"📧 Après confirmation, un bordereau de commande officiel avec toutes les instructions de paiement sera envoyé par email au destinataire.",
-    payMTN:"Paiement via MoMo",payOM:"Paiement via Orange Money",payCard:"Visa / Mastercard / CB",
-    payCOD:"Paiement à la livraison",payCODI:"Cash à réception",lPayRef:"Référence de paiement / Numéro MoMo / IBAN",
+    payT:"💳 Mode de Paiement",
+    payInfo:"📧 Le bordereau avec vos coordonnées de paiement sera envoyé par email au destinataire après confirmation.",
+    pmIban:"Virement / IBAN",pmCard:"Carte bancaire",pmCOD:"Paiement à la livraison",pmCODI:"Cash à réception",
     sl1:"Parties",sl2:"Colis",sl3:"Vitesse",sl4:"Paiement",
     btnN1:"Suivant →",btnB2:"← Retour",btnN2:"Suivant →",btnB3:"← Retour",btnN3:"Suivant →",btnB4:"← Retour",
     btnSubmit:"✅ CONFIRMER L'EXPÉDITION",
-    confTitle:"EXPÉDITION CONFIRMÉE !",confMsg:"Un bordereau de commande a été envoyé au destinataire par email.",
-    confTLabel:"Numéro de suivi",
-    btnViewInv:"📄 Voir le bordereau",btnSendEmail:"📧 Renvoyer par email",btnNew:"+ Nouvelle expédition",
-    courierTitle:"🚚 Espace Coursier – Mises à jour en Temps Réel",
-    lCNm:"Votre nom",lCVh:"Numéro de véhicule",lCTr:"N° de suivi à mettre à jour",lCPos:"Position actuelle",
-    statusLbl:"Statut du colis",
-    ps1:"✅ Collecté",ps2:"🔄 En tri",ps3:"🚚 En transit",ps4:"🛃 Douane",ps5:"🏃 En livraison",ps6:"✅ Livré",ps7:"⚠️ Retardé",
-    btnUpdate:"📡 ENVOYER LA MISE À JOUR",logTitle:"📋 Historique des mises à jour",logEmpty:"Aucune mise à jour envoyée.",
-    invSearchTitle:"🔍 Rechercher un Bordereau / Facture",btnInvLoad:"Charger",
-    btnPrintMod:"🖨️ Imprimer",
-    invTitle:"BORDEREAU DE COMMANDE",invSender:"EXPÉDITEUR",invRecv:"DESTINATAIRE",
-    invColDesc:"Description",invColQty:"Qté",invColWt:"Poids",invColVal:"Valeur",invColFee:"Frais d'expédition",
+    confT:"EXPÉDITION CONFIRMÉE !",confMsg:"Le bordereau a été envoyé au destinataire par email.",confTLbl:"Numéro de suivi",
+    btnViewB:"📄 Voir le bordereau",btnReSend:"📧 Renvoyer",btnNew:"+ Nouveau",
+    courierT:"🚚 Espace Coursier",lCNm:"Votre nom",lCVh:"Véhicule",lCTr:"N° de suivi",lCPos:"Position actuelle",
+    statusLbl:"Statut",
+    ps1:"✅ Collecté",ps2:"🔄 En tri",ps3:"🚚 Transit",ps4:"🛃 Douane",ps5:"🏃 En livraison",ps6:"✅ Livré",ps7:"⚠️ Retardé",
+    btnUpd:"📡 ENVOYER LA MISE À JOUR",logT:"📋 Historique",logEmpty:"Aucune mise à jour.",
+    invST:"🔍 Rechercher un bordereau",btnInvL:"Charger",
+    // Bordereau
+    bTitle:"BORDEREAU DE COMMANDE",bSender:"EXPÉDITEUR",bRecv:"DESTINATAIRE",
+    bColD:"Description",bColQ:"Qté",bColW:"Poids",bColV:"Valeur",bColF:"Frais d'expédition",bTotal:"TOTAL",
+    bSpeed:"Vitesse de livraison",bPay:"Mode de paiement",bPayInstr:"INSTRUCTIONS DE PAIEMENT",
+    bPayNote:"Veuillez effectuer le paiement selon les coordonnées ci-dessous avant la livraison.",
+    bTrackLabel:"Numéro de suivi",bFooter:"DHL Logistics Services • contact@dhl-logistics.cm\nDocument officiel — conservez ce bordereau pour vos archives.",
+    bStamp:"EN COURS D'EXPÉDITION",
+    payDetectMsg:"💡 Mode recommandé pour votre pays : ",
   },
   en:{
-    heroTitle:"TRACK YOUR PARCELS IN REAL TIME",heroSub:"Ship, track and manage your deliveries worldwide",
-    trackBtn:"TRACK",hLogoSub:"Logistics Services",
-    "nav-home":"Home","nav-ship":"Ship","nav-courier":"Courier","nav-invoices":"Invoices",
-    f1t:"Express Delivery",f1d:"24–48h delivery in over 80 countries.",
-    f2t:"Real-Time Tracking",f2d:"Live GPS with Google Maps and Waze.",
-    f3t:"Secured & Insured",f3d:"Every parcel is insured and documented.",
-    tLabel:"Tracking number",navLabel:"GPS Navigation",
+    heroT:"TRACK YOUR PARCELS IN REAL TIME",heroS:"Ship, track and manage your deliveries worldwide",
+    trackBtn:"🔍 TRACK",hSub:"Logistics Services",
+    nHome:"Home",nShip:"Ship",nAdmin:"Admin",nCourier:"Courier",nInvoices:"Invoices",
+    tLbl:"Tracking number",navLbl:"GPS Navigation",
     msl1:"Collected",msl2:"Sorting",msl3:"Transit",msl4:"Customs",msl5:"Delivered",
-    senderTitle:"📤 Sender",recvSep:"RECIPIENT",
-    docSep:"DOCUMENTS (OPTIONAL)",
-    docInfoBox:"📎 These documents are optional. They may be required for certain destinations (customs, high value). You can send them by email separately.",
-    lSNm:"Full name",lSEm:"Email",lSPh:"Phone",lSCo:"Country",lSCi:"City",lSZp:"Postal Code",lSAd:"Full address",
-    lRNm:"Full name",lREm:"Email",lRPh:"Phone",lRCo:"Country",lRCi:"City",lRZp:"Postal Code",lRAd:"Full address",
-    lDocID:"ID Document",optBadge1:"OPTIONAL",optNote1:"National ID, Passport — only if required by customs",
-    lDocInv:"Invoice / Item value",optBadge2:"OPTIONAL",optNote2:"For high-value parcels or outside EU",
-    parcelTitle:"📦 Parcel Description",
-    lWt:"Weight (kg)",lLn:"Length (cm)",lWd:"Width (cm)",lHt:"Height (cm)",lVl:"Declared value",lQty:"Number of items",lCnt:"Content description",
-    speedTitle:"⚡ Delivery Speed",
+    f1t:"Express Delivery",f1d:"24–48h in over 80 countries.",f2t:"Real-Time Tracking",f2d:"Live GPS with Google Maps and Waze.",f3t:"Secured & Insured",f3d:"Every parcel insured and documented.",
+    adminTitle:"⚙️ Admin Panel — Payment Coordinates",adminInfo:"🔐 Private information. Enter your bank/crypto coordinates. They will appear on the client's order slip based on their payment method.",
+    lIban:"IBAN",lBic:"BIC / SWIFT",lBank:"Bank name",lAccName:"Account holder",
+    senderT:"📤 Sender",recvSep:"RECIPIENT",
+    docSep:"DOCUMENTS (OPTIONAL)",docInfo:"📎 These documents are optional. Only required for certain destinations or high-value parcels.",
+    lSNm:"Name",lSEm:"Email",lSPh:"Phone",lSCo:"Country",lSCi:"City",lSZp:"Postal Code",lSAd:"Address",
+    lRNm:"Name",lREm:"Email",lRPh:"Phone",lRCo:"Country",lRCi:"City",lRZp:"Postal Code",lRAd:"Address",
+    lDocID:"ID Document",opt1:"OPTIONAL",optN1:"National ID, Passport — only if required by customs",
+    lDocInv:"Invoice / Value",opt2:"OPTIONAL",optN2:"For high-value parcels",
+    parcelT:"📦 Parcel Description",lWt:"Weight (kg)",lLn:"Length (cm)",lWd:"Width (cm)",lHt:"Height (cm)",lVl:"Declared value",lQty:"Nb items",lCnt:"Content",
+    speedT:"⚡ Delivery Speed",
     spEN:"International Express",spED:"24 – 48 hours",spEP:"From €45",
     spSN:"Standard",spSD:"2 – 4 business days",spSP:"From €22",
     spCN:"Economy",spCD:"5 – 10 business days",spCP:"From €12",
-    payTitle:"💳 Payment",
-    payInfo:"📧 After confirmation, an official order slip with all payment instructions will be sent by email to the recipient.",
-    payMTN:"Payment via MoMo",payOM:"Payment via Orange Money",payCard:"Visa / Mastercard / CB",
-    payCOD:"Cash on Delivery",payCODI:"Cash upon receipt",lPayRef:"Payment reference / MoMo number / IBAN",
+    payT:"💳 Payment Method",
+    payInfo:"📧 The order slip with payment coordinates will be sent by email to the recipient after confirmation.",
+    pmIban:"Bank Transfer / IBAN",pmCard:"Credit card",pmCOD:"Cash on Delivery",pmCODI:"Cash upon receipt",
     sl1:"Parties",sl2:"Parcel",sl3:"Speed",sl4:"Payment",
     btnN1:"Next →",btnB2:"← Back",btnN2:"Next →",btnB3:"← Back",btnN3:"Next →",btnB4:"← Back",
     btnSubmit:"✅ CONFIRM SHIPMENT",
-    confTitle:"SHIPMENT CONFIRMED!",confMsg:"An order slip has been sent to the recipient by email.",
-    confTLabel:"Tracking number",
-    btnViewInv:"📄 View order slip",btnSendEmail:"📧 Resend by email",btnNew:"+ New shipment",
-    courierTitle:"🚚 Courier Panel – Real-Time Updates",
-    lCNm:"Your name",lCVh:"Vehicle number",lCTr:"Tracking number to update",lCPos:"Current position",
-    statusLbl:"Parcel status",
-    ps1:"✅ Collected",ps2:"🔄 Sorting",ps3:"🚚 In transit",ps4:"🛃 Customs",ps5:"🏃 Out for delivery",ps6:"✅ Delivered",ps7:"⚠️ Delayed",
-    btnUpdate:"📡 SEND UPDATE",logTitle:"📋 Update history",logEmpty:"No updates sent yet.",
-    invSearchTitle:"🔍 Search Order Slip / Invoice",btnInvLoad:"Load",
-    btnPrintMod:"🖨️ Print",
-    invTitle:"ORDER SLIP",invSender:"SENDER",invRecv:"RECIPIENT",
-    invColDesc:"Description",invColQty:"Qty",invColWt:"Weight",invColVal:"Value",invColFee:"Shipping fee",
+    confT:"SHIPMENT CONFIRMED!",confMsg:"The order slip has been sent to the recipient by email.",confTLbl:"Tracking number",
+    btnViewB:"📄 View order slip",btnReSend:"📧 Resend",btnNew:"+ New",
+    courierT:"🚚 Courier Panel",lCNm:"Your name",lCVh:"Vehicle",lCTr:"Tracking number",lCPos:"Current position",
+    statusLbl:"Status",
+    ps1:"✅ Collected",ps2:"🔄 Sorting",ps3:"🚚 Transit",ps4:"🛃 Customs",ps5:"🏃 Out for delivery",ps6:"✅ Delivered",ps7:"⚠️ Delayed",
+    btnUpd:"📡 SEND UPDATE",logT:"📋 History",logEmpty:"No updates yet.",
+    invST:"🔍 Search order slip",btnInvL:"Load",
+    bTitle:"ORDER SLIP",bSender:"SENDER",bRecv:"RECIPIENT",
+    bColD:"Description",bColQ:"Qty",bColW:"Weight",bColV:"Value",bColF:"Shipping fee",bTotal:"TOTAL",
+    bSpeed:"Delivery speed",bPay:"Payment method",bPayInstr:"PAYMENT INSTRUCTIONS",
+    bPayNote:"Please complete payment using the coordinates below before delivery.",
+    bTrackLabel:"Tracking number",bFooter:"DHL Logistics Services • contact@dhl-logistics.cm\nOfficial document — keep this slip for your records.",
+    bStamp:"SHIPMENT IN PROGRESS",payDetectMsg:"💡 Recommended payment for your country: ",
   },
   es:{
-    heroTitle:"RASTREO DE PAQUETES EN TIEMPO REAL",heroSub:"Envía, rastrea y gestiona tus entregas en todo el mundo",
-    trackBtn:"RASTREAR",hLogoSub:"Servicios Logísticos",
-    "nav-home":"Inicio","nav-ship":"Enviar","nav-courier":"Mensajero","nav-invoices":"Facturas",
-    f1t:"Entrega Express",f1d:"Entrega en 24–48h en más de 80 países.",
-    f2t:"Seguimiento en Tiempo Real",f2d:"GPS en vivo con Google Maps y Waze.",
-    f3t:"Seguro & Asegurado",f3d:"Cada paquete está asegurado y documentado.",
-    tLabel:"Número de seguimiento",navLabel:"Navegación GPS",
+    heroT:"RASTREO DE PAQUETES EN TIEMPO REAL",heroS:"Envía, rastrea y gestiona tus entregas en todo el mundo",
+    trackBtn:"🔍 RASTREAR",hSub:"Servicios Logísticos",
+    nHome:"Inicio",nShip:"Enviar",nAdmin:"Admin",nCourier:"Mensajero",nInvoices:"Facturas",
+    tLbl:"Número de seguimiento",navLbl:"Navegación GPS",
     msl1:"Recogido",msl2:"Clasificación",msl3:"Tránsito",msl4:"Aduana",msl5:"Entregado",
-    senderTitle:"📤 Remitente",recvSep:"DESTINATARIO",
-    docSep:"DOCUMENTOS (OPCIONALES)",
-    docInfoBox:"📎 Estos documentos son opcionales. Pueden ser requeridos para ciertos destinos (aduana, alto valor).",
-    lSNm:"Nombre completo",lSEm:"Correo",lSPh:"Teléfono",lSCo:"País",lSCi:"Ciudad",lSZp:"Código Postal",lSAd:"Dirección completa",
-    lRNm:"Nombre completo",lREm:"Correo",lRPh:"Teléfono",lRCo:"País",lRCi:"Ciudad",lRZp:"Código Postal",lRAd:"Dirección completa",
-    lDocID:"Documento de identidad",optBadge1:"OPCIONAL",optNote1:"DNI, Pasaporte — solo si lo requiere la aduana",
-    lDocInv:"Factura / Valor de artículos",optBadge2:"OPCIONAL",optNote2:"Para paquetes de alto valor o fuera de la UE",
-    parcelTitle:"📦 Descripción del Paquete",
-    lWt:"Peso (kg)",lLn:"Longitud (cm)",lWd:"Ancho (cm)",lHt:"Alto (cm)",lVl:"Valor declarado",lQty:"Número de artículos",lCnt:"Descripción del contenido",
-    speedTitle:"⚡ Velocidad de Entrega",
+    f1t:"Entrega Express",f1d:"24–48h en más de 80 países.",f2t:"Seguimiento en Tiempo Real",f2d:"GPS en vivo con Google Maps y Waze.",f3t:"Seguro & Asegurado",f3d:"Cada paquete asegurado y documentado.",
+    adminTitle:"⚙️ Panel Admin — Coordenadas de Pago",adminInfo:"🔐 Información privada. Introduce tus coordenadas bancarias/crypto. Aparecerán en el resguardo del cliente.",
+    lIban:"IBAN",lBic:"BIC / SWIFT",lBank:"Nombre del banco",lAccName:"Titular de la cuenta",
+    senderT:"📤 Remitente",recvSep:"DESTINATARIO",
+    docSep:"DOCUMENTOS (OPCIONALES)",docInfo:"📎 Estos documentos son opcionales. Solo requeridos para ciertos destinos o paquetes de alto valor.",
+    lSNm:"Nombre",lSEm:"Correo",lSPh:"Teléfono",lSCo:"País",lSCi:"Ciudad",lSZp:"Código Postal",lSAd:"Dirección",
+    lRNm:"Nombre",lREm:"Correo",lRPh:"Teléfono",lRCo:"País",lRCi:"Ciudad",lRZp:"Código Postal",lRAd:"Dirección",
+    lDocID:"Documento de identidad",opt1:"OPCIONAL",optN1:"DNI, Pasaporte — solo si lo requiere la aduana",
+    lDocInv:"Factura / Valor",opt2:"OPCIONAL",optN2:"Para paquetes de alto valor",
+    parcelT:"📦 Descripción del Paquete",lWt:"Peso (kg)",lLn:"Longitud (cm)",lWd:"Ancho (cm)",lHt:"Alto (cm)",lVl:"Valor declarado",lQty:"Nb artículos",lCnt:"Contenido",
+    speedT:"⚡ Velocidad de Entrega",
     spEN:"Express Internacional",spED:"24 – 48 horas",spEP:"Desde 45 €",
     spSN:"Estándar",spSD:"2 – 4 días hábiles",spSP:"Desde 22 €",
     spCN:"Económico",spCD:"5 – 10 días hábiles",spCP:"Desde 12 €",
-    payTitle:"💳 Pago",
-    payInfo:"📧 Tras la confirmación, se enviará un resguardo oficial con instrucciones de pago al destinatario.",
-    payMTN:"Pago vía MoMo",payOM:"Pago vía Orange Money",payCard:"Visa / Mastercard / CB",
-    payCOD:"Pago contra entrega",payCODI:"Efectivo al recibir",lPayRef:"Referencia de pago / Número MoMo / IBAN",
+    payT:"💳 Método de Pago",
+    payInfo:"📧 El resguardo con las coordenadas de pago se enviará por correo al destinatario tras la confirmación.",
+    pmIban:"Transferencia / IBAN",pmCard:"Tarjeta bancaria",pmCOD:"Pago contra entrega",pmCODI:"Efectivo al recibir",
     sl1:"Partes",sl2:"Paquete",sl3:"Velocidad",sl4:"Pago",
     btnN1:"Siguiente →",btnB2:"← Volver",btnN2:"Siguiente →",btnB3:"← Volver",btnN3:"Siguiente →",btnB4:"← Volver",
     btnSubmit:"✅ CONFIRMAR ENVÍO",
-    confTitle:"¡ENVÍO CONFIRMADO!",confMsg:"Se ha enviado un resguardo al destinatario por correo.",
-    confTLabel:"Número de seguimiento",
-    btnViewInv:"📄 Ver resguardo",btnSendEmail:"📧 Reenviar por correo",btnNew:"+ Nuevo envío",
-    courierTitle:"🚚 Panel del Mensajero",
-    lCNm:"Tu nombre",lCVh:"Número de vehículo",lCTr:"Número de seguimiento",lCPos:"Posición actual",
-    statusLbl:"Estado del paquete",
-    ps1:"✅ Recogido",ps2:"🔄 Clasificación",ps3:"🚚 En tránsito",ps4:"🛃 Aduana",ps5:"🏃 En reparto",ps6:"✅ Entregado",ps7:"⚠️ Retrasado",
-    btnUpdate:"📡 ENVIAR ACTUALIZACIÓN",logTitle:"📋 Historial",logEmpty:"Sin actualizaciones.",
-    invSearchTitle:"🔍 Buscar Resguardo / Factura",btnInvLoad:"Cargar",
-    btnPrintMod:"🖨️ Imprimir",
-    invTitle:"RESGUARDO DE PEDIDO",invSender:"REMITENTE",invRecv:"DESTINATARIO",
-    invColDesc:"Descripción",invColQty:"Cant.",invColWt:"Peso",invColVal:"Valor",invColFee:"Tarifa de envío",
+    confT:"¡ENVÍO CONFIRMADO!",confMsg:"El resguardo ha sido enviado al destinatario por correo.",confTLbl:"Número de seguimiento",
+    btnViewB:"📄 Ver resguardo",btnReSend:"📧 Reenviar",btnNew:"+ Nuevo",
+    courierT:"🚚 Panel del Mensajero",lCNm:"Tu nombre",lCVh:"Vehículo",lCTr:"Número de seguimiento",lCPos:"Posición actual",
+    statusLbl:"Estado",
+    ps1:"✅ Recogido",ps2:"🔄 Clasificación",ps3:"🚚 Tránsito",ps4:"🛃 Aduana",ps5:"🏃 En reparto",ps6:"✅ Entregado",ps7:"⚠️ Retrasado",
+    btnUpd:"📡 ENVIAR ACTUALIZACIÓN",logT:"📋 Historial",logEmpty:"Sin actualizaciones.",
+    invST:"🔍 Buscar resguardo",btnInvL:"Cargar",
+    bTitle:"RESGUARDO DE PEDIDO",bSender:"REMITENTE",bRecv:"DESTINATARIO",
+    bColD:"Descripción",bColQ:"Cant.",bColW:"Peso",bColV:"Valor",bColF:"Tarifa de envío",bTotal:"TOTAL",
+    bSpeed:"Velocidad de entrega",bPay:"Método de pago",bPayInstr:"INSTRUCCIONES DE PAGO",
+    bPayNote:"Por favor realice el pago con las coordenadas indicadas antes de la entrega.",
+    bTrackLabel:"Número de seguimiento",bFooter:"DHL Logistics Services • contact@dhl-logistics.cm\nDocumento oficial — conserve este resguardo.",
+    bStamp:"ENVÍO EN CURSO",payDetectMsg:"💡 Método recomendado para su país: ",
   },
   de:{
-    heroTitle:"PAKETE IN ECHTZEIT VERFOLGEN",heroSub:"Versenden, verfolgen und verwalten Sie Ihre Sendungen weltweit",
-    trackBtn:"VERFOLGEN",hLogoSub:"Logistics Services",
-    "nav-home":"Startseite","nav-ship":"Versenden","nav-courier":"Kurier","nav-invoices":"Rechnungen",
-    f1t:"Expresslieferung",f1d:"24–48h Lieferung in über 80 Ländern.",
-    f2t:"Echtzeit-Tracking",f2d:"Live GPS mit Google Maps und Waze.",
-    f3t:"Sicher & Versichert",f3d:"Jedes Paket ist versichert und dokumentiert.",
-    tLabel:"Sendungsnummer",navLabel:"GPS-Navigation",
+    heroT:"PAKETE IN ECHTZEIT VERFOLGEN",heroS:"Versenden, verfolgen und verwalten Sie Ihre Sendungen weltweit",
+    trackBtn:"🔍 VERFOLGEN",hSub:"Logistics Services",
+    nHome:"Startseite",nShip:"Versenden",nAdmin:"Admin",nCourier:"Kurier",nInvoices:"Rechnungen",
+    tLbl:"Sendungsnummer",navLbl:"GPS-Navigation",
     msl1:"Abgeholt",msl2:"Sortierung",msl3:"Transit",msl4:"Zoll",msl5:"Zugestellt",
-    senderTitle:"📤 Absender",recvSep:"EMPFÄNGER",
-    docSep:"DOKUMENTE (OPTIONAL)",
-    docInfoBox:"📎 Diese Dokumente sind optional. Sie können für bestimmte Ziele erforderlich sein (Zoll, hoher Wert).",
-    lSNm:"Vollständiger Name",lSEm:"E-Mail",lSPh:"Telefon",lSCo:"Land",lSCi:"Stadt",lSZp:"Postleitzahl",lSAd:"Vollständige Adresse",
-    lRNm:"Vollständiger Name",lREm:"E-Mail",lRPh:"Telefon",lRCo:"Land",lRCi:"Stadt",lRZp:"Postleitzahl",lRAd:"Vollständige Adresse",
-    lDocID:"Ausweis",optBadge1:"OPTIONAL",optNote1:"Personalausweis, Reisepass — nur wenn vom Zoll verlangt",
-    lDocInv:"Rechnung / Warenwert",optBadge2:"OPTIONAL",optNote2:"Für hochwertige Pakete oder außerhalb der EU",
-    parcelTitle:"📦 Paketbeschreibung",
-    lWt:"Gewicht (kg)",lLn:"Länge (cm)",lWd:"Breite (cm)",lHt:"Höhe (cm)",lVl:"Deklarierter Wert",lQty:"Anzahl Artikel",lCnt:"Inhaltsbeschreibung",
-    speedTitle:"⚡ Liefergeschwindigkeit",
+    f1t:"Expresslieferung",f1d:"24–48h in über 80 Ländern.",f2t:"Echtzeit-Tracking",f2d:"Live GPS mit Google Maps und Waze.",f3t:"Sicher & Versichert",f3d:"Jedes Paket versichert und dokumentiert.",
+    adminTitle:"⚙️ Admin-Bereich — Zahlungsdaten",adminInfo:"🔐 Private Informationen. Geben Sie hier Ihre Bank-/Kryptodaten ein. Sie erscheinen auf dem Lieferschein des Kunden.",
+    lIban:"IBAN",lBic:"BIC / SWIFT",lBank:"Bankname",lAccName:"Kontoinhaber",
+    senderT:"📤 Absender",recvSep:"EMPFÄNGER",
+    docSep:"DOKUMENTE (OPTIONAL)",docInfo:"📎 Diese Dokumente sind optional. Nur für bestimmte Ziele oder hochwertige Pakete erforderlich.",
+    lSNm:"Name",lSEm:"E-Mail",lSPh:"Telefon",lSCo:"Land",lSCi:"Stadt",lSZp:"Postleitzahl",lSAd:"Adresse",
+    lRNm:"Name",lREm:"E-Mail",lRPh:"Telefon",lRCo:"Land",lRCi:"Stadt",lRZp:"Postleitzahl",lRAd:"Adresse",
+    lDocID:"Ausweis",opt1:"OPTIONAL",optN1:"Personalausweis, Reisepass — nur wenn vom Zoll verlangt",
+    lDocInv:"Rechnung / Wert",opt2:"OPTIONAL",optN2:"Für hochwertige Pakete",
+    parcelT:"📦 Paketbeschreibung",lWt:"Gewicht (kg)",lLn:"Länge (cm)",lWd:"Breite (cm)",lHt:"Höhe (cm)",lVl:"Deklarierter Wert",lQty:"Anz. Artikel",lCnt:"Inhalt",
+    speedT:"⚡ Liefergeschwindigkeit",
     spEN:"International Express",spED:"24 – 48 Stunden",spEP:"Ab 45 €",
     spSN:"Standard",spSD:"2 – 4 Werktage",spSP:"Ab 22 €",
     spCN:"Wirtschaftlich",spCD:"5 – 10 Werktage",spCP:"Ab 12 €",
-    payTitle:"💳 Zahlung",
-    payInfo:"📧 Nach der Bestätigung wird ein offizieller Lieferschein mit Zahlungsanweisungen per E-Mail an den Empfänger gesendet.",
-    payMTN:"Zahlung via MoMo",payOM:"Zahlung via Orange Money",payCard:"Visa / Mastercard / CB",
-    payCOD:"Nachnahme",payCODI:"Bargeld bei Erhalt",lPayRef:"Zahlungsreferenz / MoMo / IBAN",
+    payT:"💳 Zahlungsmethode",
+    payInfo:"📧 Der Lieferschein mit den Zahlungsdaten wird nach der Bestätigung per E-Mail an den Empfänger gesendet.",
+    pmIban:"Banküberweisung / IBAN",pmCard:"Kreditkarte",pmCOD:"Nachnahme",pmCODI:"Bargeld bei Erhalt",
     sl1:"Parteien",sl2:"Paket",sl3:"Geschwindigkeit",sl4:"Zahlung",
     btnN1:"Weiter →",btnB2:"← Zurück",btnN2:"Weiter →",btnB3:"← Zurück",btnN3:"Weiter →",btnB4:"← Zurück",
     btnSubmit:"✅ SENDUNG BESTÄTIGEN",
-    confTitle:"SENDUNG BESTÄTIGT!",confMsg:"Ein Lieferschein wurde per E-Mail an den Empfänger gesendet.",
-    confTLabel:"Sendungsnummer",
-    btnViewInv:"📄 Lieferschein anzeigen",btnSendEmail:"📧 Erneut senden",btnNew:"+ Neue Sendung",
-    courierTitle:"🚚 Kurier-Bereich – Echtzeit-Updates",
-    lCNm:"Ihr Name",lCVh:"Fahrzeugnummer",lCTr:"Sendungsnummer",lCPos:"Aktuelle Position",
-    statusLbl:"Paketstatus",
-    ps1:"✅ Abgeholt",ps2:"🔄 Sortierung",ps3:"🚚 Im Transit",ps4:"🛃 Zoll",ps5:"🏃 Wird zugestellt",ps6:"✅ Zugestellt",ps7:"⚠️ Verzögert",
-    btnUpdate:"📡 UPDATE SENDEN",logTitle:"📋 Update-Verlauf",logEmpty:"Noch keine Updates.",
-    invSearchTitle:"🔍 Lieferschein / Rechnung suchen",btnInvLoad:"Laden",
-    btnPrintMod:"🖨️ Drucken",
-    invTitle:"LIEFERSCHEIN",invSender:"ABSENDER",invRecv:"EMPFÄNGER",
-    invColDesc:"Beschreibung",invColQty:"Menge",invColWt:"Gewicht",invColVal:"Wert",invColFee:"Versandkosten",
+    confT:"SENDUNG BESTÄTIGT!",confMsg:"Der Lieferschein wurde per E-Mail an den Empfänger gesendet.",confTLbl:"Sendungsnummer",
+    btnViewB:"📄 Lieferschein anzeigen",btnReSend:"📧 Erneut senden",btnNew:"+ Neu",
+    courierT:"🚚 Kurier-Bereich",lCNm:"Ihr Name",lCVh:"Fahrzeug",lCTr:"Sendungsnummer",lCPos:"Aktuelle Position",
+    statusLbl:"Status",
+    ps1:"✅ Abgeholt",ps2:"🔄 Sortierung",ps3:"🚚 Transit",ps4:"🛃 Zoll",ps5:"🏃 Wird zugestellt",ps6:"✅ Zugestellt",ps7:"⚠️ Verzögert",
+    btnUpd:"📡 UPDATE SENDEN",logT:"📋 Verlauf",logEmpty:"Noch keine Updates.",
+    invST:"🔍 Lieferschein suchen",btnInvL:"Laden",
+    bTitle:"LIEFERSCHEIN",bSender:"ABSENDER",bRecv:"EMPFÄNGER",
+    bColD:"Beschreibung",bColQ:"Menge",bColW:"Gewicht",bColV:"Wert",bColF:"Versandkosten",bTotal:"GESAMT",
+    bSpeed:"Liefergeschwindigkeit",bPay:"Zahlungsmethode",bPayInstr:"ZAHLUNGSANWEISUNGEN",
+    bPayNote:"Bitte führen Sie die Zahlung mit den unten angegebenen Daten vor der Lieferung durch.",
+    bTrackLabel:"Sendungsnummer",bFooter:"DHL Logistics Services • contact@dhl-logistics.cm\nOffizielles Dokument — bewahren Sie diesen Lieferschein auf.",
+    bStamp:"SENDUNG IN BEARBEITUNG",payDetectMsg:"💡 Empfohlene Zahlungsmethode für Ihr Land: ",
+  },
+  pt:{
+    heroT:"RASTREIO DOS SEUS PACOTES EM TEMPO REAL",heroS:"Envie, rastreie e gerencie suas entregas em todo o mundo",
+    trackBtn:"🔍 RASTREAR",hSub:"Serviços Logísticos",
+    nHome:"Início",nShip:"Enviar",nAdmin:"Admin",nCourier:"Estafeta",nInvoices:"Faturas",
+    tLbl:"Número de rastreio",navLbl:"Navegação GPS",
+    msl1:"Recolhido",msl2:"Triagem",msl3:"Trânsito",msl4:"Alfândega",msl5:"Entregue",
+    f1t:"Entrega Expresso",f1d:"24–48h em mais de 80 países.",f2t:"Rastreio em Tempo Real",f2d:"GPS ao vivo com Google Maps e Waze.",f3t:"Seguro & Segurado",f3d:"Cada pacote segurado e documentado.",
+    adminTitle:"⚙️ Painel Admin — Coordenadas de Pagamento",adminInfo:"🔐 Informações privadas. Introduza aqui as suas coordenadas bancárias/crypto.",
+    lIban:"IBAN",lBic:"BIC / SWIFT",lBank:"Nome do banco",lAccName:"Titular da conta",
+    senderT:"📤 Remetente",recvSep:"DESTINATÁRIO",
+    docSep:"DOCUMENTOS (OPCIONAIS)",docInfo:"📎 Estes documentos são opcionais. Necessários apenas para destinos específicos.",
+    lSNm:"Nome",lSEm:"Email",lSPh:"Telefone",lSCo:"País",lSCi:"Cidade",lSZp:"Código Postal",lSAd:"Morada",
+    lRNm:"Nome",lREm:"Email",lRPh:"Telefone",lRCo:"País",lRCi:"Cidade",lRZp:"Código Postal",lRAd:"Morada",
+    lDocID:"Documento de identidade",opt1:"OPCIONAL",optN1:"BI, Passaporte — apenas se exigido pela alfândega",
+    lDocInv:"Fatura / Valor",opt2:"OPCIONAL",optN2:"Para pacotes de alto valor",
+    parcelT:"📦 Descrição do Pacote",lWt:"Peso (kg)",lLn:"Comprimento (cm)",lWd:"Largura (cm)",lHt:"Altura (cm)",lVl:"Valor declarado",lQty:"Nº artigos",lCnt:"Conteúdo",
+    speedT:"⚡ Velocidade de Entrega",
+    spEN:"Expresso Internacional",spED:"24 – 48 horas",spEP:"A partir de 45 €",
+    spSN:"Standard",spSD:"2 – 4 dias úteis",spSP:"A partir de 22 €",
+    spCN:"Económico",spCD:"5 – 10 dias úteis",spCP:"A partir de 12 €",
+    payT:"💳 Método de Pagamento",
+    payInfo:"📧 O talão com as coordenadas de pagamento será enviado por email ao destinatário após confirmação.",
+    pmIban:"Transferência / IBAN",pmCard:"Cartão bancário",pmCOD:"Pagamento na entrega",pmCODI:"Dinheiro na receção",
+    sl1:"Partes",sl2:"Pacote",sl3:"Velocidade",sl4:"Pagamento",
+    btnN1:"Seguinte →",btnB2:"← Voltar",btnN2:"Seguinte →",btnB3:"← Voltar",btnN3:"Seguinte →",btnB4:"← Voltar",
+    btnSubmit:"✅ CONFIRMAR ENVIO",
+    confT:"ENVIO CONFIRMADO!",confMsg:"O talão foi enviado ao destinatário por email.",confTLbl:"Número de rastreio",
+    btnViewB:"📄 Ver talão",btnReSend:"📧 Reenviar",btnNew:"+ Novo",
+    courierT:"🚚 Área do Estafeta",lCNm:"O seu nome",lCVh:"Veículo",lCTr:"Número de rastreio",lCPos:"Posição atual",
+    statusLbl:"Estado",
+    ps1:"✅ Recolhido",ps2:"🔄 Triagem",ps3:"🚚 Trânsito",ps4:"🛃 Alfândega",ps5:"🏃 Em entrega",ps6:"✅ Entregue",ps7:"⚠️ Atrasado",
+    btnUpd:"📡 ENVIAR ATUALIZAÇÃO",logT:"📋 Histórico",logEmpty:"Sem atualizações.",
+    invST:"🔍 Pesquisar talão",btnInvL:"Carregar",
+    bTitle:"TALÃO DE ENCOMENDA",bSender:"REMETENTE",bRecv:"DESTINATÁRIO",
+    bColD:"Descrição",bColQ:"Qtd",bColW:"Peso",bColV:"Valor",bColF:"Taxa de envio",bTotal:"TOTAL",
+    bSpeed:"Velocidade de entrega",bPay:"Método de pagamento",bPayInstr:"INSTRUÇÕES DE PAGAMENTO",
+    bPayNote:"Por favor efetue o pagamento com as coordenadas abaixo antes da entrega.",
+    bTrackLabel:"Número de rastreio",bFooter:"DHL Logistics Services • contact@dhl-logistics.cm\nDocumento oficial.",
+    bStamp:"ENVIO EM CURSO",payDetectMsg:"💡 Método recomendado para o seu país: ",
+  },
+  it:{
+    heroT:"MONITORAGGIO DEI TUOI PACCHI IN TEMPO REALE",heroS:"Spedisci, monitora e gestisci le tue consegne in tutto il mondo",
+    trackBtn:"🔍 TRACCIA",hSub:"Servizi Logistici",
+    nHome:"Home",nShip:"Spedire",nAdmin:"Admin",nCourier:"Corriere",nInvoices:"Fatture",
+    tLbl:"Numero di tracciamento",navLbl:"Navigazione GPS",
+    msl1:"Ritirato",msl2:"Smistamento",msl3:"Transito",msl4:"Dogana",msl5:"Consegnato",
+    f1t:"Consegna Express",f1d:"24–48h in oltre 80 paesi.",f2t:"Tracciamento in Tempo Reale",f2d:"GPS live con Google Maps e Waze.",f3t:"Sicuro & Assicurato",f3d:"Ogni pacco assicurato e documentato.",
+    adminTitle:"⚙️ Pannello Admin — Coordinate di Pagamento",adminInfo:"🔐 Informazioni private. Inserisci qui le tue coordinate bancarie/crypto.",
+    lIban:"IBAN",lBic:"BIC / SWIFT",lBank:"Nome banca",lAccName:"Intestatario conto",
+    senderT:"📤 Mittente",recvSep:"DESTINATARIO",
+    docSep:"DOCUMENTI (OPZIONALI)",docInfo:"📎 Questi documenti sono opzionali. Richiesti solo per alcune destinazioni.",
+    lSNm:"Nome",lSEm:"Email",lSPh:"Telefono",lSCo:"Paese",lSCi:"Città",lSZp:"CAP",lSAd:"Indirizzo",
+    lRNm:"Nome",lREm:"Email",lRPh:"Telefono",lRCo:"Paese",lRCi:"Città",lRZp:"CAP",lRAd:"Indirizzo",
+    lDocID:"Documento d'identità",opt1:"OPZIONALE",optN1:"CI, Passaporto — solo se richiesto dalla dogana",
+    lDocInv:"Fattura / Valore",opt2:"OPZIONALE",optN2:"Per pacchi di alto valore",
+    parcelT:"📦 Descrizione del Pacco",lWt:"Peso (kg)",lLn:"Lunghezza (cm)",lWd:"Larghezza (cm)",lHt:"Altezza (cm)",lVl:"Valore dichiarato",lQty:"N. articoli",lCnt:"Contenuto",
+    speedT:"⚡ Velocità di Consegna",
+    spEN:"Express Internazionale",spED:"24 – 48 ore",spEP:"Da 45 €",
+    spSN:"Standard",spSD:"2 – 4 giorni lavorativi",spSP:"Da 22 €",
+    spCN:"Economico",spCD:"5 – 10 giorni lavorativi",spCP:"Da 12 €",
+    payT:"💳 Metodo di Pagamento",
+    payInfo:"📧 Il bordereau con le coordinate di pagamento sarà inviato per email al destinatario dopo la conferma.",
+    pmIban:"Bonifico / IBAN",pmCard:"Carta bancaria",pmCOD:"Pagamento alla consegna",pmCODI:"Contante alla ricezione",
+    sl1:"Parti",sl2:"Pacco",sl3:"Velocità",sl4:"Pagamento",
+    btnN1:"Avanti →",btnB2:"← Indietro",btnN2:"Avanti →",btnB3:"← Indietro",btnN3:"Avanti →",btnB4:"← Indietro",
+    btnSubmit:"✅ CONFERMA SPEDIZIONE",
+    confT:"SPEDIZIONE CONFERMATA!",confMsg:"Il bordereau è stato inviato al destinatario per email.",confTLbl:"Numero di tracciamento",
+    btnViewB:"📄 Vedi bordereau",btnReSend:"📧 Reinvia",btnNew:"+ Nuovo",
+    courierT:"🚚 Area Corriere",lCNm:"Il tuo nome",lCVh:"Veicolo",lCTr:"Numero tracciamento",lCPos:"Posizione attuale",
+    statusLbl:"Stato",
+    ps1:"✅ Ritirato",ps2:"🔄 Smistamento",ps3:"🚚 Transito",ps4:"🛃 Dogana",ps5:"🏃 In consegna",ps6:"✅ Consegnato",ps7:"⚠️ Ritardato",
+    btnUpd:"📡 INVIA AGGIORNAMENTO",logT:"📋 Storico",logEmpty:"Nessun aggiornamento.",
+    invST:"🔍 Cerca bordereau",btnInvL:"Carica",
+    bTitle:"BORDEREAU D'ORDINE",bSender:"MITTENTE",bRecv:"DESTINATARIO",
+    bColD:"Descrizione",bColQ:"Qtà",bColW:"Peso",bColV:"Valore",bColF:"Spese di spedizione",bTotal:"TOTALE",
+    bSpeed:"Velocità di consegna",bPay:"Metodo di pagamento",bPayInstr:"ISTRUZIONI DI PAGAMENTO",
+    bPayNote:"Si prega di effettuare il pagamento con le coordinate di seguito prima della consegna.",
+    bTrackLabel:"Numero di tracciamento",bFooter:"DHL Logistics Services • contact@dhl-logistics.cm\nDocumento ufficiale.",
+    bStamp:"SPEDIZIONE IN CORSO",payDetectMsg:"💡 Metodo consigliato per il tuo paese: ",
   }
 };
 
-// ======================================================
+// ============================================================
 // STATE
-// ======================================================
-let lang = 'fr';
-let speed = 'express';
-let payMethod = 'mtn';
-let courierStatus = 'collected';
-let shipments = {};
-let currentShipNum = '';
-let currency = 'XAF';
-let currSymbol = 'FCFA';
+// ============================================================
+let lang='fr', speed='express', payMethod='iban', courierStatus='collected';
+let shipments={}, currentNum='';
+let adminData={iban:'',bic:'',bank:'',accName:'',mtn:'',orange:'',paypal:'',wave:'',btc:'',usdt:'',eth:'',crypto:'',stripe:'',pplink:''};
 
-// ======================================================
+// ============================================================
 // INIT
-// ======================================================
-document.addEventListener('DOMContentLoaded', () => {
-  populateCountries();
-  setLang('fr');
-  // EmailJS init (replace with your public key)
-  try { emailjs.init("YOUR_EMAILJS_PUBLIC_KEY"); } catch(e){}
+// ============================================================
+document.addEventListener('DOMContentLoaded',()=>{
+  fillCountries();
+  applyLang('fr');
+  loadAdmin();
 });
 
-function populateCountries() {
-  ['sCo','rCo'].forEach(id => {
-    const sel = document.getElementById(id);
-    sel.innerHTML = '';
-    COUNTRIES.forEach(co => {
-      const op = document.createElement('option');
-      op.value = co.c;
-      op.textContent = co.flag + ' ' + co.name[lang];
+// ============================================================
+// COUNTRIES
+// ============================================================
+function fillCountries(){
+  ['sCo','rCo'].forEach(id=>{
+    const sel=document.getElementById(id);
+    sel.innerHTML='';
+    COUNTRIES.forEach(co=>{
+      const op=document.createElement('option');
+      op.value=co.c;
+      op.textContent=co.f+' '+(co.n[lang]||co.n.fr);
       sel.appendChild(op);
     });
-    sel.value = id === 'sCo' ? 'CM' : 'FR';
+    sel.value=id==='sCo'?'CM':'FR';
   });
-  updateCurrency();
+  updateCurr();
+  detectClientPay();
 }
 
-function updateCurrency() {
-  const sco = document.getElementById('sCo').value;
-  const co = COUNTRIES.find(c => c.c === sco);
-  if (co) { currency = co.currency; currSymbol = CURRENCIES[currency] || currency; }
-  const el = document.getElementById('currLabel');
-  if (el) el.textContent = '(' + currSymbol + ')';
+function updateCurr(){
+  const co=COUNTRIES.find(c=>c.c===document.getElementById('sCo').value);
+  if(co){const sym=CURR[co.cur]||co.cur; document.getElementById('currLbl').textContent='('+sym+')';}
 }
 
-// ======================================================
-// LANGUAGE
-// ======================================================
-function setLang(l) {
-  lang = l;
-  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+function detectClientPay(){
+  const rCoVal=document.getElementById('rCo').value;
+  const co=COUNTRIES.find(c=>c.c===rCoVal);
+  const box=document.getElementById('payDetected');
+  if(!co||!co.pay||co.pay.length===0){box.style.display='none';return;}
+  const payNames={iban:'🏦 Virement/IBAN',mtn:'📱 MTN MoMo',orange:'🟠 Orange Money',paypal:'🅿️ PayPal',card:'💳 Carte',btc:'₿ Crypto',cod:'💵 Cash',wave:'🌊 Wave'};
+  const recommended=co.pay.map(p=>payNames[p]||p).join(' · ');
+  box.style.display='block';
+  box.textContent=(T[lang].payDetectMsg||'💡 Recommandé : ')+recommended;
+  // Auto-sélectionner le premier mode recommandé
+  const first=co.pay[0];
+  document.querySelectorAll('.pay-card').forEach(c=>c.classList.remove('sel'));
+  const cards=document.querySelectorAll('.pay-card');
+  cards.forEach(c=>{
+    const onclick=c.getAttribute('onclick')||'';
+    if(onclick.includes("'"+first+"'")){c.classList.add('sel');payMethod=first;}
+  });
+}
+
+function getCoName(code){const co=COUNTRIES.find(c=>c.c===code);return co?(co.n[lang]||co.n.fr):code;}
+
+// ============================================================
+// LANGUE
+// ============================================================
+function setLang(l){
+  lang=l;
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
   document.querySelector(`.lang-btn[onclick="setLang('${l}')"]`).classList.add('active');
-  const t = T[l];
-  Object.keys(t).forEach(k => {
-    const el = document.getElementById(k);
-    if (!el) return;
-    if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') el.placeholder = t[k];
-    else el.textContent = t[k];
-  });
-  // Update country names
-  populateCountries();
+  document.documentElement.lang=l;
+  applyLang(l);
+  fillCountries();
 }
 
-// ======================================================
+function applyLang(l){
+  const t=T[l]||T.fr;
+  Object.keys(t).forEach(k=>{
+    const el=document.getElementById(k);
+    if(!el)return;
+    if(el.tagName==='INPUT'||el.tagName==='TEXTAREA')el.placeholder=t[k];
+    else el.textContent=t[k];
+  });
+}
+
+// ============================================================
 // NAVIGATION
-// ======================================================
-function showSection(s) {
-  document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
-  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-  document.getElementById('sec-' + s).classList.add('active');
-  document.getElementById('nav-' + s).classList.add('active');
+// ============================================================
+function showSec(s){
+  document.querySelectorAll('.section').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('sec-'+s).classList.add('active');
+  document.getElementById('nav-'+s).classList.add('active');
   window.scrollTo(0,0);
 }
 
-// ======================================================
+// ============================================================
 // STEPS
-// ======================================================
-function goStep(n) {
-  for (let i = 1; i <= 4; i++) {
-    const fs = document.getElementById('fst' + i);
-    if (fs) fs.style.display = i === n ? 'block' : 'none';
-    const stp = document.getElementById('stp' + i);
-    if (stp) { stp.classList.remove('active','done'); if (i < n) stp.classList.add('done'); if (i === n) stp.classList.add('active'); }
-    if (i < 4) { const ln = document.getElementById('sl-' + i); if (ln) ln.classList.toggle('done', i < n); }
+// ============================================================
+function goStep(n){
+  for(let i=1;i<=4;i++){
+    const fs=document.getElementById('fst'+i);
+    if(fs)fs.style.display=i===n?'block':'none';
+    const stp=document.getElementById('stp'+i);
+    if(stp){stp.classList.remove('active','done');if(i<n)stp.classList.add('done');if(i===n)stp.classList.add('active');}
+    if(i<4){const ln=document.getElementById('sl-'+i);if(ln)ln.classList.toggle('done',i<n);}
   }
 }
 
-function selSpeed(el, v) { document.querySelectorAll('.speed-card').forEach(c=>c.classList.remove('sel')); el.classList.add('sel'); speed = v; }
-function selPay(el, v) { document.querySelectorAll('.pay-card').forEach(c=>c.classList.remove('sel')); el.classList.add('sel'); payMethod = v; }
-function selStatus(el) { document.querySelectorAll('.pill').forEach(p=>p.classList.remove('sel')); el.classList.add('sel'); courierStatus = el.dataset.s; }
+function selSpeed(el,v){document.querySelectorAll('.speed-card').forEach(c=>c.classList.remove('sel'));el.classList.add('sel');speed=v;}
+function selPay(el,v){document.querySelectorAll('.pay-card').forEach(c=>c.classList.remove('sel'));el.classList.add('sel');payMethod=v;}
+function selSt(el){document.querySelectorAll('.pill').forEach(p=>p.classList.remove('sel'));el.classList.add('sel');courierStatus=el.dataset.s;}
 
-// ======================================================
-// HELPERS
-// ======================================================
-function genNum() { return 'DHL-' + Math.random().toString(36).substr(2,8).toUpperCase(); }
-function showNotif(msg, dur=4000) {
-  const el = document.getElementById('notif'); el.textContent = msg; el.style.display = 'block';
-  setTimeout(() => { el.style.display = 'none'; }, dur);
-}
-
-// ======================================================
-// SUBMIT SHIPMENT
-// ======================================================
-function submitShipment() {
-  const sNm = document.getElementById('sNm').value || 'Expéditeur';
-  const rNm = document.getElementById('rNm').value || 'Destinataire';
-  const sEm = document.getElementById('sEm').value || '';
-  const rEm = document.getElementById('rEm').value || '';
-  const sPh = document.getElementById('sPh').value || '';
-  const rPh = document.getElementById('rPh').value || '';
-  const sCoVal = document.getElementById('sCo').value;
-  const rCoVal = document.getElementById('rCo').value;
-  const sCi = document.getElementById('sCi').value || 'Ville expéditeur';
-  const rCi = document.getElementById('rCi').value || 'Ville destinataire';
-  const sAd = document.getElementById('sAd').value || sCi;
-  const rAd = document.getElementById('rAd').value || rCi;
-  const sZp = document.getElementById('sZp').value || '';
-  const rZp = document.getElementById('rZp').value || '';
-  const weight = document.getElementById('pkWt').value || '1';
-  const value = document.getElementById('pkVl').value || '0';
-  const content = document.getElementById('pkCnt').value || 'Marchandises';
-  const qty = document.getElementById('pkQty').value || '1';
-  const sCoName = getCountryName(sCoVal);
-  const rCoName = getCountryName(rCoVal);
-
-  const prices = {express:45, standard:22, eco:12};
-  const fee = (prices[speed] + parseFloat(weight) * 2.5).toFixed(2);
-  const trackNum = genNum();
-  currentShipNum = trackNum;
-
-  const now = new Date();
-  const ship = {
-    trackNum, sNm, rNm, sEm, rEm, sPh, rPh,
-    sCoVal, rCoVal, sCoName, rCoName, sCi, rCi, sAd, rAd, sZp, rZp,
-    weight, value, content, qty, fee, speed, pay: payMethod,
-    date: now.toLocaleDateString(), dateISO: now.toISOString(),
-    courier: 'En attente d\'assignation', vehicle: '—',
-    events: [
-      {icon:'📦', title: lang==='fr'?'Colis collecté':'Parcel collected', location: sCi+', '+sCoName, time: now.toLocaleString()},
-      {icon:'🔄', title: lang==='fr'?'En cours de tri':'Sorting in progress', location: 'Centre de tri '+sCi, time: now.toLocaleString()}
-    ]
+// ============================================================
+// ADMIN — sauvegarder et charger les coordonnées de paiement
+// ============================================================
+function saveAdmin(){
+  adminData={
+    iban:v('adminIban'),bic:v('adminBic'),bank:v('adminBank'),accName:v('adminAccName'),
+    mtn:v('adminMTN'),orange:v('adminOrange'),paypal:v('adminPaypal'),wave:v('adminWave'),
+    btc:v('adminBTC'),usdt:v('adminUSDT'),eth:v('adminETH'),crypto:v('adminCrypto'),
+    stripe:v('adminStripe'),pplink:v('adminPPLink')
   };
-  shipments[trackNum] = ship;
-
-  // Show confirmation
-  for (let i = 1; i <= 4; i++) { const f = document.getElementById('fst'+i); if(f) f.style.display='none'; }
-  document.getElementById('fConfirm').style.display = 'block';
-  document.getElementById('confTrackNum').textContent = trackNum;
-  document.getElementById('confTitle').textContent = T[lang].confTitle;
-  document.getElementById('confMsg').textContent = T[lang].confMsg;
-  document.getElementById('confTLabel').textContent = T[lang].confTLabel;
-
-  setTimeout(() => {
-    try { JsBarcode("#bcConfirm", trackNum, {format:"CODE128",width:2,height:55,displayValue:true,fontSize:12,margin:8}); } catch(e){}
-  }, 150);
-
-  // Send email bordereau
-  sendBordereau(trackNum);
-  showNotif('✅ ' + trackNum + ' — ' + T[lang].confTitle);
+  try{localStorage.setItem('dhl_admin',JSON.stringify(adminData));}catch(e){}
+  showNotif('💾 Coordonnées sauvegardées !');
 }
 
-function getCountryName(code) {
-  const co = COUNTRIES.find(c => c.c === code);
-  return co ? co.name[lang] : code;
+function loadAdmin(){
+  try{
+    const d=localStorage.getItem('dhl_admin');
+    if(d){adminData=JSON.parse(d);
+      Object.keys(adminData).forEach(k=>{const el=document.getElementById('admin'+k.charAt(0).toUpperCase()+k.slice(1));if(el)el.value=adminData[k];});
+    }
+  }catch(e){}
 }
 
-// ======================================================
-// EMAIL (EmailJS)
-// ======================================================
-function sendBordereau(trackNum) {
-  const ship = shipments[trackNum];
-  if (!ship) { showNotif('❌ Bordereau introuvable'); return; }
-  // Build bordereau HTML for email body
-  const body = buildInvoiceHTML(ship, true);
-  const params = {
-    to_email: ship.rEm,
-    to_name: ship.rNm,
-    from_name: 'DHL Logistics Services',
-    track_num: trackNum,
-    sender_name: ship.sNm,
-    sender_addr: ship.sAd + ', ' + ship.sCi + ', ' + ship.sCoName,
-    recv_name: ship.rNm,
-    recv_addr: ship.rAd + ', ' + ship.rCi + ', ' + ship.rCoName,
-    content: ship.content,
-    weight: ship.weight + ' kg',
-    fee: ship.fee + ' €',
-    pay_method: ship.pay,
-    bordereau_html: body,
-    date: ship.date
-  };
-  try {
-    emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', params)
-      .then(() => showNotif('📧 Bordereau envoyé à ' + ship.rEm))
-      .catch(() => showNotif('⚠️ Email non configuré — voir README'));
-  } catch(e) { showNotif('⚠️ EmailJS non configuré — bordereau disponible sur le site'); }
+function v(id){const el=document.getElementById(id);return el?el.value.trim():'';}
+
+// ============================================================
+// Construire le bloc INSTRUCTIONS DE PAIEMENT selon le mode
+// ============================================================
+function buildPayBlock(pm, t){
+  const p=adminData;
+  let lines=[];
+  const title=`<div style="font-family:'Arial Black',sans-serif;font-size:13px;font-weight:900;color:#D40511;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;padding-bottom:6px;border-bottom:2px solid #FFCC00;">${t.bPayInstr}</div>`;
+  const note=`<div style="font-size:12px;color:#555;margin-bottom:10px;font-style:italic;">${t.bPayNote}</div>`;
+
+  if(pm==='iban'){
+    lines=[
+      p.accName?`👤 ${t.lAccName||'Titulaire'} : <strong>${p.accName}</strong>`:'',
+      p.iban?`🏦 IBAN : <strong style="font-family:monospace;">${p.iban}</strong>`:'',
+      p.bic?`📋 BIC/SWIFT : <strong>${p.bic}</strong>`:'',
+      p.bank?`🏛️ ${t.lBank||'Banque'} : ${p.bank}`:'',
+    ];
+  } else if(pm==='mtn'){
+    lines=[p.mtn?`📱 MTN MoMo : <strong>${p.mtn}</strong>`:'❌ Numéro MTN non configuré (voir panneau Admin)'];
+  } else if(pm==='orange'){
+    lines=[p.orange?`🟠 Orange Money : <strong>${p.orange}</strong>`:'❌ Numéro Orange non configuré'];
+  } else if(pm==='paypal'){
+    lines=[
+      p.paypal?`🅿️ PayPal : <strong>${p.paypal}</strong>`:'',
+      p.pplink?`🔗 Lien direct : <a href="${p.pplink}" style="color:#D40511;">${p.pplink}</a>`:'',
+    ];
+  } else if(pm==='card'){
+    lines=[
+      p.stripe?`💳 Lien de paiement : <a href="${p.stripe}" style="color:#D40511;">${p.stripe}</a>`:'',
+      p.pplink?`🔗 PayPal.me : <a href="${p.pplink}" style="color:#D40511;">${p.pplink}</a>`:'',
+    ];
+  } else if(pm==='btc'){
+    lines=[
+      p.btc?`₿ Bitcoin (BTC) :<br><code style="font-size:10px;background:#f5f5f5;padding:3px 6px;border-radius:3px;">${p.btc}</code>`:'',
+      p.usdt?`💲 USDT (TRC20) :<br><code style="font-size:10px;background:#f5f5f5;padding:3px 6px;border-radius:3px;">${p.usdt}</code>`:'',
+      p.eth?`⧫ ETH :<br><code style="font-size:10px;background:#f5f5f5;padding:3px 6px;border-radius:3px;">${p.eth}</code>`:'',
+    ];
+  } else if(pm==='wave'){
+    lines=[p.wave?`🌊 Wave/Flooz : <strong>${p.wave}</strong>`:'❌ Numéro Wave non configuré'];
+  } else if(pm==='cod'){
+    lines=[`💵 Paiement à la livraison — Le montant exact sera communiqué lors de la remise du colis.`];
+  }
+
+  const filtered=lines.filter(l=>l);
+  if(filtered.length===0) return `<div style="background:#fff3f3;border:1px solid #ffcccc;border-radius:6px;padding:12px;font-size:12px;color:#c62828;">⚠️ Coordonnées de paiement non configurées. Contactez-nous : contact@dhl-logistics.cm</div>`;
+
+  return title+note+filtered.map(l=>`<div style="padding:6px 10px;background:#f9f9f9;border-radius:4px;margin-bottom:5px;font-size:13px;line-height:1.6;">${l}</div>`).join('');
 }
 
-// ======================================================
-// BUILD INVOICE / BORDEREAU HTML (PRINT-CLEAN)
-// ======================================================
-function buildInvoiceHTML(ship, forEmail=false) {
-  const t = T[lang];
+// ============================================================
+// BUILD BORDEREAU HTML (propre, sans éléments du site)
+// ============================================================
+function buildBordereau(ship){
+  const t=T[ship.lang]||T.fr;
+  const payBlock=buildPayBlock(ship.pay, t);
+  const speedLabel={express:t.spEN||'Express',standard:t.spSN||'Standard',eco:t.spCN||'Économique'}[ship.speed]||ship.speed;
+
   return `
-<div style="font-family:'Arial',sans-serif;max-width:680px;margin:0 auto;color:#222;">
-  <!-- HEADER -->
-  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px;padding-bottom:16px;border-bottom:3px solid #D40511;">
+<div style="font-family:Arial,sans-serif;max-width:680px;margin:0 auto;color:#1a1a1a;font-size:14px;">
+
+  <!-- EN-TÊTE -->
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;padding-bottom:14px;border-bottom:3px solid #D40511;flex-wrap:wrap;gap:10px;">
     <div>
       <div style="background:#D40511;display:inline-block;padding:5px 8px;border-radius:3px;">
-        <div style="background:#FFCC00;color:#D40511;font-family:'Arial Black',sans-serif;font-size:22px;font-weight:900;padding:2px 10px;letter-spacing:2px;">DHL</div>
+        <div style="background:#FFCC00;color:#D40511;font-family:'Arial Black',sans-serif;font-size:20px;font-weight:900;padding:2px 10px;letter-spacing:2px;display:inline-block;">DHL</div>
       </div>
-      <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#888;margin-top:4px;">Logistics Services</div>
+      <div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#888;margin-top:3px;">Logistics Services</div>
     </div>
     <div style="text-align:right;">
-      <div style="font-size:18px;font-weight:700;color:#222;text-transform:uppercase;letter-spacing:1px;">${t.invTitle||'BORDEREAU DE COMMANDE'}</div>
-      <div style="font-size:12px;color:#666;margin-top:4px;">N° ${ship.trackNum}</div>
-      <div style="font-size:12px;color:#666;">Date: ${ship.date}</div>
+      <div style="font-size:17px;font-weight:900;color:#1a1a1a;text-transform:uppercase;letter-spacing:1px;">${t.bTitle}</div>
+      <div style="font-size:11px;color:#666;margin-top:3px;">N° ${ship.trackNum}</div>
+      <div style="font-size:11px;color:#666;">${t.bTrackLabel} — ${ship.date}</div>
     </div>
   </div>
 
-  <!-- PARTIES -->
-  <div style="display:table;width:100%;margin-bottom:20px;">
-    <div style="display:table-cell;width:50%;vertical-align:top;padding-right:16px;">
-      <div style="font-size:10px;font-weight:700;color:#D40511;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;">${t.invSender||'EXPÉDITEUR'}</div>
-      <div style="font-size:13px;line-height:1.7;"><strong>${ship.sNm}</strong><br>${ship.sAd}<br>${ship.sZp} ${ship.sCi}<br>${ship.sCoName}<br>📞 ${ship.sPh}<br>✉️ ${ship.sEm}</div>
+  <!-- EXPÉDITEUR / DESTINATAIRE -->
+  <div style="display:table;width:100%;margin-bottom:16px;">
+    <div style="display:table-cell;width:50%;vertical-align:top;padding-right:12px;">
+      <div style="font-size:9px;font-weight:900;color:#D40511;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:5px;">${t.bSender}</div>
+      <div style="font-size:12px;line-height:1.8;background:#fafafa;padding:10px;border-radius:4px;border-left:3px solid #FFCC00;">
+        <strong>${ship.sNm}</strong><br>
+        ${ship.sAd}<br>
+        ${ship.sZp?ship.sZp+' ':''}<strong>${ship.sCi}</strong><br>
+        <strong>${ship.sCoName}</strong><br>
+        📞 ${ship.sPh}<br>
+        ✉️ ${ship.sEm}
+      </div>
     </div>
-    <div style="display:table-cell;width:50%;vertical-align:top;padding-left:16px;border-left:2px solid #f0f0f0;">
-      <div style="font-size:10px;font-weight:700;color:#D40511;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;">${t.invRecv||'DESTINATAIRE'}</div>
-      <div style="font-size:13px;line-height:1.7;"><strong>${ship.rNm}</strong><br>${ship.rAd}<br>${ship.rZp} ${ship.rCi}<br>${ship.rCoName}<br>📞 ${ship.rPh}<br>✉️ ${ship.rEm}</div>
+    <div style="display:table-cell;width:50%;vertical-align:top;padding-left:12px;">
+      <div style="font-size:9px;font-weight:900;color:#D40511;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:5px;">${t.bRecv}</div>
+      <div style="font-size:12px;line-height:1.8;background:#fafafa;padding:10px;border-radius:4px;border-left:3px solid #D40511;">
+        <strong>${ship.rNm}</strong><br>
+        ${ship.rAd}<br>
+        ${ship.rZp?ship.rZp+' ':''}<strong>${ship.rCi}</strong><br>
+        <strong>${ship.rCoName}</strong><br>
+        📞 ${ship.rPh}<br>
+        ✉️ ${ship.rEm}
+      </div>
     </div>
   </div>
 
-  <!-- TABLE -->
-  <table style="width:100%;border-collapse:collapse;margin:16px 0;font-size:13px;">
+  <!-- TABLEAU COLIS -->
+  <table style="width:100%;border-collapse:collapse;margin:14px 0;font-size:12px;">
     <thead>
       <tr style="background:#D40511;">
-        <th style="color:#fff;padding:9px 12px;text-align:left;font-size:11px;letter-spacing:1px;text-transform:uppercase;">${t.invColDesc||'Description'}</th>
-        <th style="color:#fff;padding:9px 12px;text-align:center;font-size:11px;letter-spacing:1px;">${t.invColQty||'Qté'}</th>
-        <th style="color:#fff;padding:9px 12px;text-align:center;font-size:11px;letter-spacing:1px;">${t.invColWt||'Poids'}</th>
-        <th style="color:#fff;padding:9px 12px;text-align:right;font-size:11px;letter-spacing:1px;">${t.invColVal||'Valeur'}</th>
-        <th style="color:#fff;padding:9px 12px;text-align:right;font-size:11px;letter-spacing:1px;">${t.invColFee||'Frais'}</th>
+        <th style="color:#fff;padding:8px 10px;text-align:left;font-size:10px;letter-spacing:1px;text-transform:uppercase;">${t.bColD}</th>
+        <th style="color:#fff;padding:8px 10px;text-align:center;font-size:10px;">${t.bColQ}</th>
+        <th style="color:#fff;padding:8px 10px;text-align:center;font-size:10px;">${t.bColW}</th>
+        <th style="color:#fff;padding:8px 10px;text-align:right;font-size:10px;">${t.bColV}</th>
+        <th style="color:#fff;padding:8px 10px;text-align:right;font-size:10px;">${t.bColF}</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td style="padding:10px 12px;border-bottom:1px solid #f0f0f0;">${ship.content}</td>
-        <td style="padding:10px 12px;border-bottom:1px solid #f0f0f0;text-align:center;">${ship.qty}</td>
-        <td style="padding:10px 12px;border-bottom:1px solid #f0f0f0;text-align:center;">${ship.weight} kg</td>
-        <td style="padding:10px 12px;border-bottom:1px solid #f0f0f0;text-align:right;">${ship.value} €</td>
-        <td style="padding:10px 12px;border-bottom:1px solid #f0f0f0;text-align:right;font-weight:700;color:#D40511;">${ship.fee} €</td>
+        <td style="padding:9px 10px;border-bottom:1px solid #f0f0f0;">${ship.content}</td>
+        <td style="padding:9px 10px;text-align:center;border-bottom:1px solid #f0f0f0;">${ship.qty}</td>
+        <td style="padding:9px 10px;text-align:center;border-bottom:1px solid #f0f0f0;">${ship.weight} kg</td>
+        <td style="padding:9px 10px;text-align:right;border-bottom:1px solid #f0f0f0;">${ship.value} €</td>
+        <td style="padding:9px 10px;text-align:right;border-bottom:1px solid #f0f0f0;font-weight:700;color:#D40511;">${ship.fee} €</td>
       </tr>
     </tbody>
     <tfoot>
-      <tr>
-        <td colspan="4" style="padding:10px 12px;text-align:right;font-weight:700;font-size:14px;">TOTAL:</td>
-        <td style="padding:10px 12px;text-align:right;font-weight:700;font-size:15px;color:#D40511;">${ship.fee} €</td>
+      <tr style="background:#fff8e1;">
+        <td colspan="4" style="padding:9px 10px;text-align:right;font-weight:900;font-size:13px;">${t.bTotal} :</td>
+        <td style="padding:9px 10px;text-align:right;font-weight:900;font-size:14px;color:#D40511;">${ship.fee} €</td>
       </tr>
     </tfoot>
   </table>
 
-  <!-- SPEED & PAYMENT -->
-  <div style="display:table;width:100%;margin:16px 0;background:#f9f9f9;border-radius:6px;padding:14px 16px;">
-    <div style="display:table-cell;vertical-align:top;width:50%;">
-      <div style="font-size:11px;color:#888;text-transform:uppercase;letter-spacing:1px;">Mode de livraison</div>
-      <div style="font-size:13px;font-weight:600;margin-top:4px;">${speed==='express'?'✈️ Express':'speed'==='standard'?'📦 Standard':'🚢 Économique'} — ${ship.speed}</div>
+  <!-- VITESSE + MODE PAIEMENT -->
+  <div style="display:table;width:100%;background:#f5f5f5;border-radius:6px;padding:10px 14px;margin-bottom:14px;">
+    <div style="display:table-cell;vertical-align:top;width:50%;padding-right:10px;">
+      <div style="font-size:9px;color:#888;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;">${t.bSpeed}</div>
+      <div style="font-size:13px;font-weight:700;">${speedLabel}</div>
     </div>
-    <div style="display:table-cell;vertical-align:top;padding-left:16px;border-left:1px solid #eee;">
-      <div style="font-size:11px;color:#888;text-transform:uppercase;letter-spacing:1px;">Mode de paiement</div>
-      <div style="font-size:13px;font-weight:600;margin-top:4px;">${ship.pay.toUpperCase()}</div>
+    <div style="display:table-cell;vertical-align:top;padding-left:10px;border-left:1px solid #ddd;">
+      <div style="font-size:9px;color:#888;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;">${t.bPay}</div>
+      <div style="font-size:13px;font-weight:700;">${ship.pay.toUpperCase()}</div>
     </div>
   </div>
 
-  <!-- BARCODE -->
-  <div style="text-align:center;margin:20px 0;padding:16px;border:1px solid #eee;border-radius:6px;">
-    <div style="font-size:11px;color:#888;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px;">Numéro de suivi / Tracking Number</div>
-    <div style="font-size:22px;font-weight:900;letter-spacing:4px;font-family:monospace;color:#222;">${ship.trackNum}</div>
-    <div style="font-size:11px;color:#888;margin-top:8px;">Suivez votre colis sur notre site web</div>
+  <!-- INSTRUCTIONS PAIEMENT -->
+  <div style="background:#fff;border:1.5px solid #eee;border-radius:6px;padding:14px;margin-bottom:14px;">
+    ${payBlock}
   </div>
 
-  <!-- STAMP -->
-  <div style="text-align:center;margin:14px 0;">
-    <div style="display:inline-block;border:3px solid #D40511;color:#D40511;font-weight:700;font-size:13px;padding:6px 18px;border-radius:4px;letter-spacing:2px;transform:rotate(-5deg);opacity:.75;">EN COURS D'EXPÉDITION</div>
+  <!-- NUMÉRO DE SUIVI GRAND -->
+  <div style="text-align:center;border:1.5px solid #eee;border-radius:6px;padding:14px;margin-bottom:14px;background:#fafafa;">
+    <div style="font-size:9px;color:#888;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:6px;">${t.bTrackLabel}</div>
+    <div style="font-family:monospace;font-size:24px;font-weight:900;letter-spacing:4px;color:#1a1a1a;">${ship.trackNum}</div>
   </div>
 
-  <!-- FOOTER -->
-  <div style="text-align:center;font-size:11px;color:#aaa;margin-top:20px;padding-top:14px;border-top:1px solid #eee;line-height:1.8;">
-    DHL Logistics Services • contact@dhl-logistics.cm • +237 6XX XXX XXX<br>
-    Ce document est un bordereau officiel de commande. Conservez-le pour vos archives.<br>
-    This document is an official order slip. Keep it for your records.
+  <!-- CACHET -->
+  <div style="text-align:center;margin:12px 0;">
+    <span style="display:inline-block;border:3px solid #D40511;color:#D40511;font-weight:900;font-size:12px;padding:6px 18px;border-radius:4px;letter-spacing:2px;transform:rotate(-4deg);opacity:.75;">${t.bStamp}</span>
+  </div>
+
+  <!-- PIED DE PAGE -->
+  <div style="text-align:center;font-size:10px;color:#aaa;margin-top:16px;padding-top:12px;border-top:1px solid #eee;line-height:1.8;">
+    ${(t.bFooter||'DHL Logistics Services • contact@dhl-logistics.cm').replace(/\n/g,'<br>')}
   </div>
 </div>`;
 }
 
-// ======================================================
-// INVOICE MODAL
-// ======================================================
-function openInvoiceModal(trackNum) {
-  const ship = shipments[trackNum];
-  if (!ship) { showNotif('❌ Bordereau introuvable'); return; }
-  document.getElementById('invContent').innerHTML = buildInvoiceHTML(ship);
-  document.getElementById('invoiceModal').classList.add('open');
-  // Generate barcode inside modal if possible
-  setTimeout(() => {
-    try {
-      const existing = document.getElementById('bcModal');
-      if (!existing) {
-        const svgEl = document.createElementNS('http://www.w3.org/2000/svg','svg');
-        svgEl.id = 'bcModal';
-        const barcodeDiv = document.querySelector('#invContent .barcode-insert');
-        if (barcodeDiv) barcodeDiv.appendChild(svgEl);
-        JsBarcode(svgEl, trackNum, {format:"CODE128",width:2,height:50,displayValue:true,fontSize:11,margin:8});
-      }
-    } catch(e){}
-  }, 200);
-}
-
-function closeModal() { document.getElementById('invoiceModal').classList.remove('open'); }
-
-function printInvoice() {
-  const content = document.getElementById('invContent').innerHTML;
-  document.getElementById('printZone').innerHTML = content;
-  document.getElementById('printZone').style.display = 'block';
-  window.print();
-  setTimeout(() => { document.getElementById('printZone').style.display = 'none'; }, 1000);
-}
-
-// ======================================================
-// SEARCH INVOICE
-// ======================================================
-function searchInvoice() {
-  const num = document.getElementById('invSrch').value.trim().toUpperCase();
-  const ship = shipments[num] || getDemoShip(num);
-  if (!ship) { document.getElementById('invResult').innerHTML = '<div class="card" style="color:var(--mid);text-align:center;padding:30px;">❌ Bordereau introuvable pour ce numéro.</div>'; return; }
-  if (!shipments[num]) shipments[num] = ship;
-  document.getElementById('invResult').innerHTML = `
-    <div class="card">
-      <div class="card-title">📄 Bordereau — ${num}</div>
-      ${buildInvoiceHTML(ship)}
-      <div class="btn-row" style="margin-top:16px;">
-        <button class="btn btn-red" onclick="printInvoice_fromSearch('${num}')">🖨️ Imprimer</button>
-        <button class="btn btn-out" onclick="openInvoiceModal('${num}')">🔍 Aperçu complet</button>
-      </div>
-    </div>`;
-}
-
-function printInvoice_fromSearch(num) {
-  const ship = shipments[num];
-  if (!ship) return;
-  const content = buildInvoiceHTML(ship);
-  document.getElementById('printZone').innerHTML = content;
-  document.getElementById('printZone').style.display = 'block';
-  window.print();
-  setTimeout(() => { document.getElementById('printZone').style.display = 'none'; }, 1000);
-}
-
-function getDemoShip(num) {
-  return {
-    trackNum: num || 'DHL-DEMO0001',
-    sNm:'Jean Dupont', rNm:'Marie Curie',
-    sEm:'jean@example.com', rEm:'marie@example.com',
-    sPh:'+237 655 000 111', rPh:'+33 6 00 11 22 33',
-    sCoVal:'CM', rCoVal:'FR', sCoName:'Cameroun', rCoName:'France',
-    sCi:'Yaoundé', rCi:'Paris', sAd:'Bastos, Yaoundé', rAd:'10 Rue de Rivoli, Paris',
-    sZp:'', rZp:'75001',
-    weight:'2.5', value:'150', content:'Livres et documents commerciaux', qty:'3',
-    fee:'72.50', speed:'express', pay:'mtn',
-    date: new Date().toLocaleDateString()
+// ============================================================
+// SUBMIT
+// ============================================================
+function submitShip(){
+  const sNm=v('sNm'),rNm=v('rNm'),sEm=v('sEm'),rEm=v('rEm');
+  const sPh=v('sPh'),rPh=v('rPh');
+  const sCoVal=document.getElementById('sCo').value;
+  const rCoVal=document.getElementById('rCo').value;
+  const sCi=v('sCi')||'Ville',rCi=v('rCi')||'Ville';
+  const sAd=v('sAd')||sCi,rAd=v('rAd')||rCi;
+  const sZp=v('sZp'),rZp=v('rZp');
+  const weight=v('pkWt')||'1',value=v('pkVl')||'0',content=v('pkCnt')||'Marchandises',qty=v('pkQty')||'1';
+  const sCoName=getCoName(sCoVal),rCoName=getCoName(rCoVal);
+  const prices={express:45,standard:22,eco:12};
+  const fee=(prices[speed]+(parseFloat(weight)||1)*2.5).toFixed(2);
+  const trackNum='DHL-'+Math.random().toString(36).substr(2,8).toUpperCase();
+  currentNum=trackNum;
+  const now=new Date();
+  const ship={
+    trackNum,sNm,rNm,sEm,rEm,sPh,rPh,
+    sCoVal,rCoVal,sCoName,rCoName,sCi,rCi,sAd,rAd,sZp,rZp,
+    weight,value,content,qty,fee,speed,pay:payMethod,
+    date:now.toLocaleDateString(),
+    courier:'En attente',vehicle:'—',
+    lang:lang, // langue du bordereau = langue du site au moment de l'expédition
+    events:[
+      {icon:'📦',title:'Colis collecté',location:sCi+', '+sCoName,time:now.toLocaleString()},
+      {icon:'🔄',title:'En cours de tri',location:'Centre de tri '+sCi,time:now.toLocaleString()}
+    ]
   };
+  shipments[trackNum]=ship;
+
+  for(let i=1;i<=4;i++){const f=document.getElementById('fst'+i);if(f)f.style.display='none';}
+  document.getElementById('fConfirm').style.display='block';
+  document.getElementById('confNum').textContent=trackNum;
+  document.getElementById('confT').textContent=T[lang].confT;
+  document.getElementById('confMsg').textContent=T[lang].confMsg;
+  document.getElementById('confTLbl').textContent=T[lang].confTLbl;
+  document.getElementById('btnViewB').textContent=T[lang].btnViewB;
+  document.getElementById('btnReSend').textContent=T[lang].btnReSend;
+  document.getElementById('btnNew').textContent=T[lang].btnNew;
+
+  setTimeout(()=>{try{JsBarcode("#bcConf",trackNum,{format:"CODE128",width:2,height:50,displayValue:true,fontSize:11,margin:8});}catch(e){}},150);
+  sendEmail(trackNum);
+  showNotif('✅ '+trackNum+' — '+T[lang].confT);
 }
 
-// ======================================================
+// ============================================================
+// EMAIL
+// ============================================================
+function sendEmail(trackNum){
+  const ship=shipments[trackNum];
+  if(!ship)return;
+  emailjs.send('service_7crc39z','template_rregv2e',{
+    client_name:ship.rNm,
+    tracking_number:ship.trackNum,
+    destination:ship.rCoName+' — '+ship.rCi,
+    shipping_date:ship.date,
+    email:ship.rEm,
+    sender_name:ship.sNm,
+    recv_addr:ship.rAd+', '+ship.rZp+' '+ship.rCi+', '+ship.rCoName,
+    content:ship.content,
+    weight:ship.weight+' kg',
+    fee:ship.fee+' €',
+    pay_method:ship.pay.toUpperCase(),
+    track_num:ship.trackNum,
+    date:ship.date
+  })
+  .then(()=>showNotif('📧 Bordereau envoyé à '+ship.rEm))
+  .catch(err=>{console.warn('EmailJS:',err);showNotif('⚠️ Email : vérifiez le template EmailJS');});
+}
+
+function resendEmail(trackNum){sendEmail(trackNum);showNotif('📧 Renvoi en cours...');}
+
+// ============================================================
+// MODAL BORDEREAU
+// ============================================================
+function openModal(trackNum){
+  const ship=shipments[trackNum];
+  if(!ship){showNotif('❌ Introuvable');return;}
+  document.getElementById('invContent').innerHTML=buildBordereau(ship);
+  document.getElementById('invModal').classList.add('open');
+}
+
+function closeModal(){document.getElementById('invModal').classList.remove('open');}
+
+function printBordereau(){
+  const content=document.getElementById('invContent').innerHTML;
+  document.getElementById('printZone').innerHTML=content;
+  document.getElementById('printZone').style.display='block';
+  window.print();
+  setTimeout(()=>{document.getElementById('printZone').style.display='none';},1500);
+}
+
+// ============================================================
 // TRACKING
-// ======================================================
-function doTrack() {
-  const num = document.getElementById('trackInput').value.trim().toUpperCase();
-  if (!num) { showNotif('⚠️ Entrez un numéro de suivi'); return; }
-  const ship = shipments[num] || getDemoShip(num);
-  if (!shipments[num]) shipments[num] = ship;
+// ============================================================
+function doTrack(){
+  const num=document.getElementById('trackInput').value.trim().toUpperCase();
+  if(!num){showNotif('⚠️ Entrez un numéro de suivi');return;}
+  const ship=shipments[num]||demoShip(num);
+  if(!shipments[num])shipments[num]=ship;
   renderTrack(ship);
-  document.getElementById('trackResult').style.display = 'block';
+  document.getElementById('trackResult').style.display='block';
   document.getElementById('trackResult').scrollIntoView({behavior:'smooth',block:'start'});
 }
 
-function renderTrack(ship) {
-  const t = T[lang];
-  document.getElementById('tLabel').textContent = t.tLabel;
-  document.getElementById('tNum').textContent = ship.trackNum;
-  document.getElementById('tStatus').textContent = '🚚 En transit';
-  document.getElementById('tFrom').textContent = '📍 ' + (ship.sCi||'—');
-  document.getElementById('tTo').textContent = (ship.rCi||'—') + ' 📍';
-  document.getElementById('tCourier').textContent = ship.courier || 'En attente';
-  document.getElementById('tVehicle').textContent = '🚗 ' + (ship.vehicle||'—');
-  document.getElementById('navLabel').textContent = t.navLabel;
-  ['msl1','msl2','msl3','msl4','msl5'].forEach((id,i)=>{
-    document.getElementById(id).textContent = [t.msl1,t.msl2,t.msl3,t.msl4,t.msl5][i];
-  });
-  const from = encodeURIComponent((ship.sAd||ship.sCi||'')+', '+(ship.sCoName||''));
-  const to = encodeURIComponent((ship.rAd||ship.rCi||'')+', '+(ship.rCoName||''));
-  document.getElementById('gmapsLink').href = `https://www.google.com/maps/dir/${from}/${to}`;
-  document.getElementById('wazeLink').href = `https://waze.com/ul?q=${to}`;
-  document.getElementById('appleLink').href = `https://maps.apple.com/?saddr=${from}&daddr=${to}`;
+function demoShip(num){
+  return{trackNum:num||'DHL-DEMO001',sNm:'Jean Dupont',rNm:'Marie Curie',
+    sEm:'jean@email.com',rEm:'marie@email.com',sPh:'+237 655 000 111',rPh:'+33 6 00 11 22 33',
+    sCoVal:'CM',rCoVal:'FR',sCoName:'Cameroun',rCoName:'France',
+    sCi:'Yaoundé',rCi:'Paris',sAd:'Bastos, Yaoundé',rAd:'10 Rue de Rivoli, Paris',
+    sZp:'',rZp:'75001',weight:'2.5',value:'150',content:'Livres et documents',qty:'3',
+    fee:'72.50',speed:'express',pay:'iban',date:new Date().toLocaleDateString(),lang:'fr',
+    courier:'Jean-Pierre M.',vehicle:'LT-2847-YDE',
+    events:[
+      {icon:'📦',title:'Colis collecté',location:'Yaoundé, Cameroun',time:'Hier 09:15'},
+      {icon:'✈️',title:'Départ aéroport',location:'NSIMALEN, Yaoundé',time:'Hier 14:30'},
+      {icon:'🛃',title:'Passage en douane',location:'CDG, Paris',time:"Aujourd'hui 06:00"},
+      {icon:'🚚',title:'En cours de livraison',location:"Paris 1er",time:"Aujourd'hui 10:45"}
+    ]};
+}
 
-  const evList = document.getElementById('tEvents');
-  evList.innerHTML = '';
-  (ship.events||[]).slice().reverse().forEach(ev => {
-    const li = document.createElement('li');
-    li.className = 'event-item';
-    li.innerHTML = `<div class="ev-icon">${ev.icon}</div><div class="ev-info"><div class="ev-title">${ev.title}</div><div class="ev-loc">📍 ${ev.location}</div></div><div class="ev-time">${ev.time}</div>`;
+function renderTrack(ship){
+  const t=T[lang];
+  document.getElementById('tLbl').textContent=t.tLbl;
+  document.getElementById('tNum').textContent=ship.trackNum;
+  document.getElementById('tStatus').textContent='🚚 '+(t.msl3||'Transit');
+  document.getElementById('tFrom').textContent='📍 '+(ship.sCi||'—');
+  document.getElementById('tTo').textContent=(ship.rCi||'—')+' 📍';
+  document.getElementById('tCourier').textContent=ship.courier||'—';
+  document.getElementById('tVehicle').textContent='🚗 '+(ship.vehicle||'—');
+  document.getElementById('navLbl').textContent=t.navLbl;
+  ['msl1','msl2','msl3','msl4','msl5'].forEach((id,i)=>{
+    const el=document.getElementById(id);
+    if(el)el.textContent=[t.msl1,t.msl2,t.msl3,t.msl4,t.msl5][i];
+  });
+  const from=encodeURIComponent((ship.sAd||ship.sCi)+', '+(ship.sCoName||''));
+  const to=encodeURIComponent((ship.rAd||ship.rCi)+', '+(ship.rCoName||''));
+  document.getElementById('gmaps').href='https://www.google.com/maps/dir/'+from+'/'+to;
+  document.getElementById('waze').href='https://waze.com/ul?q='+to;
+  document.getElementById('apple').href='https://maps.apple.com/?saddr='+from+'&daddr='+to;
+  const evList=document.getElementById('tEvents');evList.innerHTML='';
+  (ship.events||[]).slice().reverse().forEach(ev=>{
+    const li=document.createElement('li');li.className='ev-item';
+    li.innerHTML=`<div class="ev-ico">${ev.icon}</div><div class="ev-info"><div class="ev-title">${ev.title}</div><div class="ev-loc">📍 ${ev.location}</div></div><div class="ev-time">${ev.time}</div>`;
     evList.appendChild(li);
   });
 }
 
-// ======================================================
+// ============================================================
 // COURIER UPDATE
-// ======================================================
-function sendUpdate() {
-  const name = document.getElementById('cNm').value || 'Coursier';
-  const vehicle = document.getElementById('cVh').value || '—';
-  const track = document.getElementById('cTr').value.trim().toUpperCase();
-  const pos = document.getElementById('cPos').value || 'Position inconnue';
-  if (!track) { showNotif('⚠️ Entrez un numéro de suivi'); return; }
-  const statusMap = {collected:'📦 Collecté',sorting:'🔄 En tri',transit:'🚚 En transit',customs:'🛃 Douane',out:'🏃 En livraison',delivered:'✅ Livré',delayed:'⚠️ Retardé'};
-  const statusLabel = statusMap[courierStatus] || courierStatus;
-  const now = new Date().toLocaleString();
-  if (!shipments[track]) shipments[track] = {trackNum:track,sCi:'—',rCi:'—',sAd:'',rAd:'',courier:name,vehicle,events:[],sNm:'',rNm:'',sCoName:'',rCoName:'',sEm:'',rEm:'',sPh:'',rPh:'',sZp:'',rZp:'',weight:'',value:'',content:'',qty:'',fee:'',speed:'',pay:'',date:new Date().toLocaleDateString()};
-  shipments[track].events.push({icon:statusLabel.split(' ')[0],title:statusLabel,location:pos,time:now});
-  shipments[track].courier = name;
-  shipments[track].vehicle = vehicle;
-  const logEl = document.getElementById('updateLog');
-  document.getElementById('logEmpty').style.display = 'none';
-  const li = document.createElement('li');
-  li.className = 'event-item';
-  li.innerHTML = `<div class="ev-icon">📡</div><div class="ev-info"><div class="ev-title">${track} — ${statusLabel}</div><div class="ev-loc">📍 ${pos} · 🚗 ${vehicle} · 👤 ${name}</div></div><div class="ev-time">${now}</div>`;
-  logEl.prepend(li);
-  showNotif('📡 Mise à jour envoyée pour ' + track);
+// ============================================================
+function sendUpd(){
+  const name=v('cNm')||'Coursier',vehicle=v('cVh')||'—';
+  const track=v('cTr').toUpperCase(),pos=v('cPos')||'Position inconnue';
+  if(!track){showNotif('⚠️ Entrez un numéro de suivi');return;}
+  const stMap={collected:'📦 Collecté',sorting:'🔄 En tri',transit:'🚚 En transit',customs:'🛃 Douane',out:'🏃 En livraison',delivered:'✅ Livré',delayed:'⚠️ Retardé'};
+  const stLbl=stMap[courierStatus]||courierStatus;
+  const now=new Date().toLocaleString();
+  if(!shipments[track])shipments[track]={trackNum:track,sCi:'—',rCi:'—',sAd:'',rAd:'',courier:name,vehicle,events:[],sNm:'',rNm:'',sCoName:'',rCoName:'',sEm:'',rEm:'',sPh:'',rPh:'',sZp:'',rZp:'',weight:'',value:'',content:'',qty:'',fee:'',speed:'',pay:'',date:new Date().toLocaleDateString(),lang};
+  shipments[track].events.push({icon:stLbl.split(' ')[0],title:stLbl,location:pos,time:now});
+  shipments[track].courier=name;shipments[track].vehicle=vehicle;
+  document.getElementById('logEmpty').style.display='none';
+  const li=document.createElement('li');li.className='ev-item';
+  li.innerHTML=`<div class="ev-ico">📡</div><div class="ev-info"><div class="ev-title">${track} — ${stLbl}</div><div class="ev-loc">📍 ${pos} · 🚗 ${vehicle}</div></div><div class="ev-time">${now}</div>`;
+  document.getElementById('updLog').prepend(li);
+  showNotif('📡 Mise à jour envoyée pour '+track);
 }
 
-// ======================================================
-// RESET
-// ======================================================
-function resetForm() {
-  document.getElementById('fConfirm').style.display = 'none';
+// ============================================================
+// SEARCH INVOICE
+// ============================================================
+function searchInv(){
+  const num=v('invSrch').toUpperCase();
+  const ship=shipments[num]||demoShip(num);
+  if(!shipments[num])shipments[num]=ship;
+  document.getElementById('invResult').innerHTML=`
+    <div class="card"><div class="card-title">📄 ${num}</div>
+    ${buildBordereau(ship)}
+    <div class="btn-row" style="margin-top:14px;">
+      <button class="btn btn-red" onclick="printInvResult('${num}')">🖨️ Imprimer</button>
+      <button class="btn btn-out" onclick="openModal('${num}')">🔍 Plein écran</button>
+    </div></div>`;
+}
+
+function printInvResult(num){
+  const ship=shipments[num];if(!ship)return;
+  document.getElementById('printZone').innerHTML=buildBordereau(ship);
+  document.getElementById('printZone').style.display='block';
+  window.print();
+  setTimeout(()=>{document.getElementById('printZone').style.display='none';},1500);
+}
+
+// ============================================================
+// HELPERS
+// ============================================================
+function showNotif(msg,dur=4000){
+  const el=document.getElementById('notif');el.textContent=msg;el.style.display='block';
+  setTimeout(()=>{el.style.display='none';},dur);
+}
+function resetForm(){
+  document.getElementById('fConfirm').style.display='none';
   goStep(1);
-  ['sNm','sEm','sPh','sCi','sZp','sAd','rNm','rEm','rPh','rCi','rZp','rAd','pkWt','pkLn','pkWd','pkHt','pkVl','pkQty','pkCnt','payRef'].forEach(id=>{
-    const el = document.getElementById(id); if(el) el.value='';
-  });
-  populateCountries();
+  ['sNm','sEm','sPh','sCi','sZp','sAd','rNm','rEm','rPh','rCi','rZp','rAd','pkWt','pkLn','pkWd','pkHt','pkVl','pkQty','pkCnt'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  fillCountries();
 }
 
-// Close modal on backdrop click
-document.getElementById('invoiceModal').addEventListener('click', function(e){ if(e.target===this) closeModal(); });
+// Fermer modal sur clic fond
+document.getElementById('invModal').addEventListener('click',function(e){if(e.target===this)closeModal();});
 </script>
 </body>
 </html>
