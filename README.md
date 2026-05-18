@@ -1,38 +1,53 @@
-# DHL Logistics Services – Site International de Suivi
+# DHL Logistics Services – Site de Suivi International
 
-## 🚀 Déploiement GitHub → Netlify
+Site de tracking et gestion de colis professionnel, style DHL.
 
+## 🚀 Déploiement sur Netlify via GitHub
+
+### Étape 1 – Pousser sur GitHub
 ```bash
 git init
 git add .
-git commit -m "DHL Logistics v2 - all fixes"
+git commit -m "DHL Logistics Services - initial commit"
 git branch -M main
-git remote add origin https://github.com/ghoks2004/dhl-logistics.git
+git remote add origin https://github.com/VOTRE_USERNAME/dhl-logistics.git
 git push -u origin main
 ```
-Puis sur netlify.com → Import from GitHub → sélectionner le dépôt → Deploy.
+
+### Étape 2 – Connecter à Netlify
+1. Allez sur [netlify.com](https://netlify.com) → "Add new site" → "Import an existing project"
+2. Connectez votre compte GitHub
+3. Sélectionnez le dépôt `dhl-logistics`
+4. Laissez les paramètres par défaut (le `netlify.toml` s'occupe de tout)
+5. Cliquez **Deploy site**
+
+Votre site sera en ligne en ~60 secondes sur une URL `xxx.netlify.app`.
 
 ---
 
-## 📧 Activer les emails (EmailJS – GRATUIT)
+## ✨ Fonctionnalités
 
-1. Va sur emailjs.com → Sign Up
-2. Crée un Email Service (Gmail)
-3. Crée un Template avec: {{to_email}}, {{to_name}}, {{track_num}}, {{content}}, {{fee}}
-4. Dans index.html remplace:
-   - YOUR_EMAILJS_PUBLIC_KEY → ta clé publique
-   - YOUR_SERVICE_ID → ton service ID
-   - YOUR_TEMPLATE_ID → ton template ID
+| Fonctionnalité | Détail |
+|---|---|
+| 🌍 Multilingue | FR / EN / ES / DE (dynamique, par bouton) |
+| 📦 Formulaire expédition | 5 étapes : Expéditeur, Colis, Documents, Vitesse, Paiement |
+| 📡 Suivi en temps réel | Numéro de suivi, statut, historique des événements |
+| 🗺️ Navigation GPS | Google Maps, Waze, Apple Maps (liens automatiques) |
+| 🚚 Espace Coursier | Envoi de mises à jour de position + statut |
+| 📄 Factures | Générées automatiquement avec code-barres |
+| 🖨️ Impression | Étiquette + facture imprimables |
+| 💳 Paiements | MTN MoMo, Orange Money, Carte, Cash |
 
 ---
 
-## ✅ Corrections v2
-- Documents CNI/facture : OPTIONNELS avec explication claire
-- Impression propre : seul le bordereau s'imprime (pas le site)
-- Bordereau professionnel : logo DHL, tableau, numéro de suivi
-- 50+ pays dont toute l'Europe
-- 4 langues complètes FR/EN/ES/DE
-- Emails via EmailJS
-- Responsive mobile corrigé
+## 📁 Structure
 
-## 📞 Contact: romarthdongmo@gmail.com
+```
+/
+├── index.html       ← Site complet (HTML + CSS + JS en un seul fichier)
+├── netlify.toml     ← Configuration Netlify
+└── README.md        ← Ce fichier
+```
+
+## 📧 Contact
+romarthdongmo@gmail.com
